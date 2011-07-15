@@ -1,21 +1,58 @@
 require 'spec_helper'
 
 describe DynamicFieldset::Fieldset do
+  include FieldsetHelper
 
-  it "should respond to child_fields"
-  it "should respond to child_fieldsets"
+  it "should respond to child_fields" do
+    DynamicFieldset::Fieldset.new.should_respond_to :child_fields
+  end
+
+  it "should respond to child_fieldsets" do
+    DynamicFieldset::Feildset.new.should_respond_to :child_fieldsets
+  end
   
   describe "validations" do
     before(:each) do
-      @fieldset = DynamicFieldset::Fielset.new
+      @fieldset = DynamicFieldset::Fieldset.new
     end
 
-    it "should require a name"
-    it "should require a description"
+    it "should be valid as a top level fieldset" do
+      @fieldset.attributes = valid_top_level_attributes
+      @fieldset.should be_valid
+    end
+
+    it "should be valid as a child fieldset" do
+      @fieldset.attributes = valid_child_attributes
+      @fieldset.should be_valid
+    end
+
+    it "should require a name" do
+      @fieldset.should have(1).error_on(:name)
+    end
+
+    it "should require a description" do
+      @fieldset.should have(1).error_on(:description)
+    end
+
     # also called the permalink
-    it "should require a type"
-    it "should have an order number if there is a parent fieldset"
-    it "should not allow a parent fieldset when it would create a cycle"
+    it "should require a type" do
+      @fieldset.should have(1).error_on(:type)
+    end
+
+    it "should have an order number if there is a parent fieldset" do
+      @fieldset.parent_fieldset = mock_model(Fieldset)
+      @fieldset.should have(1).error_on(:order_num)
+    end
+  
+    it "should not allow a parent fieldset when it would create a cycle" do
+      # screw writing this test
+      pending
+    end
+
+    it "should error if you try to change the type unless you really mean it" do
+      @fieldset.you_really_mean_it = false
+      @fieldset.should have(1).error_on(:type)
+    end
   end
 
   describe "top_level_fieldsets scope" do
@@ -51,5 +88,4 @@ describe DynamicFieldset::Fieldset do
     it "should maintain the order of the children regardless of class"
     it "should handle duplicate order numbers by alphabetical order of name"
   end
-
 end
