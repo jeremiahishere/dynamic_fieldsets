@@ -114,3 +114,7 @@ Migrating to CreatePeople (20110715180834)
   [1m[36mSQL (0.4ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
 Migrating to CreateMultipartFormTables (20110715175956)
 Migrating to CreatePeople (20110715180834)
+  [1m[36mSQL (1.4ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m

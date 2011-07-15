@@ -14,11 +14,11 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "acts_as_multipart_form"
-  gem.homepage = "http://github.com/jeremiahishere/acts_as_multipart_form"
+  gem.name = "dynamic_fieldsets"
+  gem.homepage = "http://github.com/jeremiahishere/dynamic_fieldsets"
   gem.license = "MIT"
-  gem.summary = %Q{Multipart form engine on rails}
-  gem.description = %Q{Multipart forms using custom routes}
+  gem.summary = %Q{Dynamic fieldsets for rails controllers}
+  gem.description = %Q{Dynamic fieldsets for rails controllers}
   gem.email = "jeremiah@cloudspace.com"
   gem.authors = ["Jeremiah Hemphill", "Ethan Pemble"]
   # dependencies defined in Gemfile
