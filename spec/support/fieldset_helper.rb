@@ -6,7 +6,7 @@ module FieldsetHelper
     {   
       :name => "Hire Form",
       :description => "Hire a person for a job",
-      :type => :hire_form
+      :type => "hire_form"
     }
   end
 
@@ -17,7 +17,7 @@ module FieldsetHelper
     {
       :name => "Hire Form",
       :description => "Hire a person for a job",
-      :type => :hire_form,
+      :type => "hire_form",
       :order_num => 1,
     }
       # this should be in there but isnt working right now

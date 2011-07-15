@@ -26,12 +26,19 @@ describe DynamicFieldsets::Fieldset do
     end
 
     it "should be valid as a top level fieldset" do
+      puts valid_top_level_attributes
       @fieldset.attributes = valid_top_level_attributes
+      @fieldset.valid?
+      puts @fieldset.attributes
+      puts @fieldset.errors
       @fieldset.should be_valid
     end
 
     it "should be valid as a child fieldset" do
       @fieldset.attributes = valid_child_attributes
+      @fieldset.valid?
+      puts @fieldset.attributes
+      puts @fieldset.errors
       @fieldset.should be_valid
     end
 
