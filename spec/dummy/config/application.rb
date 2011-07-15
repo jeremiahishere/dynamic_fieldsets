@@ -7,7 +7,7 @@ require "action_view/railtie"
 require "action_mailer/railtie"
 
 Bundler.require
-require "dynamic_fieldsets"
+require "acts_as_multipart_form"
 
 module Dummy
   class Application < Rails::Application

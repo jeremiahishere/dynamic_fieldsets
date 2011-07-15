@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="MultipartForm::InProgressForm validations" tests="5" time="0.00780956" failures="0" errors="5" skipped="0">
+  <testcase name="MultipartForm::InProgressForm validations should be valid" time="0.001769442">
+    <failure type="ActiveRecord::StatementInvalid" message="Could not find table 'in_progress_forms'">
+Could not find table 'in_progress_forms' (ActiveRecord::StatementInvalid)
+ActiveRecord::StatementInvalid:
+Could not find table 'in_progress_forms'
+     ./spec/in_progress_form_spec.rb:6:in `new'
+     ./spec/in_progress_form_spec.rb:6:in `block (3 levels) in &lt;top (required)&gt;'    </failure>
+  </testcase>
+  <testcase name="MultipartForm::InProgressForm validations should require a form subject" time="0.00119303">
+    <failure type="ActiveRecord::StatementInvalid" message="Could not find table 'in_progress_forms'">
+Could not find table 'in_progress_forms' (ActiveRecord::StatementInvalid)
+ActiveRecord::StatementInvalid:
+Could not find table 'in_progress_forms'
+     ./spec/in_progress_form_spec.rb:6:in `new'
+     ./spec/in_progress_form_spec.rb:6:in `block (3 levels) in &lt;top (required)&gt;'    </failure>
+  </testcase>
+  <testcase name="MultipartForm::InProgressForm validations should require a form name" time="0.001504453">
+    <failure type="ActiveRecord::StatementInvalid" message="Could not find table 'in_progress_forms'">
+Could not find table 'in_progress_forms' (ActiveRecord::StatementInvalid)
+ActiveRecord::StatementInvalid:
+Could not find table 'in_progress_forms'
+     ./spec/in_progress_form_spec.rb:6:in `new'
+     ./spec/in_progress_form_spec.rb:6:in `block (3 levels) in &lt;top (required)&gt;'    </failure>
+  </testcase>
+  <testcase name="MultipartForm::InProgressForm validations should require a last completed step" time="0.001388378">
+    <failure type="ActiveRecord::StatementInvalid" message="Could not find table 'in_progress_forms'">
+Could not find table 'in_progress_forms' (ActiveRecord::StatementInvalid)
+ActiveRecord::StatementInvalid:
+Could not find table 'in_progress_forms'
+     ./spec/in_progress_form_spec.rb:6:in `new'
+     ./spec/in_progress_form_spec.rb:6:in `block (3 levels) in &lt;top (required)&gt;'    </failure>
+  </testcase>
+  <testcase name="MultipartForm::InProgressForm validations should require completed" time="0.001450073">
+    <failure type="ActiveRecord::StatementInvalid" message="Could not find table 'in_progress_forms'">
+Could not find table 'in_progress_forms' (ActiveRecord::StatementInvalid)
+ActiveRecord::StatementInvalid:
+Could not find table 'in_progress_forms'
+     ./spec/in_progress_form_spec.rb:6:in `new'
+     ./spec/in_progress_form_spec.rb:6:in `block (3 levels) in &lt;top (required)&gt;'    </failure>
+  </testcase>
+  <system-out>
+  </system-out>
+  <system-err>
+  </system-err>
+</testsuite>

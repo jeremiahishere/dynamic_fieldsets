@@ -1,29 +1,58 @@
-# encoding: UTF-8
+# encoding: utf-8
+
 require 'rubygems'
+require 'bundler'
 begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
 end
-
 require 'rake'
-require 'rake/rdoctask'
 
-require 'rake/testtask'
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "acts_as_multipart_form"
+  gem.homepage = "http://github.com/jeremiahishere/acts_as_multipart_form"
+  gem.license = "MIT"
+  gem.summary = %Q{Multipart form engine on rails}
+  gem.description = %Q{Multipart forms using custom routes}
+  gem.email = "jeremiah@cloudspace.com"
+  gem.authors = ["Jeremiah Hemphill", "Ethan Pemble"]
+  # dependencies defined in Gemfile
+end
+Jeweler::RubygemsDotOrgTasks.new
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = false
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-task :default => :test
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
 
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'DynamicFieldsets'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README.rdoc')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+require 'cucumber/rake/task'
+Cucumber::Rake::Task.new(:features)
+
+task :default => :spec
+
+require 'yard'
+YARD::Rake::YardocTask.new
+
+# hudson ci
+require 'ci/reporter/rake/rspec'
+namespace :hudson do
+  def report_path
+    "spec/reports/"
+  end
+
+  task :report_setup do
+    rm_rf report_path
+    mkdir_p report_path
+  end
 end
