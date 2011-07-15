@@ -4,11 +4,13 @@ describe DynamicFieldset::Fieldset do
   include FieldsetHelper
 
   it "should respond to child_fields" do
-    DynamicFieldset::Fieldset.new.should_respond_to :child_fields
+    fieldset = DynamicFieldset::Fieldset.new
+    fieldset.should respond_to :child_fields
   end
 
   it "should respond to child_fieldsets" do
-    DynamicFieldset::Feildset.new.should_respond_to :child_fieldsets
+    fieldset = DynamicFieldset::Fieldset.new
+    fieldset.should respond_to :child_fieldsets
   end
   
   describe "validations" do
@@ -40,7 +42,7 @@ describe DynamicFieldset::Fieldset do
     end
 
     it "should have an order number if there is a parent fieldset" do
-      @fieldset.parent_fieldset = mock_model(Fieldset)
+      @fieldset.parent_fieldset = mock_model(DynamicFieldset::Fieldset)
       @fieldset.should have(1).error_on(:order_num)
     end
   

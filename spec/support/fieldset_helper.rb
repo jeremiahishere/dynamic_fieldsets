@@ -19,7 +19,7 @@ module FieldsetHelper
       :description => "Hire a person for a job",
       :type => :hire_form,
       :order_num => 1,
-      :parent_fieldset => mock_model(Fieldset)
+      :parent_fieldset => mock_model(DynamicFieldset::Fieldset)
     }
   end
 end
