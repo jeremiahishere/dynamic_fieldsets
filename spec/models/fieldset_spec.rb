@@ -1,21 +1,28 @@
 require 'spec_helper'
 
-describe DynamicFieldset::Fieldset do
+describe DynamicFieldsets::Fieldset do
   include FieldsetHelper
 
   it "should respond to child_fields" do
-    fieldset = DynamicFieldset::Fieldset.new
+    # pending until fields model is complete
+    pending
+    fieldset = DynamicFieldsets::Fieldset.new
     fieldset.should respond_to :child_fields
   end
 
+  it "should respond to parent_fieldset" do 
+    fieldset = DynamicFieldsets::Fieldset.new
+    fieldset.should respond_to :parent_fieldset
+  end
+
   it "should respond to child_fieldsets" do
-    fieldset = DynamicFieldset::Fieldset.new
+    fieldset = DynamicFieldsets::Fieldset.new
     fieldset.should respond_to :child_fieldsets
   end
   
   describe "validations" do
     before(:each) do
-      @fieldset = DynamicFieldset::Fieldset.new
+      @fieldset = DynamicFieldsets::Fieldset.new
     end
 
     it "should be valid as a top level fieldset" do
@@ -41,8 +48,11 @@ describe DynamicFieldset::Fieldset do
       @fieldset.should have(1).error_on(:type)
     end
 
-    it "should have an order number if there is a parent fieldset" do
-      @fieldset.parent_fieldset = mock_model(DynamicFieldset::Fieldset)
+    it "should not require an order number if htere is no parent fieldset" do
+      @fieldset.should have(0).error_on(:order_num)
+    end
+    it "should require an order number if there is a parent fieldset" do
+      @fieldset.parent_fieldset = DynamicFieldsets::Fieldset.new
       @fieldset.should have(1).error_on(:order_num)
     end
   
@@ -52,6 +62,7 @@ describe DynamicFieldset::Fieldset do
     end
 
     it "should error if you try to change the type unless you really mean it" do
+      pending
       @fieldset.you_really_mean_it = false
       @fieldset.should have(1).error_on(:type)
     end

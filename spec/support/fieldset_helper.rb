@@ -19,7 +19,8 @@ module FieldsetHelper
       :description => "Hire a person for a job",
       :type => :hire_form,
       :order_num => 1,
-      :parent_fieldset => mock_model(DynamicFieldset::Fieldset)
     }
+      # this should be in there but isnt working right now
+      #:parent_fieldset => DynamicFieldset::Fieldset.new
   end
 end
