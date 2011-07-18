@@ -26,17 +26,11 @@ describe DynamicFieldsets::Fieldset do
     end
 
     it "should be valid as a top level fieldset" do
-      # no idea why this doesn't set type correctly
-      # maybe it is a reserved word
-      pending
       @fieldset.attributes = valid_top_level_attributes
       @fieldset.should be_valid
     end
 
     it "should be valid as a child fieldset" do
-      # no idea why this doesn't set type correctly
-      # maybe it is a reserved word
-      pending
       @fieldset.attributes = valid_child_attributes
       @fieldset.should be_valid
     end
@@ -49,9 +43,8 @@ describe DynamicFieldsets::Fieldset do
       @fieldset.should have(1).error_on(:description)
     end
 
-    # also called the permalink
-    it "should require a type" do
-      @fieldset.should have(1).error_on(:type)
+    it "should require an nkey" do # permalink
+      @fieldset.should have(1).error_on(:nkey)
     end
 
     it "should not require an order number if there is no parent fieldset" do
@@ -68,37 +61,35 @@ describe DynamicFieldsets::Fieldset do
       pending
     end
 
-    it "should error if you try to change the type unless you really mean it" do
+    it "should error if you try to change the nkey unless you really mean it" do
       pending
       @fieldset.you_really_mean_it = false
-      @fieldset.should have(1).error_on(:type)
+      @fieldset.should have(1).error_on(:nkey)
     end
   end
 
-  describe "top_level_fieldsets scope" do
-    it "should respond to top_level_fieldsets scope"
+  describe "roots scope" do # A Fieldset root has no parents
+    before(:each) do
+      @fieldset = DynamicFieldsets::Fieldset.new
+    end
+    
+    it "should respond to roots scope" do
+      @fieldset.should have(0).error_on(:roots)
+    end
+    
     it "should return fieldsets with no parent fieldset"
     it "should not return fieldsets with a parent fieldset"
   end
 
-  describe "render method" do
-    it "should probably be named something else"
-    it "should call get_haml (or get_erb)"
-    it "should call render_children"
-    it "should add the results of get_haml to the results of render_children"
-    it "should return a haml(/erb) string"
+  describe "full_markup method" do
+    it "should call get_markup on itself and each field"
+    it "should call full_markup on fieldset children"
+    it "should add the results of get_markup to the results of fieldset children"
+    it "should return an array of haml lines"
   end
 
-  describe "get_html/erb method" do
-    it "should return an array with the top and bottom haml/erb"
-    it "should have a better name with haml/erb passed as an argument"
-    it "should default to one of the two though"  
-  end
-
-  describe "render_children method" do
-    it "should call get_ordered_children"
-    it "should call the render method for each child (fieldset or field)"
-    it "should add it's own tags around the generated html/erb/whatever"
+  describe "get_markup method" do
+    it "should return a string of haml"
   end
 
   describe "get_ordered_children method" do

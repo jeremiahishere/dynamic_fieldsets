@@ -10,16 +10,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110715210759) do
+ActiveRecord::Schema.define(:version => 20110718215812) do
+
+  create_table "fields", :force => true do |t|
+    t.integer  "fieldset_id"
+    t.string   "label"
+    t.boolean  "required",    :default => false
+    t.integer  "order_num"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "fieldsets", :force => true do |t|
+    t.string   "nkey",               :null => false
     t.string   "name"
     t.text     "description"
-    t.string   "type"
     t.integer  "parent_fieldset_id"
     t.integer  "order_num"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "fieldsets", ["nkey"], :name => "index_fieldsets_on_nkey", :unique => true
 
 end
