@@ -54,13 +54,11 @@ describe DynamicFieldsets::Fieldset do
       @fieldset.should have(1).error_on(:type)
     end
 
-    it "should not require an order number if htere is no parent fieldset" do
+    it "should not require an order number if there is no parent fieldset" do
       @fieldset.should have(0).error_on(:order_num)
     end
 
     it "should require an order number if there is a parent fieldset" do
-      # also don't know why this reference doesn't work but it does work in the before
-      pending
       @fieldset.parent_fieldset = DynamicFieldsets::Fieldset.new
       @fieldset.should have(1).error_on(:order_num)
     end
