@@ -26,7 +26,7 @@ describe DynamicFieldsets::Fieldset do
     end
 
     it "should be valid as a top level fieldset" do
-      @fieldset.attributes = valid_top_level_attributes
+      @fieldset.attributes = valid_root_attributes
       @fieldset.should be_valid
     end
 
@@ -68,31 +68,55 @@ describe DynamicFieldsets::Fieldset do
     end
   end
 
-  describe "roots scope" do # A Fieldset root has no parents
+  describe "roots scope" do
     before(:each) do
-      @fieldset = DynamicFieldsets::Fieldset.new
+      @root_fieldset = DynamicFieldsets::Fieldset.new( valid_root_attributes )
+      @child_fieldset = DynamicFieldsets::Fieldset.new( valid_child_attributes )
     end
     
     it "should respond to roots scope" do
-      @fieldset.should have(0).error_on(:roots)
+      DynamicFieldsets::Fieldset.should have(0).error_on(:roots)
     end
     
-    it "should return fieldsets with no parent fieldset"
-    it "should not return fieldsets with a parent fieldset"
+    it "should return fieldsets with no parent fieldset" do
+      DynamicFieldsets::Fieldset.roots.should include @root_fieldset
+    end
+    
+    it "should not return fieldsets with a parent fieldset" do
+      DynamicFieldsets::Fieldset.roots.should_not include @child_fieldset
+    end
   end
 
-  describe "full_markup method" do
-    it "should call get_markup on itself and each field"
-    it "should call full_markup on fieldset children"
-    it "should add the results of get_markup to the results of fieldset children"
-    it "should return an array of haml lines"
+  describe "collect_markup method" do
+    before(:each) do
+      @root_fieldset = DynamicFieldsets::Fieldset.new( valid_root_attributes )
+      @child_fieldset = DynamicFieldsets::Fieldset.new( valid_child_attributes )
+    end
+    
+    it "should call markup on itself" do
+      pending
+    end
+    
+    it "should call collect_markup on its children"
+    it "should add the results of markup to the results of its children"
+    it "should return an array of haml"
   end
 
-  describe "get_markup method" do
-    it "should return a string of haml"
+  describe "markup method" do
+    before(:each) do
+      @fieldset = DynamicFieldsets::Fieldset.new( valid_root_attributes )
+    end
+    
+    it "should respond to markup" do
+      @fieldset.should respond_to :markup
+    end
+    
+    it "should return a string of haml" do
+      @fieldset.markup.should be_an_instance_of String
+    end
   end
 
-  describe "get_ordered_children method" do
+  describe "children method" do
     it "should return a mixture of fieldset and field children of the fieldset"
     it "should return an array of activerecord objects"
     it "should only return top level children"

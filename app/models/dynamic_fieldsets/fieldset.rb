@@ -4,7 +4,7 @@ module DynamicFieldsets
   # @author Jeremiah Hemphill, Ethan Pemble
   class Fieldset < ActiveRecord::Base
     # Relations
-    belongs_to :parent_fieldset, :class_name => "Fieldset", :foreign_key => "child_fieldset_id"
+    belongs_to :parent_fieldset, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
     has_many :child_fieldsets, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
     has_many :fields
 
@@ -22,32 +22,36 @@ module DynamicFieldsets
       return parent_fieldset.nil?
     end
     
-    # Calls get_markup on itself, and on its field and fieldset descendents recursively.
+    # The collected descendents of a fieldset.  This group is sorted first by order number, 
+    # then alphabetically by name in the case of duplicate order numbers.
+    # @return [Array] Ordered collection of descendent fields and fieldsets.
+    def children
+      collected_children = []
+      fields.each{ |field| collected_children.push field }
+      child_fieldsets.each{ |fieldset| collected_children.push fieldset }
+      return collected_children.sort_by{ |child| [child.order_num, child.name] }
+    end
+    
+    # @return [String] Haml markup for this element.
+    def markup
+      return "#fieldset-" + nkey
+    end
+    
+    # Calls markup on itself, and on its field and fieldset descendents recursively.
     # @return [Array] Each line of haml markup for the fieldset.
-    def full_markup( lines = [], depth = 0 )
+    def collect_markup( field_values, lines = [], depth = 0 )
       padding = ""
       depth.times.each{ padding += "  " }
-      lines.push( padding + get_markup )
-      fields.each{ |field| lines.push( padding + "  " + field.get_markup ) }
-      child_fieldsets.each{ |fieldset| fieldset.full_markup( lines, depth+1 ) }
-      return lines if depth == 0
+      lines.push( padding + markup )
+      children.each{ |child| lines |= child.collect_markup( field_values, lines, depth+1 ) }
+      return lines
     end
     
     # @return [String] Entire haml markup for the fieldset.
     def render_for_view
       haml_str = ""
-      full_markup.each{ |line| haml_str += line + "\n" }
+      collect_markup({ 1=>['test'], 2=>['hello!'] }).each{ |line| haml_str += line + "\n" }
       return haml_str
-    end
-    
-    # @return [String] Haml markup for this element.
-    def get_markup
-      return "#fieldset-" + nkey
-    end
-    
-    # ...
-    def get_ordered_children
-      return nil
     end
 
   end
