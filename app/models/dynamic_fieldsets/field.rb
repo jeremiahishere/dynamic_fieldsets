@@ -5,10 +5,21 @@ module DynamicFieldsets
   class Field < ActiveRecord::Base
     # Relations
     belongs_to :fieldset
+    has_many :field_options
 
     # Validations
     validates_presence_of :label
+    validates_presence_of :type
     validates_presence_of :order_num
+    validates_inclusion_of :type, :in => %w( text password checkbox radio button textarea select )
+    validate :has_field_options
+    
+    # Custom validation for fields with multiple options
+    def has_field_options
+      if %w[select radio checkbox].include? self.type
+        self.errors.add(:field_options, "This field must have options")
+      end
+    end
 
     # @return [String] Alias for label property
     def name
