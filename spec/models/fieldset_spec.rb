@@ -90,62 +90,61 @@ describe Fieldset do
     end
   end
 
-  describe "collect_markup method" do
+  describe "children method" do
     before(:each) do
       @root_fieldset = Fieldset.new( valid_root_attributes )
-      @child_fieldset = Fieldset.new( valid_child_attributes )
+      
+      @child_fieldset = mock_model Fieldset
+      @child_fieldset.stub!(:id).and_return 2
+      @child_fieldset.stub!(:order_num).and_return 1
+      @child_fieldset.stub!(:name).and_return
+      
+      @field1 = mock_model Field
+      @field1.stub!(:id).and_return 1
+      @field1.stub!(:order_num).and_return 2
+      @field1.stub!(:name).and_return 'z-field'
+      
+      @field2 = mock_model Field
+      @field2.stub!(:id).and_return 2
+      @field2.stub!(:order_num).and_return 2
+      @field2.stub!(:name).and_return 'a-field'
     end
     
-    it "should call markup on itself" do
-      pending
+    it "should respond to children" do
+      @root_fieldset.should respond_to :children
     end
     
-    it "should call collect_markup on its children" do
-      pending
+    it "should call fields and return them" do
+      @root_fieldset.should_receive(:fields).and_return [@field1]
+      @root_fieldset.children.should include @field1
     end
     
-    it "should add the results of markup to the results of its children" do
-      pending
+    it "should call child_fieldsets and return them" do
+      @root_fieldset.should_receive(:child_fieldsets).and_return [@child_fieldset]
+      @root_fieldset.children.should include @child_fieldset
     end
     
-    it "should return an array of haml" do
-      pending
-    end
-  end
-
-  describe "markup method" do
-    before(:each) do
-      @fieldset = Fieldset.new( valid_root_attributes )
-    end
-    
-    it "should respond to markup" do
-      @fieldset.should respond_to :markup
-    end
-    
-    it "should return a string of haml" do
-      @fieldset.markup.should be_an_instance_of String
-    end
-  end
-
-  describe "children method" do
-    it "should return a mixture of fieldset and field children of the fieldset" do
-      pending
-    end
-    
-    it "should return an array of activerecord objects" do
-      pending
-    end
-    
-    it "should only return top level children" do
-      pending
+    it "should return a mixture of fieldsets and fields" do
+      @root_fieldset.stub!(:fields).and_return [@field1]
+      @root_fieldset.stub!(:child_fieldsets).and_return [@child_fieldset]
+      children = @root_fieldset.children
+      children.should include @field1
+      children.should include @child_fieldset
     end
     
     it "should maintain the order of the children regardless of class" do
-      pending
+      @root_fieldset.stub!(:fields).and_return [@field1]
+      @root_fieldset.stub!(:child_fieldsets).and_return [@child_fieldset]
+      children = @root_fieldset.children
+      children.first.should == @child_fieldset
+      children.last.should == @field1
     end
     
     it "should handle duplicate order numbers by alphabetical order of name" do
-      pending
+      @root_fieldset.stub!(:fields).and_return [@field1, @field2]
+      children = @root_fieldset.children
+      children.first.should == @field2
+      children.last.should == @field1
     end
   end
   

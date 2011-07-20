@@ -47,10 +47,12 @@ module DynamicFieldsets
       return lines
     end
     
+    randvalues = { 1=>['test'], 2=>['hello!'] }
+    
     # @return [String] Entire haml markup for the fieldset.
     def render_for_view
       haml_str = ""
-      collect_markup({ 1=>['test'], 2=>['hello!'] }).each{ |line| haml_str += line + "\n" }
+      collect_markup(randvalues).each{ |line| haml_str += line + "\n" }
       return haml_str
     end
 
