@@ -24,7 +24,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.timestamps
     end
     
-
     create_table :field_options do |t|
       t.integer :field_id
       t.string  :label
@@ -35,6 +34,14 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     create_table :field_defaults do |t|
       t.integer :field_id
       t.string  :value
+      
+      t.timestamps
+    end  
+    
+    create_table :field_html_attributes do |t|
+      t.integer :field_id
+      t.string  :attribute_name, :required => true # couldn't use attribute because it is used by active record
+      t.string  :value, :required => true
 
       t.timestamps
     end
@@ -45,5 +52,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     drop_table :fields
     drop_table :field_options
     drop_table :field_defaults
+    drop_table :field_html_attributes
   end
 end
