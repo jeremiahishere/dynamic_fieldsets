@@ -10,7 +10,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720134605) do
+ActiveRecord::Schema.define(:version => 20110721022051) do
+
+  create_table "field_options", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "label"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "fields", :force => true do |t|
     t.integer  "fieldset_id"

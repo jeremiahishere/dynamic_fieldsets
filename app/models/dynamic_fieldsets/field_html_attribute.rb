@@ -9,7 +9,7 @@ module DynamicFieldsets
     belongs_to :field
     
     #validations
-    validates_presence_of :attribute
+    validates_presence_of :attribute_name
     validates_presence_of :value
   end
 end

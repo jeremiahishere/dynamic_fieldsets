@@ -26,7 +26,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     
     create_table :field_html_attributes do |t|
       t.integer :field_id
-      t.string  :attribute, :required => true
+      t.string  :attribute_name, :required => true # couldn't use attribute because it is used by active record
       t.string  :value, :required => true
 
       t.timestamps

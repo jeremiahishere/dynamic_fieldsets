@@ -6,6 +6,7 @@ module DynamicFieldsets
     # Relations
     belongs_to :fieldset
     has_many :field_options
+    has_many :field_html_attributes
 
     # Validations
     validates_presence_of :label
