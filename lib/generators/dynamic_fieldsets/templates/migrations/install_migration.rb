@@ -43,10 +43,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
   def self.down
     drop_table :fieldsets
     drop_table :fields
-<<<<<<< HEAD
     drop_table :field_options
-=======
     drop_table :field_defaults
->>>>>>> 220_Create_Field_Default_model
   end
 end
