@@ -35,5 +35,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration
   def self.down
     drop_table :fieldsets
     drop_table :fields
+    drop_table :field_defaults
   end
 end
