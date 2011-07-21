@@ -6,7 +6,7 @@ module FieldDefaultHelper
     {
       :id => 1,
       :field_id => 1,
-      :label => "Name",
+      :value => "Scott Sampson",
     }
   end
 end
