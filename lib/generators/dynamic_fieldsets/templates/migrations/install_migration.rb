@@ -24,9 +24,17 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.timestamps
     end
     
+    create_table :field_options do |t|
+      t.integer :field_id
+      t.string  :label
+      
+      t.timestamps
+    end
+    
   end
   def self.down
     drop_table :fieldsets
     drop_table :fields
+    drop_table :field_options
   end
 end
