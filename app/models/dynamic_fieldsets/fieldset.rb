@@ -31,30 +31,6 @@ module DynamicFieldsets
       child_fieldsets.each{ |fieldset| collected_children.push fieldset }
       return collected_children.sort_by{ |child| [child.order_num, child.name] }
     end
-    
-    # @return [String] Haml markup for this element.
-    def markup
-      return "#fieldset-" + nkey
-    end
-    
-    # Calls markup on itself, and on its field and fieldset descendents recursively.
-    # @return [Array] Each line of haml markup for the fieldset.
-    def collect_markup( field_values, lines = [], depth = 0 )
-      padding = ""
-      depth.times.each{ padding += "  " }
-      lines.push( padding + markup )
-      children.each{ |child| lines |= child.collect_markup( field_values, lines, depth+1 ) }
-      return lines
-    end
-    
-    randvalues = { 1=>['test'], 2=>['hello!'] }
-    
-    # @return [String] Entire haml markup for the fieldset.
-    def render_for_view
-      haml_str = ""
-      collect_markup(randvalues).each{ |line| haml_str += line + "\n" }
-      return haml_str
-    end
 
   end
 end
