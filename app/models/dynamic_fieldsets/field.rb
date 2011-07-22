@@ -37,5 +37,10 @@ module DynamicFieldsets
       return self.enabled
     end
     
+    # @return [String] 
+    def default
+      return self.field_default.value
+    end
+    
   end
 end

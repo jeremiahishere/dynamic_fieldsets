@@ -77,7 +77,8 @@ describe DynamicFieldsetsHelper do
   describe ".field_renderer" do
     before(:each) do
       @form = ""
-      @field = mock_model(Field)
+      @field = Field.new
+      @field.stub!(:id).and_return 420
       @values = []
     end
     
