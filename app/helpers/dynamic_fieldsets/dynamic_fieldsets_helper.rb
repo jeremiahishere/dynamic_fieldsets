@@ -16,7 +16,7 @@ module DynamicFieldsets
       field_markup.push "<abbr title='required'>*</abbr>" if field.required?
       field_markup.push "</label>"
       
-      elem ""
+      elem = ""
       elem += " name='fsa-#{field.fieldset.fieldset_associator.id}[field-#{field.id}]'"
       elem += " id='field-#{field.id}'"
       elem += " value='#{field.defaults}'"
