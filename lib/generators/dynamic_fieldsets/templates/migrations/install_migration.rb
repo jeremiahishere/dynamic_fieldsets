@@ -1,6 +1,6 @@
 class <%= migration_class_name %> < ActiveRecord::Migration
   def self.up
-    create table :fieldset_associators do |t|
+    create_table :fieldset_associators do |t|
       t.integer :fieldset_id
       t.integer :fieldset_model_id
       t.string :fieldset_model_type
