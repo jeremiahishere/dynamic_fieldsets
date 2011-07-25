@@ -4,6 +4,7 @@ module DynamicFieldsets
   # @author Jeremiah Hemphill, Ethan Pemble
   class Fieldset < ActiveRecord::Base
     # Relations
+    has_many :fieldset_associators
     belongs_to :parent_fieldset, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
     has_many :child_fieldsets, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
     has_many :fields

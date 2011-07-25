@@ -1,4 +1,4 @@
-class <%= migration_class_name %> < ActiveRecord::Migration
+class CreateDynamicFieldsetsTables < ActiveRecord::Migration
   def self.up
     create_table :fieldset_associators do |t|
       t.integer :fieldset_id
