@@ -55,4 +55,15 @@ namespace :hudson do
     rm_rf report_path
     mkdir_p report_path
   end
+
+  # hudson cucumber rake task
+  Cucumber::Rake::Task.new(:cucumber, "Run cucumber with hudson output") do |t|
+    t.cucumber_opts = %{spec/dummy/features --format junit --out #{report_path}}
+  end
+end
+
+#general cucumber rake task
+require 'cucumber/rake/task'
+Cucumber::Rake::Task.new(:cucumber, 'run features that should pass') do |t|
+  t.cucumber_opts = "spec/dummy/features --format progress"
 end
