@@ -10,7 +10,29 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720134605) do
+ActiveRecord::Schema.define(:version => 20110724183405) do
+
+  create_table "field_defaults", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "field_html_attributes", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "attribute_name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "field_options", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "label"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "fields", :force => true do |t|
     t.integer  "fieldset_id"
@@ -20,6 +42,15 @@ ActiveRecord::Schema.define(:version => 20110720134605) do
     t.boolean  "required",    :default => false
     t.boolean  "enabled",     :default => true
     t.integer  "order_num"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "fieldset_associators", :force => true do |t|
+    t.integer  "fieldset_id"
+    t.integer  "fieldset_model_id"
+    t.string   "fieldset_model_type"
+    t.string   "fieldset_model_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

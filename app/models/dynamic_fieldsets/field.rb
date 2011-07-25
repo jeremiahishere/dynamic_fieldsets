@@ -29,6 +29,11 @@ module DynamicFieldsets
       %w[select multiple_select radio checkbox].include? self.type
     end
     
+    # @return [FieldOptions] Alias
+    def options
+      self.field_options
+    end
+    
     # @return [Boolean] True if the field is required.
     def required?
       return self.required
