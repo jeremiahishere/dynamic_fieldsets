@@ -13,8 +13,12 @@ module DynamicFieldsets
     validates_presence_of :name
     validates_presence_of :label
     validates_presence_of :type
-    validates_presence_of :order_num
     validates_inclusion_of :type, :in => %w( select multiple_select checkbox radio textfield textarea date datetime instruction )
+    validates_presence_of :order_num
+    validates_presence_of :enabled
+    validates_inclusion_of :enabled, :in => [true, false]
+    validates_presence_of :required
+    validates_inclusion_of :required, :in => [true, false]
     validate :has_field_options
     
     # Custom validation for fields with multiple options
