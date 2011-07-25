@@ -3,26 +3,78 @@ require 'spec_helper'
 include DynamicFieldsets
 
 describe DynamicFieldsetsInModel do
-  it "should respond to acts_as_dynamic_fieldset"
 
-  it "should respond to fieldset_associator"
-  it "should respond to fieldset"
+  it "should respond to acts_as_dynamic_fieldset" do
+    InformationForm.should respond_to :acts_as_dynamic_fieldset
+  end
+
+  it "should respond to fieldset_associator" do
+    InformationForm.new.should respond_to :fieldset
+  end
+
+  it "should respond to fieldset" do
+    InformationForm.new.should respond_to :fieldset_associator
+  end
 
   describe "acts_as_dynamic_fieldset class method" do
-    it "should initialize the dynamic_fieldsets field"
-    it "should include the instance methods"
+    before(:each) do
+      @model = InformationForm.new
+    end
+
+    it "should initialize the dynamic_fieldsets field" do
+      @model.should respond_to :dynamic_fieldsets
+    end
+
+    it "should include the instance methods" do
+      @model.should be_a_kind_of (DynamicFieldsets::DynamicFieldsetsInModel::InstanceMethods)
+    end
   end
 
   describe "method missing method" do
-    it "should call match_fieldset_associator?"
-    it "should call fieldset_associator if match_fieldset_associator? returns true"
-    it "should call match_fieldset?"
-    it "should call fieldset if match_fieldset? returns true"
+    before(:each) do
+      @model = InformationForm.new
+    end
+
+    it "should call match_fieldset_associator?" do
+      @model.should_receive(:match_fieldset_associator?).and_return(true)
+      @model.some_method
+    end
+
+    it "should call fieldset_associator if match_fieldset_associator? returns true" do
+      @model.stub!(:match_fieldset_associator?).and_return(true)
+      @model.should_receive(:fieldset_associator)
+      @model.some_method
+    end
+
+    it "should call match_fieldset?" do
+      @model.stub!(:match_fieldset_associator?).and_return(false)
+      @model.should_receive(:match_fieldset?).and_return(true)
+      @model.some_method
+    end
+
+    it "should call fieldset if match_fieldset? returns true" do
+      @model.stub!(:match_fieldset_associator?).and_return(false)
+      @model.stub!(:match_fieldset?).and_return(true)
+      @model.should_receive(:fieldset)
+      @model.some_method
+    end
   end
 
   describe "respond_to? method" do
-    it "should call match_fieldset_associator?"
-    it "should call match_fieldset?"
+    before(:each) do
+      @model = InformationForm.new
+    end
+
+    it "should call match_fieldset_associator?" do
+      @model.should_receive(:match_fieldset_associator?)
+      @model.respond_to?(:some_method)
+    end
+
+    it "should call match_fieldset?" do
+      @model.stub!(:match_fieldset_associator?).and_return(false)
+      @model.should_receive(:match_fieldset?)
+      @model.respond_to?(:some_method)
+    end
   end
 
   describe "match_fieldset_associator? method" do

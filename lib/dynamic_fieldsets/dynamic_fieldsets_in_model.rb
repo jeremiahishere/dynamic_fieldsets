@@ -42,12 +42,13 @@ module DynamicFieldsets
       # @param [Array] args The arguments of the method
       # @returns [?] The result of the found method or the result of super
       def method_missing(sym, *args)
-        super(sym, *args)
-        # if matches a form_name
-        #   get the form associator
-        # if matchs form_name_fieldset
-        #   get the fieldset
-        # call super
+        if match_fieldset_associator?(sym)
+          return fieldset_associator(sym)
+        elsif match_fieldset?(sym)
+          return fieldset(sym)
+        else
+          super(sym, *args)
+        end
       end
 
       # Matches methods that match named_fieldset and named_fieldset_fieldset
@@ -57,10 +58,13 @@ module DynamicFieldsets
       # @param [Array] args The arguments of the method
       # @returns [Boolean] True if the method is found or the result of super
       def respond_to?(sym, *args)
-        # if it matches form_name or form_name_fieldset
-        #   return true
-        # call super
-        super(sym, *args)
+        if match_fieldset_associator?(sym)
+          return true
+        elsif match_fieldset?(sym)
+          return true
+        else
+          super(sym, *args)
+        end
       end
 
       # Returns whether a method name matches a named fieldset
@@ -68,6 +72,7 @@ module DynamicFieldsets
       # @param [Symbol] The name of the method
       # @param [Boolean] Whether the method name matches a named fieldset
       def match_fieldset_associator?(sym)
+        return false
       end
 
       # Returns whether a method name matches a named fieldset followed by '_fieldset'
@@ -75,6 +80,7 @@ module DynamicFieldsets
       # @param [Symbol] The name of the method
       # @param [Boolean] Whether the method name matches a named fieldset
       def match_fieldset?(sym)
+        return false
       end
 
       # Returns the fieldset associator object for the named fieldset
@@ -82,6 +88,7 @@ module DynamicFieldsets
       # @param [Symbol] The name of the name fieldset
       # @param [FieldsetAssociator] The fieldset associator object for the named fieldset
       def fieldset_associator(sym)
+        return nil
       end
 
       # Returns the fieldset object for the named fieldset
@@ -89,6 +96,7 @@ module DynamicFieldsets
       # @param [Symbol] The name of the named fieldset
       # @param [Fieldset] The fieldset object for the named fieldset
       def fieldset(sym)
+        return nil
       end
 
     end
