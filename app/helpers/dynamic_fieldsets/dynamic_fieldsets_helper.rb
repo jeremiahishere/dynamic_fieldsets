@@ -17,11 +17,25 @@ module DynamicFieldsets
       field_markup.push "</label>"
       
       elem ""
+      
+      case field.type.to_sym
+      when :select
+      when :multiple_select
+      when :checkbox
+      when :radio
+      when :textfield
+      when :textarea
+      when :date
+      when :datetime
+      when :instruction
+      end
+      
       elem += " name='fsa-#{field.fieldset.fieldset_associator.id}[field-#{field.id}]'"
       elem += " id='field-#{field.id}'"
-      elem += " value='#{field.defaults}'"
+      elem += " value='#{field.default}'" if field.has_default?
       field.html_attributes.each{ |att,val| elem += " #{att}='#{val}'" }
       
+      field_markup.push elem
       field_markup.push "</li>"
       return field_markup
     end
