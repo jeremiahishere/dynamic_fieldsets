@@ -12,11 +12,6 @@ describe DynamicFieldsetsHelper do
       stub!(:fieldset_renderer).and_return []
     end
 
-    it "should respond to dynamic_fieldset_renderer" do
-      pending("How do I test helpers?")
-      self.should respond_to :dynamic_fieldset_renderer
-    end
-
     it "should include a form object and a field set associator object" do
       lambda { dynamic_fieldset_renderer(@fsa) }.should_not raise_error
     end
@@ -37,11 +32,6 @@ describe DynamicFieldsetsHelper do
       @fieldset = Fieldset.new
       @fieldset.stub!(:id).and_return 326
       @values = {}
-    end
-    
-    it "should respond to fieldset_renderer" do
-      pending("How do I test helpers?")
-      self.should respond_to :fieldset_renderer
     end
 
     it "should include the fsa object, fieldset object, and a values hash" do
@@ -90,11 +80,6 @@ describe DynamicFieldsetsHelper do
       @field.stub!(:type).and_return ""
       @field.stub!(:options).and_return []
       @values = []
-    end
-    
-    it "should respond to field_renderer" do
-      pending("How do I test helpers?")
-      self.should respond_to :field_renderer
     end
     
     it "should include the form object, the field object, and an array of values" do
@@ -163,13 +148,19 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should call check_box if the type is checkbox" do
+      option = mock_model(FieldOption)
+      option.stub!(:label).and_return ""
       @field.stub!(:type).and_return 'checkbox'
+      @field.stub!(:options).and_return [option]
       should_receive(:check_box)
       field_renderer(@fsa,@field,@values)
     end
     
     it "should call radio_button if the type is radio" do
+      option = mock_model(FieldOption)
+      option.stub!(:label).and_return ""
       @field.stub!(:type).and_return 'radio'
+      @field.stub!(:options).and_return [option]
       should_receive(:radio_button)
       field_renderer(@fsa,@field,@values)
     end

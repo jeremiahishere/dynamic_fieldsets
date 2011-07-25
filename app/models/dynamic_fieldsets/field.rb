@@ -31,7 +31,7 @@ module DynamicFieldsets
     
     # @return [FieldOptions] Alias
     def options
-      self.field_options
+      return self.field_options
     end
     
     # @return [Boolean] True if the field is required.
@@ -46,7 +46,7 @@ module DynamicFieldsets
     
     # @return [Boolean] False if field_default.value is empty
     def has_default?
-      !self.field_default.value.empty?
+      return !self.field_default.value.empty?
     end
     
     # @return [String] Alias for field_default.value
