@@ -1,5 +1,6 @@
 module DynamicFieldsets
   module DynamicFieldsetsHelper
+    include ActionView::Helpers
     
     # This helper does ..
     # @param [FieldsetAssociator] fsa parent FieldsetAssociator
@@ -18,16 +19,17 @@ module DynamicFieldsets
       
       attrs = { id: "field-#{field.id}" }
       field.html_attributes.each{ |att,val| attrs.merge att.to_sym => val }
+      default = field.default # needs to be implemented ...
       
       case field.type.to_sym
       when :select
         attrs.merge disabled: 'disabled' unless field.enabled
-        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, , attrs
+        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
         
       when :multiple_select
         attrs.merge multiple: 'multiple'
         attrs.merge disabled: 'disabled' unless field.enabled
-        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, , attrs
+        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
         
       when :radio
         field.options.each do |option|
@@ -96,7 +98,7 @@ module DynamicFieldsets
     # @return [String] The HTML for the entire dynamic fieldset
     def dynamic_fieldset_renderer(fsa)
       rendered_dynamic_fieldset = ""
-      fieldset_renderer( fsa, form, fsa.fieldset, fsa.field_values ).each do |line|
+      fieldset_renderer( fsa, fsa.fieldset, fsa.field_values ).each do |line|
         rendered_dynamic_fieldset += line + "\n"
       end
       return rendered_dynamic_fieldset
