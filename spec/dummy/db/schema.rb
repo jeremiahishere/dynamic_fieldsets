@@ -10,7 +10,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110721022051) do
+ActiveRecord::Schema.define(:version => 20110725130211) do
+
+  create_table "field_defaults", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "field_html_attributes", :force => true do |t|
+    t.integer  "field_id"
+    t.string   "attribute_name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "field_options", :force => true do |t|
     t.integer  "field_id"
@@ -31,6 +46,15 @@ ActiveRecord::Schema.define(:version => 20110721022051) do
     t.datetime "updated_at"
   end
 
+  create_table "fieldset_associators", :force => true do |t|
+    t.integer  "fieldset_id"
+    t.integer  "fieldset_model_id"
+    t.string   "fieldset_model_type"
+    t.string   "fieldset_model_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "fieldsets", :force => true do |t|
     t.string   "nkey",               :null => false
     t.string   "name"
@@ -42,5 +66,11 @@ ActiveRecord::Schema.define(:version => 20110721022051) do
   end
 
   add_index "fieldsets", ["nkey"], :name => "index_fieldsets_on_nkey", :unique => true
+
+  create_table "information_forms", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

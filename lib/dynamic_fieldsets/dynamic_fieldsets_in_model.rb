@@ -1,7 +1,7 @@
 module DynamicFieldsets
   module DynamicFieldsetsInModel
     def self.include(base)
-      base.extend(ClassMethods)
+      base.extend ClassMethods
     end
 
     module ClassMethods
