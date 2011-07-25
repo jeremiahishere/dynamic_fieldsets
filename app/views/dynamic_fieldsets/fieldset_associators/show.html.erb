@@ -1,0 +1,26 @@
+<h1 class='pagetitle'>
+  Viewing fieldset associator
+</h1>
+
+<div class='content'
+  <div id='fieldset_associator'>
+    <p>
+      <b>Fieldset Model Id:</b>
+      <%= @fieldset_associator.fieldset_model_id %>
+    </p>
+    <p>
+      <b>Fieldset Model Type</b>
+      <%= @fieldset_associator.fieldset_model_type %>
+    </p>
+    <p>
+      <b>Fieldset Model Name</b>
+      <%= @fieldset_associator.fieldset_model_name %>
+    </p>
+    <p>
+      <b>Fieldset</b>
+      <%= @fieldset_associator.fieldset.name %>
+    </p>
+  </div>
+</div>
+
+<%= link_to "Back", dynamic_fieldsets_fieldset_associators_path %>

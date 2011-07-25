@@ -1,0 +1,18 @@
+<div class='content'>
+  <table>
+    <tr>
+      <td>Fieldset Model Id</td>
+      <td>Fieldset Model Type</td>
+      <td>Fieldset Model Name</td>
+      <td>Fieldset Name</td>
+    </tr>
+    <% @fieldset_associators.each do |fieldset_associator| %>
+      <tr>
+        <td><%= fieldset_associator.fieldset_model_id %></td>
+        <td><%= fieldset_associator.fieldset_model_type %></td>
+        <td><%= fieldset_associator.fieldset_model_name %></td>
+        <td><%= fieldset_associator.fieldset.name %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
