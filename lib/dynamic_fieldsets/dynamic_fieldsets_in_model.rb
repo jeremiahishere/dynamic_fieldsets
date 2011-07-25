@@ -17,7 +17,8 @@ module DynamicFieldsets
 
     module InstanceMethods
 
-      def method_missing
+      def method_missing(sym, *args)
+        super(sym, *args)
         # if matches a form_name
         #   get the form associator
         # if matchs form_name_fieldset
@@ -25,10 +26,11 @@ module DynamicFieldsets
         # call super
       end
 
-      def respond_to?
+      def respond_to?(sym, *args)
         # if it matches form_name or form_name_fieldset
         #   return true
         # call super
+        super(sym, *args)
       end
 
       # method matches fingerprint_form
