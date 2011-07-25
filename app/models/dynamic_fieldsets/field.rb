@@ -29,6 +29,11 @@ module DynamicFieldsets
       %w[select multiple_select radio checkbox].include? self.type
     end
     
+    # @return [FieldOptions] Alias
+    def options
+      self.field_options
+    end
+    
     # @return [Boolean] True if the field is required.
     def required?
       return self.required
@@ -39,7 +44,12 @@ module DynamicFieldsets
       return self.enabled
     end
     
-    # @return [String] 
+    # @return [Boolean] False if field_default.value is empty
+    def has_default?
+      !self.field_default.value.empty?
+    end
+    
+    # @return [String] Alias for field_default.value
     def default
       return self.field_default.value
     end
