@@ -33,6 +33,8 @@ describe DynamicFieldsetsInModel do
   describe "method missing method" do
     before(:each) do
       @model = InformationForm.new
+      @model.stub!(:fieldset_associator)
+      @model.stub!(:fieldset)
     end
 
     it "should call match_fieldset_associator?" do
@@ -78,27 +80,88 @@ describe DynamicFieldsetsInModel do
   end
 
   describe "match_fieldset_associator? method" do
-    it "should call dynamic_fieldsets"
-    it "should return true if the sym parameter matches a key in dynamic_fieldsets"
-    it "should return false if the sym parameter does not match a key in dynamic_fieldsets"
+    before(:each) do
+      @model = InformationForm.new
+      @model.stub!(:dynamic_fieldsets).and_return({:child_form => []})
+    end
+
+    it "should call dynamic_fieldsets" do
+      @model.should_receive(:dynamic_fieldsets).and_return({:child_form => []})
+      @model.match_fieldset_associator?(:some_method)
+    end
+
+    it "should return true if the sym parameter matches a key in dynamic_fieldsets" do
+      @model.match_fieldset_associator?(:child_form).should be_true
+    end
+
+    it "should return false if the sym parameter does not match a key in dynamic_fieldsets" do
+      @model.match_fieldset_associator?(:not_child_form).should be_false
+    end
   end
 
   # need to be abvle to call child_form_fieldset to get the fieldset object
   # because child_form does not exist in the fsa model until after it is created
   describe "match_fieldset? method" do
-    it "should call dynamic_fieldsets"
-    it "should return true if the sym parameter matches a key in dynamic_fieldsets followed by the word fieldset"
-    it "should return false if the sym parameter does not match a key in dynamic_fieldsets followed by the word fieldset"
-    it "should return false if the sym parameter matches a key in dynamic_fieldsets not followed by the word fieldset"
+    before(:each) do
+      @model = InformationForm.new
+      @model.stub!(:dynamic_fieldsets).and_return({:child_form => []})
+    end
+
+    it "should call dynamic_fieldsets if the calling method includes _fieldset" do
+      @model.should_receive(:dynamic_fieldsets).and_return({:child_form => []})
+      @model.match_fieldset?(:some_method_fieldset)
+    end
+
+    it "should return true if the sym parameter matches a key in dynamic_fieldsets followed by the word fieldset" do
+      @model.match_fieldset?(:child_form_fieldset).should be_true
+    end
+
+    it "should return false if the sym parameter does not match a key in dynamic_fieldsets followed by the word fieldset" do
+      @model.match_fieldset?(:not_child_form_fieldset).should be_false
+    end
+
+    it "should return false if the sym parameter matches a key in dynamic_fieldsets not followed by the word fieldset" do
+      @model.match_fieldset?(:child_form).should be_false
+    end
   end
 
   describe "fieldset_associator method" do
-    it "should return the fieldset associator object for the specified dynamic fieldset"
-    it "should return nil if the sym param does not match a kyer in the dynamic_fieldsets field"
+    before(:each) do
+      @model = InformationForm.new
+      @model.stub!(:dynamic_fieldsets).and_return({:child_form => {:fieldset => :fingerprint_form}})
+      @fsa = DynamicFieldsets::FieldsetAssociator.new(:fieldset_model_id => 1234, :fieldset_model_type => "InformationForm", :fieldset_model_name => :child_form)
+      DynamicFieldsets::FieldsetAssociator.stub!(:find_by_fieldset_model_parameters).and_return(@fsa)
+    end
+
+    it "should return the fieldset associator object for the specified dynamic fieldset" do
+      DynamicFieldsets::FieldsetAssociator.should_receive(:find_by_fieldset_model_parameters).and_return(@fsa)
+      @model.fieldset_associator(:child_form).should == @fsa
+    end
+
+    it "should return nil if the sym param does not match a key in the dynamic_fieldsets field" do
+      @model.fieldset_associator(:not_child_form).should be_nil
+    end
   end
 
   describe "fieldset method" do
-    it "should return the fieldset object for the specified dynamic fieldset"
-    it "should return nil if the sym param does not match a kyer in the dynamic_fieldsets field"
+    before(:each) do
+      @model = InformationForm.new
+      @model.stub!(:dynamic_fieldsets).and_return({:child_form => {:fieldset => :fingerprint_form}})
+      @fieldset = DynamicFieldsets::Fieldset.new(:nkey => :fingerprint_form)
+      DynamicFieldsets::Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
+    end
+
+    it "should call find_by_nkey for the fieldset model" do
+      DynamicFieldsets::Fieldset.should_receive(:find_by_nkey).and_return(@fieldset)
+      @model.fieldset(:child_form)
+    end
+
+    it "should return the fieldset object for the specified dynamic fieldset" do
+      @model.fieldset(:child_form).should == @fieldset
+    end
+      
+    it "should return nil if the sym param does not match a kyer in the dynamic_fieldsets field" do
+      @model.fieldset(:not_child_form).should be_nil
+    end
   end
 end

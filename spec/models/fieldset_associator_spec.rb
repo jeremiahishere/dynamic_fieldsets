@@ -41,4 +41,10 @@ describe FieldsetAssociator do
       fsa2.should have(1).error_on(:fieldset_model_name)
     end
   end
+
+  describe "find_by_fieldset_model_parameters" do
+  
+    it "should respond to find_by_fieldset_model_parameters"
+
+  end
 end

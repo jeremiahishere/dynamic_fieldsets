@@ -72,7 +72,7 @@ module DynamicFieldsets
       # @param [Symbol] The name of the method
       # @param [Boolean] Whether the method name matches a named fieldset
       def match_fieldset_associator?(sym)
-        return false
+        return self.dynamic_fieldsets.keys.include?(sym)
       end
 
       # Returns whether a method name matches a named fieldset followed by '_fieldset'
@@ -80,7 +80,13 @@ module DynamicFieldsets
       # @param [Symbol] The name of the method
       # @param [Boolean] Whether the method name matches a named fieldset
       def match_fieldset?(sym)
-        return false
+        sym_string = sym.to_s
+        if !sym_string.match(/_fieldset$/)
+          return false
+        else
+          sym_string.gsub!(/_fieldset$/, "")
+          return self.dynamic_fieldsets.keys.include?(sym_string.to_sym)
+        end
       end
 
       # Returns the fieldset associator object for the named fieldset
@@ -88,7 +94,15 @@ module DynamicFieldsets
       # @param [Symbol] The name of the name fieldset
       # @param [FieldsetAssociator] The fieldset associator object for the named fieldset
       def fieldset_associator(sym)
-        return nil
+        if match_fieldset_associator?(sym)
+          return DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
+            :fieldset_model_id => self.id, 
+            :fieldset_model_type => self.class, 
+            :fieldset_model_name => sym,
+            :fieldset => self.dynamic_fieldsets[sym][:fieldset])
+        else
+          return nil
+        end
       end
 
       # Returns the fieldset object for the named fieldset
@@ -96,7 +110,11 @@ module DynamicFieldsets
       # @param [Symbol] The name of the named fieldset
       # @param [Fieldset] The fieldset object for the named fieldset
       def fieldset(sym)
-        return nil
+        if match_fieldset_associator?(sym)
+          return DynamicFieldsets::Fieldset.find_by_nkey(:nkey => self.dynamic_fieldsets[sym][:fieldset])
+        else
+          return nil
+        end
       end
 
     end
