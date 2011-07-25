@@ -4,9 +4,9 @@ module NavigationHelpers
     case page_name
 
     when /^the fieldset associator index page$/
-      "/dynamic_fieldsets"
-    when /^the fieldset associator index page for that fieldset associator$/
-      "/dynamic_fieldsets/" + DynamicFieldsets::FieldsetAssociator.last.id.to_s
+      "/dynamic_fieldsets/fieldset_associators/"
+    when /^the fieldset associator show page for that fieldset associator$/
+      "/dynamic_fieldsets/fieldset_associators/" + DynamicFieldsets::FieldsetAssociator.last.id.to_s
 
     else
       begin
