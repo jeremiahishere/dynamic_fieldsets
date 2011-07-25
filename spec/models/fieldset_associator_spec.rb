@@ -43,8 +43,29 @@ describe FieldsetAssociator do
   end
 
   describe "find_by_fieldset_model_parameters" do
-  
-    it "should respond to find_by_fieldset_model_parameters"
+    before(:each) do
+      @fieldset = mock_model(Fieldset)
+      @fieldset.stub!(:nkey).and_return(":hire_form")
+      @fieldset.stub!(:id).and_return(1)
+      @fsa = FieldsetAssociator.create(valid_attributes)
 
+      @fieldset_model_attributes = valid_attributes
+      @fieldset_model_attributes[:fieldset] = :hire_form
+    end
+  
+    it "should respond to find_by_fieldset_model_parameters" do
+      FieldsetAssociator.should respond_to :find_by_fieldset_model_parameters
+    end
+
+    it "should call Fieldset find_by_nkey" do
+      Fieldset.should_receive(:find_by_nkey).and_return(@fieldset)
+      FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes)
+    end
+
+    it "should return the correct fieldset associator" do
+      Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
+      # this is a fun hack because of all the fsas being made during tests
+      FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
+    end
   end
 end

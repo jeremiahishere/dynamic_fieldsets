@@ -13,5 +13,24 @@ module DynamicFieldsets
       end
     end
 
+    # Scope to find a fieldset associator based on information from the fieldset model
+    #
+    # Arguments
+    # fieldset: The nkey of the fieldset
+    # fieldset_model_id: The id of the fieldset model
+    # fieldset_model_type: The class name of the fieldset model
+    # fieldset_model_name: The named fieldset in the model
+    #
+    # @params [Hash] args A hash of arguments for the scope
+    # @retursn [Array] An array of fieldset associators that match the arguments
+    def self.find_by_fieldset_model_parameters(args)
+      fieldset = Fieldset.find_by_nkey(args[:fieldset])
+      where(
+        :fieldset_id => fieldset.id, 
+        :fieldset_model_id => args[:fieldset_model_id], 
+        :fieldset_model_type => args[:fieldset_model_type], 
+        :fieldset_model_name => args[:fieldset_model_name])
+    end
+
   end
 end
