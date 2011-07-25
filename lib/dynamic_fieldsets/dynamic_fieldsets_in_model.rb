@@ -9,13 +9,9 @@ module DynamicFieldsets
         mattr_accessor :dynamic_fieldsets unless self.respond_to?(:dynamic_fieldsets)
         self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a?(Hash)
 
-        puts args
         args.each_pair do |key, value|
-          puts key
-          puts value
           self.dynamic_fieldsets[key] = value
         end
-        puts self.dynamic_fieldsets
 
         include DynamicFieldsets::DynamicFieldsetsInModel::InstanceMethods
       end
