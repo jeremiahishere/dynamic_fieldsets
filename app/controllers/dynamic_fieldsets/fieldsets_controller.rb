@@ -35,7 +35,7 @@ module DynamicFieldsets
     end
     
     def create
-      @fieldset = DynamicFieldsets::Fieldset.new(params[:fieldset])
+      @fieldset = DynamicFieldsets::Fieldset.new(params[:dynamic_fieldsets_fieldset])
 
       respond_to do |format|
         if @fieldset.save
@@ -50,7 +50,7 @@ module DynamicFieldsets
       @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
 
       respond_to do |format|
-        if @fieldset.update_attributes(params[:fieldset])
+        if @fieldset.update_attributes(params[:dynamic_fieldsets_fieldset])
           format.html { redirect_to( dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Successfully created a new fieldset" )}
         else
           format.html { render :action => "edit" }
