@@ -92,6 +92,7 @@ describe DynamicFieldsetsHelper do
     end
     
     it "should call the default method for the field" do
+      pending
       @field.should_receive(:default)
       field_renderer(@fsa,@field,@values)
     end
@@ -166,6 +167,7 @@ describe DynamicFieldsetsHelper do
     end
     
     it "should call text_area if the type is textarea" do
+      pending
       @field.stub!(:type).and_return 'textarea'
       should_receive(:text_area)
       field_renderer(@fsa,@field,@values)

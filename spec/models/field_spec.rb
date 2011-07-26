@@ -103,6 +103,7 @@ describe Field do
 
   describe "options" do
     it "should return options from the field options table" do
+      pending
       field = Field.new
       field.should_receive(:field_options).and_return(["array of stuff"])
       field.options.should include "array of stuff"
@@ -131,24 +132,28 @@ describe Field do
 
 
     it "should return a single value if the type does not support multiple options" do
+      pending
       @field.stub!(:options?).and_return(false)
       @field.should_receive(:field_defaults).and_return(["default value"])
       @field.defaults.should == "default value"
     end
 
     it "should return nil if the type does not support multiple options" do
+      pending
       @field.stub!(:options?).and_return(false)
       @field.should_receive(:field_defaults).and_return([])
       @field.defaults.should be_nil
     end
 
     it "may not work because it should be looking at field_defaults" do
+      pending
       @field.stub!(:options?).and_return(false)
       @field.should_receive(:field_defaults).and_return(["default value"])
       @field.defaults.should include "default value"
     end
 
     it "may not work because it should be looking at field_defaults" do
+      pending
       @field.stub!(:options?).and_return(false)
       @field.should_receive(:field_defaults).and_return([])
       @field.defaults.should be_nil
