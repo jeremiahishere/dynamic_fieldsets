@@ -34,12 +34,23 @@ module DynamicFieldsets
     end
 
     # Returns a hash of field record values
-    # The hash keys are field ids
-    # The hash values are field_record values or field_records ids depending on the field type
     # Fun nonintuitive stuff here
     #
+    # The hash keys are field ids
+    # The hash values are field_record values or field_records ids depending on the field type
+    # The hash values are usually strings but sometimes arrays
     # If a field that expects a single value has multiple values, it will
     # choose one to use arbitrarily
+    #
+    # multiple_select: [option_ids,]
+    # checkbox: [option_ids,]
+    # select: option_id
+    # radio: option_id
+    # textfield: "value"
+    # textarea: "value"
+    # date: "value"
+    # datetime: "value"
+    # instruction: "value"
     #
     # @returns [Hash] A hash of field record values associated with field ids
     def field_values
@@ -47,8 +58,11 @@ module DynamicFieldsets
       self.field_records.each do |record|
         if record.field.type == "checkbox" || record.field.type == "multiple_select"
           output[record.field.id] = [] unless output[record.field.id].is_a?(Array)
-          # note record.id
+          # note record.id array
           output[record.field.id].push record.id
+        elsif record.field.type == "radio" || record.field.type == "select"
+          # note record.id
+          output[record.field.id] = record.id
         else
           # note record.value
           output[record.field.id] = record.value
