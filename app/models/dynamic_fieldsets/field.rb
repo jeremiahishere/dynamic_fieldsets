@@ -35,7 +35,7 @@ module DynamicFieldsets
     
     # @return [FieldOptions] Alias
     def options
-      return self.field_options
+      return self.field_options.reject{ |option| !option.active }
     end
     
     # @return [Boolean] False if field_default.value is empty
@@ -43,13 +43,17 @@ module DynamicFieldsets
       return self.field_defaults.length > 0
     end
     
-    # @return [String] Alias for field_default.value
+    # @return [Array] Alias for field_defaults
     def defaults
-      if options?
-        return self.field_defaults
-      else
-        return self.field_defaults.first
+      if self.options?
+      then return self.field_defaults
+      else nil
       end
+    end
+    
+    # @return [String] Alias for field_defaults.first
+    def default
+      return self.field_defaults.first
     end
     
   end
