@@ -23,7 +23,7 @@ module DynamicFieldsets
     
     # Custom validation for fields with multiple options
     def has_field_options
-      if %w[select multiple_select radio checkbox].include? self.type
+      if options? 
         self.errors.add(:field_options, "This field must have options")
       end
     end
@@ -36,16 +36,6 @@ module DynamicFieldsets
     # @return [FieldOptions] Alias
     def options
       return self.field_options
-    end
-    
-    # @return [Boolean] True if the field is required.
-    def required?
-      return self.required
-    end
-    
-    # @return [Boolean] True if the field is enabled.
-    def enabled?
-      return self.enabled
     end
     
     # @return [Boolean] False if field_default.value is empty

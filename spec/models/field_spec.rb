@@ -86,20 +86,23 @@ describe Field do
   end
 
   describe "options?" do
-    it "should return true if the field requires options"
-    it "shoudl return false if the field does not have options"
+    before(:each) do
+      @field = Field.new
+    end
+
+    it "should return true if the field type requires options" do
+      @field.type = "select"
+      @field.options?.should be_true
+    end
+
+    it "should return false if the field does not have options" do
+      @field.type = "textfield"
+      @field.options?.should be_false
+    end
   end
 
   describe "options" do
     it "should return options from the field options table"
-  end
-
-  describe "required?" do
-    it "is this necessary?"
-  end
-
-  describe "enabled?" do
-    it "is this necessary?"
   end
 
   describe "has_default?" do
