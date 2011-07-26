@@ -72,4 +72,41 @@ describe FieldsetAssociator do
       FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
     end
   end
+
+  describe "field_values method" do
+    before(:each) do
+      @fsa = FieldsetAssociator.new
+    end
+
+    it "should return a hash"  do
+      @field = mock_model(DynamicFieldsets::Field)
+      @field.stub!(:id).and_return(37)
+      @field_record = mock_model(DynamicFieldsets::FieldRecord)
+      @field_record.stub!(:field).and_return(@field)
+      @field_record.stub!(:value).and_return("forty two")
+
+      @fsa.field_values.should be_a_kind_of Hash
+      @fsa.stub!(:field_records).and_return([@field_record, @field_record])
+    end
+
+    it "should call field_records" do
+      @fsa.should_receive(:field_records)
+      @fsa.field_values
+    end
+
+    it "should return multiple select values as an array" do
+      @field.stub!(:type).and_return("multiple_select")
+      @fsa.field_values.should == { 37 => ["forty two"] }
+    end
+
+    it "should return checkboxes values as an array" do
+      @field.stub!(:type).and_return("checkbox")
+      @fsa.field_values.should == { 37 => ["forty two"] }
+    end
+
+    it "should return all other field types as strings" do
+      @field.stub!(:type).and_return("text")
+      @fsa.field_values.should == { 37 => "forty two" }
+    end
+  end
 end

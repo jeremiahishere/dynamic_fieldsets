@@ -33,5 +33,25 @@ module DynamicFieldsets
         :fieldset_model_name => args[:fieldset_model_name])
     end
 
+    # Returns a hash of field record values
+    # The hash keys are field ids
+    # The hash values are field_record values
+    #
+    # @returns [Hash] A hash of field record values associated with field ids
+    def field_values
+      output = {}
+      self.field_records.each do |record|
+        if record.field.type == "checkbox" || record.field.type == "multiple_select"
+          output[record.field.id = [] unless output[record.field.id].is_a?(Array)
+          output[record.field.id] |= record.value
+        else
+          output[record.field.id] = record.value
+          #if output.has_key?(record.id)
+            # big problem
+        end
+      end
+      return output
+    end
+
   end
 end
