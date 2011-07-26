@@ -20,7 +20,7 @@ Feature: Managed fieldsets
     When I fill in "test_fieldset" for "Nkey"
     And I fill in "Test Fieldset" for "Name"
     And I fill in "This fieldset is being used for testing." for "Description"
-    And I choose "that parent" from "Parent Fieldset"
+    And I select "Parent Fieldset" from "Parent fieldset"
     And I fill in "1" for "Order Number"
     And I press "Create Fieldset"
     Then I should be on the fieldset show page for that fieldset

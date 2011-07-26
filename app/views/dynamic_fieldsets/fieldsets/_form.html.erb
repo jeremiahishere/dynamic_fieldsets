@@ -25,10 +25,10 @@
   </div>
   <div class="field">
     <%= f.label :parent_fieldset_id %><br />
-    <%= f.text_field :parent_fieldset_id %>
+    <%= f.select :parent_fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list), :include_blank => "Choose One"  %>
   </div>
   <div class="field">
-    <%= f.label :order_num %><br />
+    <%= f.label :order_num, "Order Number" %><br />
     <%= f.text_field :order_num %>
   </div>
   <div class="actions">

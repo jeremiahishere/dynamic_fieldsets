@@ -32,6 +32,11 @@ module DynamicFieldsets
     
     # @return [Array] Scope: parent-less fieldsets
     scope :roots, :conditions => ["parent_fieldset_id IS NULL"]
+    
+    # @return [Array] An array of name, id pairs to be used in select tags
+    def self.parent_fieldset_list
+      all.collect { |f| [f.name, f.id] }
+    end
 
     # @return [Boolean] True if fieldset has no parent
     def root?
