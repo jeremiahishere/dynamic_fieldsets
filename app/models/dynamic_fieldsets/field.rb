@@ -33,9 +33,6 @@ module DynamicFieldsets
       %w[select multiple_select radio checkbox].include? self.type
     end
     
-    # @return [Array] Scope: parent-less fieldsets
-    scope :options, :conditions => ["parent_fieldset_id IS NULL"]
-    
     # @return [FieldOptions] Alias
     def options
       return self.field_options.reject{ |option| !option.active }

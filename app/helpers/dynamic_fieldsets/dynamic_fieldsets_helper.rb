@@ -129,7 +129,7 @@ module DynamicFieldsets
     # @param [Field] field
     # @param [String] value
     # @return [String] 
-    # I know this is messy; Yeah, this is what happens when we are behind deadline.
+    # I know this is messy; Yeah, this is what happens when we are over deadline.
     def populate(field, value)
       if !value.empty?
         return value
