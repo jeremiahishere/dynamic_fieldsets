@@ -39,13 +39,17 @@ module DynamicFieldsets
     end
     
     # @return [Boolean] False if field_default.value is empty
-    def has_default?
-      return !self.field_default.value.empty?
+    def has_defaults?
+      return self.field_defaults.length > 0
     end
     
     # @return [String] Alias for field_default.value
-    def default
-      return self.field_default.value
+    def defaults
+      if options?
+        return self.field_defaults
+      else
+        return self.field_defaults.first
+      end
     end
     
   end

@@ -102,16 +102,56 @@ describe Field do
   end
 
   describe "options" do
-    it "should return options from the field options table"
+    it "should return options from the field options table" do
+      field = Field.new
+      field.should_receive(:field_options).and_return(["array of stuff"])
+      field.options.should include "array of stuff"
+    end
   end
 
-  describe "has_default?" do
-    it "should return true if the field default has a value"
-    it "shoudl return flase if the field default has no values"
+  describe "has_defaults?" do
+    before(:each) do
+      @field = Field.new
+    end
+
+    it "should return true if the field default has a value" do
+      @field.should_receive(:field_defaults).and_return(["default value"])
+      @field.has_defaults?.should be_true
+    end
+    it "should return false if the field default has no values" do
+      @field.should_receive(:field_defaults).and_return([])
+      @field.has_defaults?.should be_false
+    end
   end
 
-  describe "default" do
-    it "should return a single value for the field default"
-    it "may not work because it should be looking at field_defaults"
+  describe "defaults" do
+    before(:each) do
+      @field = Field.new
+    end
+
+
+    it "should return a single value if the type does not support multiple options" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return(["default value"])
+      @field.defaults.should == "default value"
+    end
+
+    it "should return nil if the type does not support multiple options" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return([])
+      @field.defaults.should be_nil
+    end
+
+    it "may not work because it should be looking at field_defaults" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return(["default value"])
+      @field.defaults.should include "default value"
+    end
+
+    it "may not work because it should be looking at field_defaults" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return([])
+      @field.defaults.should be_nil
+    end
   end
 end
