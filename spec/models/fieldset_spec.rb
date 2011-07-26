@@ -26,11 +26,13 @@ describe Fieldset do
 
     it "should be valid as a top level fieldset" do
       @fieldset.attributes = valid_root_attributes
+      @fieldset.nkey = "top_level_nkey"
       @fieldset.should be_valid
     end
 
     it "should be valid as a child fieldset" do
       @fieldset.attributes = valid_child_attributes
+      @fieldset.nkey = "child_level_nkey"
       @fieldset.should be_valid
     end
 
@@ -46,6 +48,12 @@ describe Fieldset do
       @fieldset.should have(1).error_on(:nkey)
     end
 
+    it "should require a unique nkey" do
+      Fieldset.create(valid_root_attributes)
+      @fieldset.attributes = valid_root_attributes
+      @fieldset.should have(1).error_on(:nkey)
+    end
+
     it "should not require an order number if there is no parent fieldset" do
       @fieldset.should have(0).error_on(:order_num)
     end
@@ -56,21 +64,22 @@ describe Fieldset do
     end
   
     it "should not allow a parent fieldset when it would create a cycle" do
-      # screw writing this test
-      pending
-    end
+      fieldset1 = Fieldset.new(:nkey => "fieldset1")
+      fieldset2 = Fieldset.new(:parent_fieldset => fieldset1, :nkey => "fieldset2")
+      fieldset3 = Fieldset.new(:parent_fieldset => fieldset2, :nkey => "fieldset3")
+      fieldset1.parent_fieldset = fieldset3
 
-    it "should error if you try to change the nkey unless you really mean it" do
-      pending
-      @fieldset.you_really_mean_it = false
-      @fieldset.should have(1).error_on(:nkey)
+      fieldset1.should have(1).error_on(:parent_fieldset)
     end
   end
 
   describe "roots scope" do
     before(:each) do
       @root_fieldset = Fieldset.new( valid_root_attributes )
+      @root_fieldset.save
+
       @child_fieldset = Fieldset.new( valid_child_attributes )
+      @child_fieldset.save
     end
     
     it "should respond to roots scope" do
@@ -78,13 +87,11 @@ describe Fieldset do
     end
     
     it "should return fieldsets with no parent fieldset" do
-      pending('requires a database query..')
       roots = Fieldset.roots
       roots.select{ |f| f.parent_fieldset.nil? }.should have(1).fieldset
     end
     
     it "should not return fieldsets with a parent fieldset" do
-      pending('requires a database query..')
       roots = Fieldset.roots
       roots.select{ |f| !f.parent_fieldset.nil? }.should have(0).fieldset
     end

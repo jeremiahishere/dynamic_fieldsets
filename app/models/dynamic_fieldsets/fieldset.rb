@@ -13,7 +13,22 @@ module DynamicFieldsets
     validates_presence_of :name
     validates_presence_of :description
     validates_presence_of :nkey
+    validates_uniqueness_of :nkey
     validates_presence_of :order_num, :if => lambda { !self.root? }
+    validate :cannot_be_own_parent
+
+    # looks recursively up the parent_fieldset value to check if it sees itself
+    def cannot_be_own_parent
+      parent = self.parent_fieldset
+      while !parent.nil?
+        if parent == self
+          self.errors.add(:parent_fieldset, "Parent fieldsets must not create a cycle.")
+          parent = nil
+        else
+          parent = parent.parent_fieldset
+        end
+      end
+    end
     
     # @return [Array] Scope: parent-less fieldsets
     scope :roots, :conditions => ["parent_fieldset_id IS NULL"]
