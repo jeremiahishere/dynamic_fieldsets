@@ -8,6 +8,10 @@ describe FieldsetAssociator do
     FieldsetAssociator.new.should respond_to :fieldset
   end
 
+  it "should respond to field_records" do
+    FieldsetAssociator.new.should respond_to :field_records
+  end
+
   describe "validations" do
     before(:each) do
       @fsa = FieldsetAssociator.new
