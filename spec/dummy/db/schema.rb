@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110726185041) do
+ActiveRecord::Schema.define(:version => 20110726215814) do
 
   create_table "field_defaults", :force => true do |t|
     t.integer  "field_id"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20110726185041) do
   create_table "field_options", :force => true do |t|
     t.integer  "field_id"
     t.string   "label"
+    t.boolean  "enabled",    :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
   end

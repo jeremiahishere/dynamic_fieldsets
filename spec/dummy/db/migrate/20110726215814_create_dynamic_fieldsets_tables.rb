@@ -36,6 +36,7 @@ class CreateDynamicFieldsetsTables < ActiveRecord::Migration
     create_table :field_options do |t|
       t.integer :field_id
       t.string :label
+      t.boolean :enabled, :default => true
     
       t.timestamps
     end

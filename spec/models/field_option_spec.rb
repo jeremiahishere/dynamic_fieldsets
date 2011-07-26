@@ -22,5 +22,31 @@ describe FieldOption do
     it "should require a label" do
       @field_option.should have(1).error_on(:label)
     end
+    it "should require enabled is a boolean value" do
+      @field_option.enabled = nil 
+      @field_option.should have(1).error_on(:enabled)
+    end
   end  
+
+  describe "enabled scope" do
+    before(:each) do
+      @field_option1 = FieldOption.new
+      @field_option1.attributes = valid_attributes
+      @field_option1.enabled = true
+      @field_option1.save
+
+      @field_option2 = FieldOption.new
+      @field_option2.attributes = valid_attributes
+      @field_option2.enabled = false
+      @field_option2.save
+    end
+
+    it "should return enabled field options" do
+      FieldOption.enabled.should include @field_option1
+    end
+
+    it "should not return disabled field options" do
+      FieldOption.enabled.should_not include @field_option2
+    end
+  end
 end
