@@ -19,13 +19,13 @@
     <td><%= fieldset.description %></td>
     <td><%= fieldset.parent_fieldset_id %></td>
     <td><%= fieldset.order_num %></td>
-    <td><%= link_to 'Show', fieldset %></td>
-    <td><%= link_to 'Edit', edit_fieldset_path(fieldset) %></td>
-    <td><%= link_to 'Destroy', fieldset, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Show', dynamic_fieldsets_fieldset_path(fieldset) %></td>
+    <td><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(fieldset) %></td>
+    <td><%= link_to 'Destroy', dynamic_fieldsets_fieldset_path(fieldset), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Fieldset', new_fieldset_path %>
+<%= link_to 'New Fieldset', new_dynamic_fieldsets_fieldset_path %>

@@ -8,6 +8,15 @@ module NavigationHelpers
     when /^the fieldset associator show page for that fieldset associator$/
       "/dynamic_fieldsets/fieldset_associators/" + DynamicFieldsets::FieldsetAssociator.last.id.to_s
 
+    when /^the fieldset index page$/
+      "/dynamic_fieldsets/fieldsets"
+    when /^the fieldset new page$/
+      "/dynamic_fieldsets/fieldsets/new"
+    when /^the fieldset edit page for that fieldset$/
+      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s + "/edit"
+    when /^the fieldset show page for that fieldset$/
+      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s
+
     else
       begin
         page_name =~ /the (.*) page/
