@@ -1,4 +1,4 @@
-<h1>Listing dynamic_fieldsets_fields</h1>
+<h1>Listing fields</h1>
 
 <table>
   <tr>
@@ -14,18 +14,18 @@
     <th></th>
   </tr>
 
-<% @dynamic_fieldsets_fields.each do |dynamic_fieldsets_field| %>
+<% @fields.each do |field| %>
   <tr>
-    <td><%= dynamic_fieldsets_field.fieldset_id %></td>
-    <td><%= dynamic_fieldsets_field.name %></td>
-    <td><%= dynamic_fieldsets_field.label %></td>
-    <td><%= dynamic_fieldsets_field.type %></td>
-    <td><%= dynamic_fieldsets_field.required %></td>
-    <td><%= dynamic_fieldsets_field.enabled %></td>
-    <td><%= dynamic_fieldsets_field.order_num %></td>
-    <td><%= link_to 'Show', dynamic_fieldsets_field %></td>
-    <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(dynamic_fieldsets_field) %></td>
-    <td><%= link_to 'Destroy', dynamic_fieldsets_field, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= field.fieldset_id %></td>
+    <td><%= field.name %></td>
+    <td><%= field.label %></td>
+    <td><%= field.type %></td>
+    <td><%= field.required %></td>
+    <td><%= field.enabled %></td>
+    <td><%= field.order_num %></td>
+    <td><%= link_to 'Show', dynamic_fieldsets_field_path(field) %></td>
+    <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(field) %></td>
+    <td><%= link_to 'Destroy', dynamic_fieldsets_field_path(field), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

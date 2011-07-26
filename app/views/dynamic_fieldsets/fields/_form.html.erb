@@ -1,10 +1,10 @@
-<%= form_for(@dynamic_fieldsets_field) do |f| %>
-  <% if @dynamic_fieldsets_field.errors.any? %>
+<%= form_for(@field) do |f| %>
+  <% if @ield.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@dynamic_fieldsets_field.errors.count, "error") %> prohibited this dynamic_fieldsets_field from being saved:</h2>
+      <h2><%= pluralize(@ield.errors.count, "error") %> prohibited this field from being saved:</h2>
 
       <ul>
-      <% @dynamic_fieldsets_field.errors.full_messages.each do |msg| %>
+      <% @field.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
