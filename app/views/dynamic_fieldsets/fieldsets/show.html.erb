@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Nkey:</b>
+  <%= @fieldset.nkey %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @fieldset.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @fieldset.description %>
+</p>
+
+<% if @fieldset.parent_fieldset %>
+  <p>
+    <b>Parent fieldset:</b>
+    <%= @fieldset.parent_fieldset.name %>
+  </p>
+
+  <p>
+    <b>Order num:</b>
+    <%= @fieldset.order_num %>
+  </p>
+<% end %>
+
+
+<%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(@fieldset) %> |
+<%= link_to 'Back', dynamic_fieldsets_fieldsets_path %>

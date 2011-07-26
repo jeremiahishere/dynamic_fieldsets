@@ -97,6 +97,14 @@ describe Fieldset do
     end
   end
 
+  describe "parent_fieldset_list static method" do
+    it "should include values for any fieldset" do
+      fieldset = Fieldset.new(:name => "parent_fieldset_list test", :nkey => "parent_fieldset_list_test")
+      fieldset.save(:validate => false)
+      DynamicFieldsets::Fieldset.parent_fieldset_list.should include [fieldset.name, fieldset.id]
+    end
+  end
+
   describe "children method" do
     before(:each) do
       @root_fieldset = Fieldset.new( valid_root_attributes )

@@ -54,13 +54,20 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
       t.timestamps
     end
-    
+
+    create_table :field_records do |t|
+      t.integer :fieldset_associator_id
+      t.integer :field_id
+      t.text :value
+    end
   end
+
   def self.down
     drop_table :fieldsets
     drop_table :fields
     drop_table :field_options
     drop_table :field_defaults
     drop_table :field_html_attributes
+    drop_table :field_records
   end
 end

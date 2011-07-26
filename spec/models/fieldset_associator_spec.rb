@@ -8,6 +8,10 @@ describe FieldsetAssociator do
     FieldsetAssociator.new.should respond_to :fieldset
   end
 
+  it "should respond to field_records" do
+    FieldsetAssociator.new.should respond_to :field_records
+  end
+
   describe "validations" do
     before(:each) do
       @fsa = FieldsetAssociator.new
@@ -66,6 +70,59 @@ describe FieldsetAssociator do
       Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
       # this is a fun hack because of all the fsas being made during tests
       FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
+    end
+  end
+
+  describe "field_values method" do
+    before(:each) do
+      @fsa = FieldsetAssociator.new
+
+      @field = mock_model(DynamicFieldsets::Field)
+      @field.stub!(:id).and_return(37)
+
+      @field_record = mock_model(DynamicFieldsets::FieldRecord)
+      @field_record.stub!(:field).and_return(@field)
+      @field_record.stub!(:value).and_return("forty two")
+      @field_record.stub!(:id).and_return(42)
+
+      @fsa.stub!(:field_records).and_return([@field_record, @field_record])
+    end
+
+    it "should return a hash"  do
+      @field.stub!(:type).and_return("")
+      @fsa.field_values.should be_a_kind_of Hash
+    end
+
+    it "should call field_records" do
+      @fsa.should_receive(:field_records).and_return([])
+      @fsa.field_values
+    end
+
+    # I am aware these two tests aren't really realistic because ids should be different
+    # Results should be consistent with these when ids are different
+    it "should return multiple select values as an array of ids" do
+      @field.stub!(:type).and_return("multiple_select")
+      @fsa.field_values.should == { 37 => [42, 42] }
+    end
+
+    it "should return checkboxes values as an array of ids" do
+      @field.stub!(:type).and_return("checkbox")
+      @fsa.field_values.should == { 37 => [42, 42] }
+    end
+
+    it "should return select values as an id" do
+      @field.stub!(:type).and_return("select")
+      @fsa.field_values.should == { 37 => 42 }
+    end
+
+    it "should return radio values as an id" do
+      @field.stub!(:type).and_return("radio")
+      @fsa.field_values.should == { 37 => 42 }
+    end
+
+    it "should return all other field types as strings" do
+      @field.stub!(:type).and_return("text")
+      @fsa.field_values.should == { 37 => "forty two" }
     end
   end
 end
