@@ -19,49 +19,71 @@ module DynamicFieldsets
       
       attrs = { id: "field-#{field.id}" }
       field.html_attributes.each{ |att,val| attrs.merge att.to_sym => val }
-      default = field.default # needs to be implemented ...
       
       case field.type.to_sym
       when :select
         attrs.merge disabled: 'disabled' unless field.enabled
+        # handle defaults and saved vals
         field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
         
       when :multiple_select
         attrs.merge multiple: 'multiple'
         attrs.merge disabled: 'disabled' unless field.enabled
+        # handle defaults and saved vals
         field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
         
       when :radio
+        field_markup.push "<div id='field-#{field.id}'>"
         field.options.each do |option|
-          attrs[:id] += "-#{option.label.underscore}"
-          field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.label, attrs
+          attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
+          attrs.merge checked: true if populate( field, values ).to_i.eql? option.id
+          field_markup.push "<label for='#{attrs[:id]}'>"
+          field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, attrs
+          field_markup.push "#{option.label}"
+          field_markup.push "</label>"
         end
+        field_markup.push "</div>"
+
         
       when :checkbox
+        field_markup.push "<div id='field-#{field.id}'>"
         field.options.each do |option|
-          attrs[:id] += "-#{option.label.underscore}"
+          attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
+          # handle defaults and saved vals
+          field_markup.push "<label for='#{attrs[:id]}'>"
           field_markup.push check_box "fsa-#{fsa.id}", "field-#{field.id}", attrs
+          field_markup.push "#{option.label}"
+          field_markup.push "</label>"
         end
+        field_markup.push "</div>"
         
       when :textfield
         attrs.merge disabled: 'disabled' unless field.enabled
+        attrs.merge value: populate( field, values )
         field_markup.push text_field "fsa-#{fsa.id}", "field-#{field.id}", attrs
         
       when :textarea
         attrs.merge disabled: 'disabled' unless field.enabled
-        field_markup.push text_area "fsa-#{fsa.id}", "field-#{field.id}", attrs
+        attrs.merge cols: '40' if !attrs.include? :cols
+        attrs.merge rows: '20' if !attrs.include? :rows
+        attrs.merge name: "fsa-#{fsa.id}[field-#{field.id}]"
+        field_markup.push "<textarea #{attrs}>"
+        field_markup.push populate( field, values )
+        field_markup.push "</textarea>"
         
       when :date
         date_options = {  date_separator: '/',
                           add_month_numbers: true,
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
+        # handle defaults and saved vals
         field_markup.push date_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
       when :datetime
         date_options = {  add_month_numbers: true,
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
+        # handle defaults and saved vals
         field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
       when :instruction
@@ -102,6 +124,20 @@ module DynamicFieldsets
         rendered_dynamic_fieldset += line + "\n"
       end
       return rendered_dynamic_fieldset
+    end
+    
+    # @param [Field] field
+    # @param [String] value
+    # @return [String] 
+    # I know this is messy; Yeah, this is what happens when we are behind deadline.
+    def populate(field, value)
+      if !value.empty?
+        return value
+      elsif !field.default.empty?
+        return field.default.value
+      else
+        return ""
+      end
     end
     
   end
