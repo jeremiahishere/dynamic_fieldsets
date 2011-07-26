@@ -33,7 +33,7 @@ Then(/^I should see that fieldset listed$/) do
   page.should have_content(@fieldset.parent_fieldset.name) if @fieldset.parent_fieldset
 end
 
-Then(/^I should see the data for the fieldset$/) do
+Then(/^I should see the data for that fieldset$/) do
   @fieldset = DynamicFieldsets::Fieldset.last
   page.should have_content(@fieldset.name)
   page.should have_content(@fieldset.nkey)

@@ -51,7 +51,7 @@ module DynamicFieldsets
 
       respond_to do |format|
         if @fieldset.update_attributes(params[:dynamic_fieldsets_fieldset])
-          format.html { redirect_to( dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Successfully created a new fieldset" )}
+          format.html { redirect_to( dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Successfully updated a fieldset" )}
         else
           format.html { render :action => "edit" }
         end
