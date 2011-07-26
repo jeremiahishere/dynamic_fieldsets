@@ -1,0 +1,45 @@
+<%= form_for(@dynamic_fieldsets_field) do |f| %>
+  <% if @dynamic_fieldsets_field.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dynamic_fieldsets_field.errors.count, "error") %> prohibited this dynamic_fieldsets_field from being saved:</h2>
+
+      <ul>
+      <% @dynamic_fieldsets_field.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :fieldset_id %><br />
+    <%= f.text_field :fieldset_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :label %><br />
+    <%= f.text_field :label %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br />
+    <%= f.text_field :type %>
+  </div>
+  <div class="field">
+    <%= f.label :required %><br />
+    <%= f.check_box :required %>
+  </div>
+  <div class="field">
+    <%= f.label :enabled %><br />
+    <%= f.check_box :enabled %>
+  </div>
+  <div class="field">
+    <%= f.label :order_num %><br />
+    <%= f.text_field :order_num %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
