@@ -42,4 +42,8 @@ Feature: Managed fieldsets
     And I should see "This fieldset has been repurposed"
 
   Scenario: Destroying a fieldset
-  Scenario: Fieldset Validations
+    Given a parent fieldset exists
+    And I record the data for that fieldset
+    And I am on the fieldset index page
+    When I follow "Destroy"
+    Then I should not see that fieldset listed
