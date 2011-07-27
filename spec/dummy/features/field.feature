@@ -35,3 +35,20 @@ Feature: Managed fields
     When I follow "Destroy"
     Then I should not see that field listed
 
+  # this test should be a javascript test and actually test the javascript at some point
+  Scenario: Additional field links on new page
+    Given a field exists
+    And I am on the field new page
+    Then I should see "Add Field Option"
+    And I should see "Add Default Value"
+    And I should see "Add Html Attribute"
+
+  Scenario: Additional field values on show page
+    Given a field exists
+    And field options, defaults, and attributes exist for that field
+    When I go to the field show page for that field
+    Then I should see "Default value value"
+    And I should see "Field option value"
+    And I should see "Html attribute name"
+    And I should see "Html attribute value"
+

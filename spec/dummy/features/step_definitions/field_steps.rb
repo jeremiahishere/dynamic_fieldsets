@@ -8,6 +8,13 @@ Given /^a field exists$/ do
     :required => true)
 end
 
+Given /^field options, defaults, and attributes exist for that field$/ do
+  @field = DynamicFieldsets::Field.last
+  DynamicFieldsets::FieldOption.create(:field => @field, :name => "Field option value")
+  DynamicFieldsets::FieldDefault.create(:field => @field, :value => "Default value value")
+  DynamicFieldsets::FieldHtmlAttribute.create(:field => @field, :attribute_name => "Html attribute name", :value => "Html attribute value")
+end
+
 Then /^I should see that field listed$/ do
   @field = DynamicFieldsets::Field.last
   page.should have_content(@field.fieldset.name) if @field.fieldset
