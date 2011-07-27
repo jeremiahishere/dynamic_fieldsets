@@ -20,6 +20,16 @@
   <%= @field.field_type %>
 </p>
 
+<% if @field.field_options.length > 0 %>
+  <p>
+    <b>Options:</b><br />
+    <% @field.field_options.each do |fo| %>
+      <%= fo.name %>
+      <br />
+    <% end %>
+  </p>
+<% end %>
+
 <p>
   <b>Required:</b>
   <%= @field.required %>
@@ -34,6 +44,16 @@
   <b>Order Number:</b>
   <%= @field.order_num %>
 </p>
+
+<% if @field.field_defaults.length > 0 %>
+  <p>
+    <b>Default values:</b><br />
+    <% @field.field_defaults.each do |fd| %>
+      <%= fd.value %>
+      <br />
+    <% end %>
+  </p>
+<% end %>
 
 
 <%= link_to 'Edit', edit_dynamic_fieldsets_field_path(@field) %> |

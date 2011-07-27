@@ -9,6 +9,8 @@ module DynamicFieldsets
     accepts_nested_attributes_for :field_options, :allow_destroy => true
 
     has_many :field_defaults
+    accepts_nested_attributes_for :field_defaults, :allow_destroy => true
+
     has_many :field_html_attributes
 
     # Validations

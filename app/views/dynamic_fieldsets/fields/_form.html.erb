@@ -23,6 +23,7 @@
     <%= f.label :label %><br />
     <%= f.text_field :label %>
   </div>
+
   <div class="field">
     <%= f.label :field_type %><br />
     <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types, @field.field_type), :include_blank => "Choose One" %>
@@ -46,6 +47,14 @@
     <%= f.label :order_num, "Order Number" %><br />
     <%= f.text_field :order_num %>
   </div>
+
+  <% @field.field_defaults.each do |field_default| %>
+    <%= f.fields_for :field_defaults, field_default do |field_default_form| %>
+      <%= render :partial => "field_default_fields", :locals => {:f => field_default_form} %>
+    <% end %>
+  <% end %>
+  <p><%= link_to_add_fields "Add Field Default", f, :field_defaults %></p>
+
   <div class="actions">
     <%= f.submit %>
   </div>

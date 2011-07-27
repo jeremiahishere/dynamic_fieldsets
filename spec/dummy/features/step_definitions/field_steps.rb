@@ -24,6 +24,18 @@ Then /^I should see the data for that field$/ do
   page.should have_content(@field.order_num)
   page.should have_content(@field.enabled)
   page.should have_content(@field.required)
+
+  if @field.field_options.length > 0 
+    @field.field_options.each do |fo|
+      page.should have_content(fo.name)
+    end
+  end
+
+  if @field.field_defaults.length > 0
+    @field.field_defaults.each do |fd|
+      page.should have_content(fd.value)
+    end
+  end
 end
 
 Given /^I record the data for that field$/ do
