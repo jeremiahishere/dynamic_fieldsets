@@ -4,10 +4,7 @@
   <tr>
     <th>Fieldset</th>
     <th>Name</th>
-    <th>Label</th>
     <th>Type</th>
-    <th>Required</th>
-    <th>Enabled</th>
     <th>Order num</th>
     <th></th>
     <th></th>
@@ -16,12 +13,9 @@
 
 <% @fields.each do |field| %>
   <tr>
-    <td><%= field.fieldset_id %></td>
+    <td><%= field.fieldset.name if field.fieldset %></td>
     <td><%= field.name %></td>
-    <td><%= field.label %></td>
-    <td><%= field.type %></td>
-    <td><%= field.required %></td>
-    <td><%= field.enabled %></td>
+    <td><%= field.field_type %></td>
     <td><%= field.order_num %></td>
     <td><%= link_to 'Show', dynamic_fieldsets_field_path(field) %></td>
     <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(field) %></td>

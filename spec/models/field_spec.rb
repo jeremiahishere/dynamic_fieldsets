@@ -62,19 +62,9 @@ describe Field do
       @field.should have(0).error_on(:enabled)
     end
 
-    it "should require enabled" do
-      @field.enabled = nil
-      @field.should have(2).error_on(:enabled)
-    end
-
     it "should require required true or false" do
-      @field.required = true
+      @field.required = false
       @field.should have(0).error_on(:required)
-    end
-
-    it "should require required" do
-      @field.required = nil
-      @field.should have(2).error_on(:required)
     end
 
     it "should require options if the type is one that requires options" do

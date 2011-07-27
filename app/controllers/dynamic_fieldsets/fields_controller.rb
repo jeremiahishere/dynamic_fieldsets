@@ -40,7 +40,7 @@ module DynamicFieldsets
 
       respond_to do |format|
         if @field.save
-          format.html { redirect_to(@field, :notice => 'Field was successfully created.') }
+          format.html { redirect_to(@field, :notice => 'Successfully created a new field.') }
         else
           format.html { render :action => "new" }
         end
@@ -53,7 +53,7 @@ module DynamicFieldsets
 
       respond_to do |format|
         if @field.update_attributes(params[:dynamic_fieldsets_field])
-          format.html { redirect_to(@field, :notice => 'Field was successfully updated.') }
+          format.html { redirect_to(@field, :notice => 'Successfully updated a field.') }
         else
           format.html { render :action => "edit" }
         end
