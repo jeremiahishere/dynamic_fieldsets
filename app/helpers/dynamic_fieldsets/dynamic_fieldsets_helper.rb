@@ -8,7 +8,7 @@ module DynamicFieldsets
     # @param [Array] values Stored values for the field
     # @return [Array] The HTML elements for the field
     def field_renderer(fsa, field, values = [])
-      classes  = "#{field.type} "
+      classes  = "#{field.field_type} "
       classes += ( field.required ? 'required' : 'optional' )
       
       field_markup = ["<li class='#{classes}' id='field-input-#{field.id}'>"]
@@ -20,23 +20,23 @@ module DynamicFieldsets
       attrs = { id: "field-#{field.id}" }
       field.html_attributes.each{ |att,val| attrs.merge att.to_sym => val }
       
-      case field.type.to_sym
+      case field.field_type.to_sym
       when :select
         attrs.merge disabled: 'disabled' unless field.enabled
-        # handle defaults and saved vals
-        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
+        selected = populate(field,values).to_i # should return the ID of the saved or default option
+        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :label, selected ), attrs
         
       when :multiple_select
         attrs.merge multiple: 'multiple'
         attrs.merge disabled: 'disabled' unless field.enabled
-        # handle defaults and saved vals
-        field_markup.push collection_select "fsa-#{fsa.id}", "field-#{field.id}", field.options, :id, :label, {}, attrs
+        selected = populate(field,values).map{ |e| e.to_i } # array of option IDs, saved > default
+        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :label, selected ), attrs
         
       when :radio
         field_markup.push "<div id='field-#{field.id}'>"
         field.options.each do |option|
           attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
-          attrs.merge checked: true if populate( field, values ).to_i.eql? option.id
+          attrs.merge checked: true if populate(field,values).to_i.eql? option.id
           field_markup.push "<label for='#{attrs[:id]}'>"
           field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, attrs
           field_markup.push "#{option.label}"
@@ -47,9 +47,10 @@ module DynamicFieldsets
         
       when :checkbox
         field_markup.push "<div id='field-#{field.id}'>"
+        checked = populate(field,values).map{ |e| e.to_i } # array of option IDs, saved > default
         field.options.each do |option|
           attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
-          # handle defaults and saved vals
+          attrs.merge checked: true if checked.include? option.id
           field_markup.push "<label for='#{attrs[:id]}'>"
           field_markup.push check_box "fsa-#{fsa.id}", "field-#{field.id}", attrs
           field_markup.push "#{option.label}"
@@ -77,6 +78,7 @@ module DynamicFieldsets
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
         # handle defaults and saved vals
+        # attrs.reject!{ |k| k.eql? :id }
         field_markup.push date_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
       when :datetime
@@ -84,12 +86,13 @@ module DynamicFieldsets
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
         # handle defaults and saved vals
+        # attrs.reject!{ |k| k.eql? :id }
         field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
       when :instruction
         field_markup.push "<p>#{field.label}</p>"
         
-      end # case field.type
+      end # case field.field_type
       
       field_markup.push "</li>"
       return field_markup

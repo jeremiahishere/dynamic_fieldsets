@@ -52,7 +52,7 @@ module DynamicFieldsets
     # datetime: "value"
     # instruction: "value"
     #
-    # @returns [Hash] A hash of field record values associated with field ids
+    # @return [Hash] A hash of field record values associated with field ids
     def field_values
       output = {}
       self.field_records.each do |record|
