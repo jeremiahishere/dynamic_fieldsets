@@ -25,8 +25,19 @@
   </div>
   <div class="field">
     <%= f.label :field_type %><br />
-    <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types), :include_blank => "Choose One" %>
+    <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types, @field.field_type), :include_blank => "Choose One" %>
   </div>
+  <% @field.field_options.each do |field_option| %>
+    <%= f.fields_for :field_options, field_option do |field_option_form| %>
+      <%= field_option_form.label :label %>
+      <%= field_option_form.text_field :label %>
+      <% unless field_option_form.object.new_record? %>
+        <%= field_option_form.check_box '_destroy' %>
+        <%= field_option_form.label '_destroy', 'Remove' %>
+      <% end %>
+      <br />
+    <% end %>
+  <% end %>
   <div class="field">
     <%= f.label :required %><br />
     <%= f.check_box :required %>
@@ -43,3 +54,13 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+<script>
+$(document).ready(function()  {
+  $('#dynamic_fieldsets_field_field_type').change(function()  {
+    var val = $(this).attr('value');
+  });
+
+});
+
+</script>

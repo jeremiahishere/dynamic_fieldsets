@@ -6,6 +6,8 @@ module DynamicFieldsets
     # Relations
     belongs_to :fieldset
     has_many :field_options
+    accepts_nested_attributes_for :field_options, :allow_destroy => true
+
     has_many :field_defaults
     has_many :field_html_attributes
 
