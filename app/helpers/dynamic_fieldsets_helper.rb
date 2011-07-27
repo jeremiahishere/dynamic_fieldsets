@@ -52,8 +52,8 @@ module DynamicFieldsetsHelper
     field_markup.push "<abbr title='required'>*</abbr>" if field.required?
     field_markup.push "</label>"
     
-    attrs = { id: "field-#{field.id}" }
-    field.html_attributes.each{ |att,val| attrs.merge att.to_sym => val }
+    attrs = { :id => "field-#{field.id}" }
+    field.field_html_attributes.each{ |att,val| attrs.merge({ att.to_sym => val}) }
     
     case field.field_type.to_sym
     when :select
@@ -94,7 +94,7 @@ module DynamicFieldsetsHelper
       field_markup.push "</div>"
       
     when :textfield
-      attrs.merge value: populate( field, values )
+      attrs.merge({:value => populate( field, values )})
       field_markup.push text_field "fsa-#{fsa.id}", "field-#{field.id}", attrs
       
     when :textarea
@@ -182,15 +182,16 @@ module DynamicFieldsetsHelper
   # @return The saved or default value(s)
   # I know this is messy; this is what happens when we are past deadline.
   def populate(field, value)
-    if !value.empty?
-      return value
-    elsif !field.default.empty?
-      if field_defaults.length > 1
-      then return field.defaults.collect{ |d| d[:value] }
-      else return field.default.value
+    if value.nil? || value.empty?
+      if field.field_defaults.length == 0
+        return ""
+      elsif field.field_defaults.length > 1
+        return field.field_defaults.collect{ |d| d[:value] }
+      else 
+        return field.field_default.value
       end
     else
-      return ""
+      return value
     end
   end
   

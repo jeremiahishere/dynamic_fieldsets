@@ -250,4 +250,8 @@ describe DynamicFieldsetsHelper do
       field_renderer(@fsa, @field, @values, "show")
     end
   end
+
+  describe "populate method" do
+    it "needs tests"
+  end
 end
