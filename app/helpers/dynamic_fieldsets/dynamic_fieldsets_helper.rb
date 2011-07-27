@@ -22,13 +22,11 @@ module DynamicFieldsets
       
       case field.field_type.to_sym
       when :select
-        attrs.merge disabled: 'disabled' unless field.enabled
         selected = populate(field,values).to_i # should return the ID of the saved or default option
         field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
         
       when :multiple_select
         attrs.merge multiple: 'multiple'
-        attrs.merge disabled: 'disabled' unless field.enabled
         selected = populate(field,values).map( &:to_i ) # array of option IDs, saved > default
         field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
         
@@ -43,7 +41,6 @@ module DynamicFieldsets
           field_markup.push "</label>"
         end
         field_markup.push "</div>"
-
         
       when :checkbox
         field_markup.push "<div id='field-#{field.id}'>"
@@ -59,12 +56,10 @@ module DynamicFieldsets
         field_markup.push "</div>"
         
       when :textfield
-        attrs.merge disabled: 'disabled' unless field.enabled
         attrs.merge value: populate( field, values )
         field_markup.push text_field "fsa-#{fsa.id}", "field-#{field.id}", attrs
         
       when :textarea
-        attrs.merge disabled: 'disabled' unless field.enabled
         attrs.merge cols: '40' if !attrs.include? :cols
         attrs.merge rows: '20' if !attrs.include? :rows
         attrs.merge name: "fsa-#{fsa.id}[field-#{field.id}]"
@@ -100,10 +95,10 @@ module DynamicFieldsets
       return field_markup
     end
     
-    # This helper does ..
+    # Builds HTML for the provided fieldset and its children.
     # @param [FieldsetAssociator] fsa parent FieldsetAssociator
     # @param [Field] fieldset The Fieldset to render
-    # @param [Array] values Stored values for the fieldset
+    # @param [Hash] values Stored values for the fieldset
     # @return [Array] The HTML elements for the fieldset
     def fieldset_renderer(fsa, fieldset, values)
       lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
@@ -120,7 +115,7 @@ module DynamicFieldsets
       return lines
     end
     
-    # This helper ..
+    # Builds HTML for a specific dynamic fieldset.
     # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
     # @return [String] The HTML for the entire dynamic fieldset
     def dynamic_fieldset_renderer(fsa)
@@ -131,15 +126,19 @@ module DynamicFieldsets
       return rendered_dynamic_fieldset
     end
     
-    # @param [Field] field
-    # @param [String] value
-    # @return [String] 
-    # I know this is messy; Yeah, this is what happens when we are over deadline.
+    # Gives precedence to saved values; returns default values if empty
+    # @param [Field] field Field to populate
+    # @param [String] value Possibly saved values
+    # @return The saved or default value(s)
+    # I know this is messy; this is what happens when we are past deadline.
     def populate(field, value)
       if !value.empty?
         return value
       elsif !field.default.empty?
-        return field.default.value
+        if field_defaults.length > 1
+        then return field.defaults.collect{ |d| d[:value] }
+        else return field.default.value
+        end
       else
         return ""
       end
