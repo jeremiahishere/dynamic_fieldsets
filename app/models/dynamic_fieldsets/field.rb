@@ -50,7 +50,7 @@ module DynamicFieldsets
     
     # @return [FieldOptions] Alias
     def options
-      return self.field_options.reject{ |option| !option.active }
+      return self.field_options.reject{ |option| !option.enabled }
     end
     
     # @return [Boolean] False if field_default.value is empty

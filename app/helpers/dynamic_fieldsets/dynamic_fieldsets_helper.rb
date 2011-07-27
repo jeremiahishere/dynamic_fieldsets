@@ -2,10 +2,10 @@ module DynamicFieldsets
   module DynamicFieldsetsHelper
     include ActionView::Helpers
     
-    # This helper does ..
+    # Builds HTML for the provided field.
     # @param [FieldsetAssociator] fsa parent FieldsetAssociator
     # @param [Field] field The Field to render
-    # @param [Array] values Stored values for the field
+    # @param [Array] values Saved values for the field
     # @return [Array] The HTML elements for the field
     def field_renderer(fsa, field, values = [])
       classes  = "#{field.field_type} "
@@ -24,22 +24,22 @@ module DynamicFieldsets
       when :select
         attrs.merge disabled: 'disabled' unless field.enabled
         selected = populate(field,values).to_i # should return the ID of the saved or default option
-        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :label, selected ), attrs
+        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
         
       when :multiple_select
         attrs.merge multiple: 'multiple'
         attrs.merge disabled: 'disabled' unless field.enabled
-        selected = populate(field,values).map{ |e| e.to_i } # array of option IDs, saved > default
-        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :label, selected ), attrs
+        selected = populate(field,values).map( &:to_i ) # array of option IDs, saved > default
+        field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
         
       when :radio
         field_markup.push "<div id='field-#{field.id}'>"
         field.options.each do |option|
-          attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
+          attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
           attrs.merge checked: true if populate(field,values).to_i.eql? option.id
           field_markup.push "<label for='#{attrs[:id]}'>"
           field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, attrs
-          field_markup.push "#{option.label}"
+          field_markup.push "#{option.name}"
           field_markup.push "</label>"
         end
         field_markup.push "</div>"
@@ -47,13 +47,13 @@ module DynamicFieldsets
         
       when :checkbox
         field_markup.push "<div id='field-#{field.id}'>"
-        checked = populate(field,values).map{ |e| e.to_i } # array of option IDs, saved > default
+        checked = populate(field,values).map( &:to_i ) # array of option IDs, saved > default
         field.options.each do |option|
-          attrs[:id] = "field-#{field.id}-#{option.label.underscore}"
+          attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
           attrs.merge checked: true if checked.include? option.id
           field_markup.push "<label for='#{attrs[:id]}'>"
           field_markup.push check_box "fsa-#{fsa.id}", "field-#{field.id}", attrs
-          field_markup.push "#{option.label}"
+          field_markup.push "#{option.name}"
           field_markup.push "</label>"
         end
         field_markup.push "</div>"
@@ -77,7 +77,8 @@ module DynamicFieldsets
                           add_month_numbers: true,
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
-        # handle defaults and saved vals
+        setdate = populate( field, value ) # date string if saved or default
+        date_options.merge default: Time.parse setdate if !setdate.empty?
         # attrs.reject!{ |k| k.eql? :id }
         field_markup.push date_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
@@ -85,7 +86,8 @@ module DynamicFieldsets
         date_options = {  add_month_numbers: true,
                           start_year: Time.now.year - 70 }
         date_options.merge disabled: true unless field.enabled
-        # handle defaults and saved vals
+        setdate = populate( field, value ) # datetime string if saved or default
+        date_options.merge default: Time.parse setdate if !setdate.empty?
         # attrs.reject!{ |k| k.eql? :id }
         field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
         
