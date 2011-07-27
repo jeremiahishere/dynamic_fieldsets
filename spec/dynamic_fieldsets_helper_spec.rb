@@ -75,7 +75,6 @@ describe DynamicFieldsetsHelper do
     it "should return a array of html elements" do
       fieldset_renderer(@fsa,@fieldset,@values, @form_type).should be_a_kind_of Array
     end
-    
   end
 
   describe ".field_form_renderer" do
@@ -194,11 +193,36 @@ describe DynamicFieldsetsHelper do
   end
 
   describe "field_show_renderer method" do
-    it "should return an array of string"
-    it "should include the class dynamic_fieldsets_field" 
-    it "should include the class dynamic_fieldsets_field_label" 
-    it "should include the class dynamic_fieldsets_field_value" 
-    it "should return 'No answer given' if the field has no answer for the current fieldset associator"
+    before(:each) do
+      @fsa = mock_model(FieldsetAssociator)
+      @field = Field.new
+      @field.stub!(:id).and_return 420
+      @values = []
+    end
+
+    it "should return an array of strings" do
+      result = field_show_renderer(@fsa, @field, @values)
+      result.should be_a_kind_of Array
+      result.each do |r|
+        r.should be_a_kind_of String
+      end
+    end
+
+    it "should include the class dynamic_fieldsets_field" do
+      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field/
+    end
+
+    it "should include the class dynamic_fieldsets_field_label" do
+      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field_label/
+    end
+
+    it "should include the class dynamic_fieldsets_field_value" do
+      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field_value/
+    end
+
+    it "should return 'No answer given' if the field has no answer for the current fieldset associator" do
+      field_show_renderer(@fsa, @field, @values).join().should match /No answer given/
+    end
   end
   
   describe "field_renderer method" do
