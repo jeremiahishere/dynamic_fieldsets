@@ -38,6 +38,16 @@ module DynamicFieldsets
         format.html
       end
     end
+
+    # Show a record and all children
+    def children
+      @fieldset_family = DynamicFieldsets::Fieldset.find_by_id(params[:id]).children
+      @parent_fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+
+      respond_to do |format|
+        format.html
+      end
+    end
     
     # Save new record
     def create
