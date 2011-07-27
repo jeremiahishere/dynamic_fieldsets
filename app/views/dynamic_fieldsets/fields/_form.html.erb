@@ -29,16 +29,10 @@
   </div>
   <% @field.field_options.each do |field_option| %>
     <%= f.fields_for :field_options, field_option do |field_option_form| %>
-      <%= field_option_form.label :label %>
-      <%= field_option_form.text_field :label %>
-      <% unless field_option_form.object.new_record? %>
-        <%= field_option_form.check_box '_destroy' %>
-        <%= field_option_form.label '_destroy', 'Remove' %>
-      <% end %>
-      <br />
+      <%= render :partial => "field_option_fields", :locals => {:f => field_option_form} %>
     <% end %>
   <% end %>
-  <p><%= link_to_add_fields "Add Field Option", f, :field_options%></p>
+  <p><%= link_to_add_fields "Add Field Option", f, :field_options %></p>
 
   <div class="field">
     <%= f.label :required %><br />
@@ -58,11 +52,14 @@
 <% end %>
 
 <script>
-$(document).ready(function()  {
-  $('#dynamic_fieldsets_field_field_type').change(function()  {
-    var val = $(this).attr('value');
-  });
-
-});
-
+function remove_fields(link) {  
+  $(link).prev("input[type=hidden]").val("1");  
+  $(link).closest(".fields").hide();  
+}  
+  
+function add_fields(link, association, content) {  
+  var new_id = new Date().getTime();  
+  var regexp = new RegExp("new_" + association, "g");  
+  $(link).parent().before(content.replace(regexp, new_id));  
+}  
 </script>

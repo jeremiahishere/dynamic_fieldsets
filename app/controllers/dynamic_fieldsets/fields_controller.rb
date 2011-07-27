@@ -1,5 +1,6 @@
 module DynamicFieldsets
   class FieldsController < ApplicationController
+    include FieldsHelper
     unloadable
 
     # GET /dynamic_fieldsets/fields
