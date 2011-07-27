@@ -53,7 +53,7 @@ module DynamicFieldsets
       Field.option_field_types.include? self.field_type
     end
     
-    # @return [FieldOptions] Alias
+    # @return [FieldOptions] Returns all field options that are enabled
     def options
       return self.field_options.reject{ |option| !option.enabled }
     end
@@ -65,15 +65,20 @@ module DynamicFieldsets
     
     # @return [Array] Alias for field_defaults
     def defaults
-      if self.options?
-      then return self.field_defaults
-      else nil
+      if options?
+        return self.field_defaults
+      else 
+        return nil
       end
     end
     
     # @return [String] Alias for field_defaults.first
     def default
-      return self.field_defaults.first
+      if options?
+        return nil
+      else
+        return self.field_defaults.first
+      end
     end
     
   end

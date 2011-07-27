@@ -90,11 +90,19 @@ describe Field do
   end
 
   describe "options" do
-    it "should return options from the field options table" do
-      pending
+    it "should return options from the field options table if enabled" do
       field = Field.new
-      field.should_receive(:field_options).and_return(["array of stuff"])
-      field.options.should include "array of stuff"
+      field_option = mock_model(DynamicFieldsets::FieldOption)
+      field_option.stub!(:enabled).and_return(true)
+      field.should_receive(:field_options).and_return([field_option])
+      field.options.should include field_option
+    end
+    it "should not return disabled options from the field options table" do
+      field = Field.new
+      field_option = mock_model(DynamicFieldsets::FieldOption)
+      field_option.stub!(:enabled).and_return(false)
+      field.should_receive(:field_options).and_return([field_option])
+      field.options.should_not include field_option
     end
   end
 
@@ -113,37 +121,36 @@ describe Field do
     end
   end
 
+  describe "default" do
+    before(:each) do
+      @field = Field.new
+    end
+
+    it "should return a string if the type does not support multiple options" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return(["default value"])
+      @field.default.should == "default value"
+    end
+
+    it "should return nil if the type supports multiple options" do
+      @field.stub!(:options?).and_return(true)
+      @field.default.should be_nil
+    end
+  end 
+
   describe "defaults" do
     before(:each) do
       @field = Field.new
     end
 
-
-    it "should return a single value if the type does not support multiple options" do
-      pending
-      @field.stub!(:options?).and_return(false)
+    it "should return an array if the type supports multiple options" do
+      @field.stub!(:options?).and_return(true)
       @field.should_receive(:field_defaults).and_return(["default value"])
-      @field.defaults.should == "default value"
+      @field.defaults.should == ["default value"]
     end
 
     it "should return nil if the type does not support multiple options" do
-      pending
       @field.stub!(:options?).and_return(false)
-      @field.should_receive(:field_defaults).and_return([])
-      @field.defaults.should be_nil
-    end
-
-    it "may not work because it should be looking at field_defaults" do
-      pending
-      @field.stub!(:options?).and_return(false)
-      @field.should_receive(:field_defaults).and_return(["default value"])
-      @field.defaults.should include "default value"
-    end
-
-    it "may not work because it should be looking at field_defaults" do
-      pending
-      @field.stub!(:options?).and_return(false)
-      @field.should_receive(:field_defaults).and_return([])
       @field.defaults.should be_nil
     end
   end
@@ -153,6 +160,7 @@ describe Field do
       Field.field_types.should be_a_kind_of Array
     end
   end
+
   describe "option_field_types method" do
     it "should return an array" do
       Field.option_field_types.should be_a_kind_of Array
