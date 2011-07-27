@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(:version => 20110726215814) do
     t.integer  "fieldset_id"
     t.string   "name"
     t.string   "label"
-    t.string   "type"
+    t.string   "field_type"
     t.boolean  "required",    :default => false
     t.boolean  "enabled",     :default => true
     t.integer  "order_num"

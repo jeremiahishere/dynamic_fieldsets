@@ -27,8 +27,6 @@ describe Field do
 
     it "should be valid" do
       @field.attributes = valid_attributes
-      # hack to set the type, not sure why it is needed
-      @field.type = "textfield"
       @field.should be_valid
     end
 
@@ -40,8 +38,8 @@ describe Field do
       @field.should have(1).error_on(:label)
     end
 
-    it "should require type" do
-      @field.should have(2).error_on(:type)
+    it "should require field_type" do
+      @field.should have(2).error_on(:field_type)
     end
 
     it "should require order number" do
@@ -49,13 +47,13 @@ describe Field do
     end
 
     it "should require type within the allowable types" do
-      @field.type = "unsupported_type"
-      @field.should have(1).error_on(:type)
+      @field.field_type = "unsupported_type"
+      @field.should have(1).error_on(:field_type)
     end
 
     it "should require type within the allowable types" do
-      @field.type = "select"
-      @field.should have(0).error_on(:type)
+      @field.field_type = "select"
+      @field.should have(0).error_on(:field_type)
     end
 
 
@@ -80,7 +78,7 @@ describe Field do
     end
 
     it "should require options if the type is one that requires options" do
-      @field.type = "select"
+      @field.field_type = "select"
       @field.should have(1).error_on(:field_options)
     end
   end
@@ -91,12 +89,12 @@ describe Field do
     end
 
     it "should return true if the field type requires options" do
-      @field.type = "select"
+      @field.field_type = "select"
       @field.options?.should be_true
     end
 
     it "should return false if the field does not have options" do
-      @field.type = "textfield"
+      @field.field_type = "textfield"
       @field.options?.should be_false
     end
   end
@@ -157,6 +155,17 @@ describe Field do
       @field.stub!(:options?).and_return(false)
       @field.should_receive(:field_defaults).and_return([])
       @field.defaults.should be_nil
+    end
+  end
+
+  describe "field_types method" do
+    it "should return an array" do
+      Field.new.field_types.should be_a_kind_of Array
+    end
+  end
+  describe "option_field_types method" do
+    it "should return an array" do
+      Field.new.option_field_types.should be_a_kind_of Array
     end
   end
 end

@@ -17,6 +17,15 @@ module NavigationHelpers
     when /^the fieldset show page for that fieldset$/
       "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s
 
+    when /^the field index page$/
+      "/dynamic_fieldsets/fields"
+    when /^the field new page$/
+      "/dynamic_fieldsets/fields/new"
+    when /^the field edit page for that field$/
+      "/dynamic_fieldsets/fields/" + DynamicFieldsets::Field.last.id.to_s + "/edit"
+    when /^the field show page for that field$/
+      "/dynamic_fieldsets/fields/" + DynamicFieldsets::Field.last.id.to_s
+
     else
       begin
         page_name =~ /the (.*) page/

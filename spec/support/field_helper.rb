@@ -7,7 +7,7 @@ module FieldHelper
       :fieldset_id => 1,
       :name => "Test field name",
       :label => "Test field label",
-      :type => "textfield",
+      :field_type => "textfield",
       :required => true,
       :enabled => true,
       :order_num => 1

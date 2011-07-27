@@ -12,14 +12,21 @@ module DynamicFieldsets
     # Validations
     validates_presence_of :name
     validates_presence_of :label
-    validates_presence_of :type
-    validates_inclusion_of :type, :in => %w( select multiple_select checkbox radio textfield textarea date datetime instruction )
+    validates_presence_of :field_type
     validates_presence_of :order_num
     validates_presence_of :enabled
     validates_inclusion_of :enabled, :in => [true, false]
     validates_presence_of :required
     validates_inclusion_of :required, :in => [true, false]
-    validate :has_field_options
+    validate :has_field_options, :field_type_in_field_types
+
+    # validates inclusion of wasn't working so I made it a custom validation
+    # refactor later when I figure out how rails works
+    def field_type_in_field_types
+      if !field_types.include?(self.field_type)
+        self.errors.add(:field_type, "The field type must be one of the available field types.")
+      end
+    end
     
     # Custom validation for fields with multiple options
     def has_field_options
@@ -27,10 +34,20 @@ module DynamicFieldsets
         self.errors.add(:field_options, "This field must have options")
       end
     end
+
+    # @returns [Array] An array of allowable field types
+    def field_types
+      ["select", "multiple_select", "checkbox", "radio", "textfield", "textarea", "date", "datetime", "instruction"]
+    end
+
+    # @returns [Array] An array of field types that use options
+    def option_field_types
+      ["select", "multiple_select", "checkbox", "radio"]
+    end
     
     # @return [Boolean] True if the field is of type 'select', 'multiple_select', 'radio', or 'checkbox'
     def options?
-      %w[select multiple_select radio checkbox].include? self.type
+      option_field_types.include? self.field_type
     end
     
     # @return [FieldOptions] Alias
