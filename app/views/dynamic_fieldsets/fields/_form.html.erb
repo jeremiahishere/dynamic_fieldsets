@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :fieldset_id %><br />
-    <%= f.text_field :fieldset_id %>
+    <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list), :include_blank => "Choose One"  %>
   </div>
   <div class="field">
     <%= f.label :name %><br />
@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :field_type %><br />
-    <%= f.text_field :field_type %>
+    <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types), :include_blank => "Choose One" %>
   </div>
   <div class="field">
     <%= f.label :required %><br />

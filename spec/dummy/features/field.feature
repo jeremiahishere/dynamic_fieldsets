@@ -9,7 +9,7 @@ Feature: Managed fields
     Given I am on the field new page
     When I fill in "test_field" for "Label"
     And I fill in "Test field" for "Name"
-    And I fill in "textfield" for "Field type"
+    And I select "textfield" from "Field type"
     And I fill in "1" for "Order Number"
     And I press "Create Field"
     Then I should be on the field show page for that field
@@ -21,6 +21,7 @@ Feature: Managed fields
     And I am on the field edit page for that field
     When I fill in "Different field name" for "Name"
     And I fill in "different_field_name" for "Label"
+    And I select "textarea" from "Field type"
     And I press "Update Field"
     Then I should be on the field show page for that field
     And I should see "Successfully updated a field"

@@ -21,7 +21,7 @@ module DynamicFieldsets
     # validates inclusion of wasn't working so I made it a custom validation
     # refactor later when I figure out how rails works
     def field_type_in_field_types
-      if !field_types.include?(self.field_type)
+      if !Field.field_types.include?(self.field_type)
         self.errors.add(:field_type, "The field type must be one of the available field types.")
       end
     end
@@ -34,18 +34,18 @@ module DynamicFieldsets
     end
 
     # @returns [Array] An array of allowable field types
-    def field_types
+    def self.field_types
       ["select", "multiple_select", "checkbox", "radio", "textfield", "textarea", "date", "datetime", "instruction"]
     end
 
     # @returns [Array] An array of field types that use options
-    def option_field_types
+    def self.option_field_types
       ["select", "multiple_select", "checkbox", "radio"]
     end
     
     # @return [Boolean] True if the field is of type 'select', 'multiple_select', 'radio', or 'checkbox'
     def options?
-      option_field_types.include? self.field_type
+      Field.option_field_types.include? self.field_type
     end
     
     # @return [FieldOptions] Alias

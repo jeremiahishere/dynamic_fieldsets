@@ -150,12 +150,12 @@ describe Field do
 
   describe "field_types method" do
     it "should return an array" do
-      Field.new.field_types.should be_a_kind_of Array
+      Field.field_types.should be_a_kind_of Array
     end
   end
   describe "option_field_types method" do
     it "should return an array" do
-      Field.new.option_field_types.should be_a_kind_of Array
+      Field.option_field_types.should be_a_kind_of Array
     end
   end
 end
