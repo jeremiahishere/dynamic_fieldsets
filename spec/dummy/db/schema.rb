@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20110726215814) do
 
   create_table "field_options", :force => true do |t|
     t.integer  "field_id"
-    t.string   "label"
+    t.string   "name"
     t.boolean  "enabled",    :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
