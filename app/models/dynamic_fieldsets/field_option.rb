@@ -9,7 +9,7 @@ module DynamicFieldsets
     belongs_to :field
     
     #validations
-    validates_presence_of :label
+    validates_presence_of :name
     validates_inclusion_of :enabled, :in => [true, false]
 
     # @return [Array] Scope: enabled field options

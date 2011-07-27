@@ -118,11 +118,14 @@ describe Fieldset do
       @field1.stub!(:id).and_return 1
       @field1.stub!(:order_num).and_return 2
       @field1.stub!(:name).and_return 'z-field'
+      @field1.stub!(:enabled).and_return true
       
       @field2 = mock_model Field
       @field2.stub!(:id).and_return 2
       @field2.stub!(:order_num).and_return 2
       @field2.stub!(:name).and_return 'a-field'
+      @field2.stub!(:enabled).and_return true
+      
     end
     
     it "should respond to children" do

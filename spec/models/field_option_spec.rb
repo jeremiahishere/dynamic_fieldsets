@@ -19,8 +19,8 @@ describe FieldOption do
       @field_option.should be_valid
     end
 
-    it "should require a label" do
-      @field_option.should have(1).error_on(:label)
+    it "should require a name" do
+      @field_option.should have(1).error_on(:name)
     end
     it "should require enabled is a boolean value" do
       @field_option.enabled = nil 
