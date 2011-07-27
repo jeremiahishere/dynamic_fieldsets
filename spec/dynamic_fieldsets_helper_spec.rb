@@ -77,7 +77,7 @@ describe DynamicFieldsetsHelper do
       @field.stub!(:html_attributes).and_return []
       @field.stub!(:has_default?).and_return false
       @field.stub!(:default).and_return ""
-      @field.stub!(:type).and_return ""
+      @field.stub!(:field_type).and_return ""
       @field.stub!(:options).and_return []
       @values = []
     end
@@ -90,33 +90,27 @@ describe DynamicFieldsetsHelper do
       @field.should_receive(:html_attributes)
       field_renderer(@fsa,@field,@values)
     end
-    
-    it "should call the default method for the field" do
-      pending
-      @field.should_receive(:default)
-      field_renderer(@fsa,@field,@values)
-    end
 
     it "should call the field_options method for the field if it is a select" do
-      @field.stub!(:type).and_return 'select'
+      @field.stub!(:field_type).and_return 'select'
       @field.should_receive(:options)
       field_renderer(@fsa,@field,@values)
     end
     
     it "should call the field_options method for the field if it is a multiple select" do
-      @field.stub!(:type).and_return 'multiple_select'
+      @field.stub!(:field_type).and_return 'multiple_select'
       @field.should_receive(:options)
       field_renderer(@fsa,@field,@values)
     end
     
     it "should call the field_options method for the field if it is a checkbox" do
-      @field.stub!(:type).and_return 'checkbox'
+      @field.stub!(:field_type).and_return 'checkbox'
       @field.should_receive(:options)
       field_renderer(@fsa,@field,@values)
     end
     
     it "should call the field_options method for the field if it is a radio" do
-      @field.stub!(:type).and_return 'radio'
+      @field.stub!(:field_type).and_return 'radio'
       @field.should_receive(:options)
       field_renderer(@fsa,@field,@values)
     end
@@ -130,28 +124,28 @@ describe DynamicFieldsetsHelper do
       }
     end
     
-    it "should call collection_select if the type is select" do
-      @field.stub!(:type).and_return 'select'
-      should_receive(:collection_select)
+    it "should call select_tag if the type is select" do
+      @field.stub!(:field_type).and_return 'select'
+      should_receive(:select_tag)
       field_renderer(@fsa,@field,@values)
     end
     
-    it "should call collection_select if the type is multiple select" do
-      @field.stub!(:type).and_return 'multiple_select'
-      should_receive(:collection_select)
+    it "should call select_tag if the type is multiple select" do
+      @field.stub!(:field_type).and_return 'multiple_select'
+      should_receive(:select_tag)
       field_renderer(@fsa,@field,@values)
     end
     
     it "should call text_field if the type is textfield" do
-      @field.stub!(:type).and_return 'textfield'
+      @field.stub!(:field_type).and_return 'textfield'
       should_receive(:text_field)
       field_renderer(@fsa,@field,@values)
     end
 
     it "should call check_box if the type is checkbox" do
       option = mock_model(FieldOption)
-      option.stub!(:label).and_return ""
-      @field.stub!(:type).and_return 'checkbox'
+      option.stub!(:name).and_return ""
+      @field.stub!(:field_type).and_return 'checkbox'
       @field.stub!(:options).and_return [option]
       should_receive(:check_box)
       field_renderer(@fsa,@field,@values)
@@ -159,28 +153,27 @@ describe DynamicFieldsetsHelper do
     
     it "should call radio_button if the type is radio" do
       option = mock_model(FieldOption)
-      option.stub!(:label).and_return ""
-      @field.stub!(:type).and_return 'radio'
+      option.stub!(:name).and_return ""
+      @field.stub!(:field_type).and_return 'radio'
       @field.stub!(:options).and_return [option]
       should_receive(:radio_button)
       field_renderer(@fsa,@field,@values)
     end
     
-    it "should call text_area if the type is textarea" do
-      pending
-      @field.stub!(:type).and_return 'textarea'
-      should_receive(:text_area)
-      field_renderer(@fsa,@field,@values)
+    it "should have a text_area tag if the type is textarea" do
+      field_renderer(@fsa,@field,@values).should satisfy {
+        |x| !x.select{ |v| v =~ /<textarea/ }.nil?
+      }
     end
 
     it "should call date_select if the type is date" do
-      @field.stub!(:type).and_return 'date'
+      @field.stub!(:field_type).and_return 'date'
       should_receive(:date_select)
       field_renderer(@fsa,@field,@values)
     end
 
     it "should call datetime_select if the type is datetime" do
-      @field.stub!(:type).and_return 'datetime'
+      @field.stub!(:field_type).and_return 'datetime'
       should_receive(:datetime_select)
       field_renderer(@fsa,@field,@values)
     end

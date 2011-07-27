@@ -6,7 +6,7 @@ module FieldOptionHelper
     {
       :id => 1,
       :field_id => 1,
-      :label => "Supervisor",
+      :name => "Supervisor",
       :enabled => true
     }
   end

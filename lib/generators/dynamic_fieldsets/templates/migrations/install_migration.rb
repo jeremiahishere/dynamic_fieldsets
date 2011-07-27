@@ -35,7 +35,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     
     create_table :field_options do |t|
       t.integer :field_id
-      t.string :label
+      t.string :name
       t.boolean :enabled, :default => true
     
       t.timestamps

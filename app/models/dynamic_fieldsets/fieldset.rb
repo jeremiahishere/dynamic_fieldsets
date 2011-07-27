@@ -48,7 +48,7 @@ module DynamicFieldsets
     # @return [Array] Ordered collection of descendent fields and fieldsets.
     def children
       collected_children = []
-      fields.each{ |field| collected_children.push field }
+      fields.reject{|f| !f.enabled}.each{ |field| collected_children.push field }
       child_fieldsets.each{ |fieldset| collected_children.push fieldset }
       return collected_children.sort_by{ |child| [child.order_num, child.name] }
     end
