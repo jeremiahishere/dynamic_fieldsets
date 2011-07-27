@@ -1,7 +1,8 @@
-class AddInformationForm < ActiveRecord::Migration
+class CreateInformationForms < ActiveRecord::Migration
   def self.up
     create_table :information_forms do |t|
       t.string :name
+
       t.timestamps
     end
   end
