@@ -16,6 +16,10 @@ module NavigationHelpers
       "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s + "/edit"
     when /^the fieldset show page for that fieldset$/
       "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s
+    when /^the fieldset child page for that fieldset$/
+      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s + "/children"
+    when /^the fieldset children page for the parent fieldset$/
+      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.parent_fieldset.id.to_s + "/children"
 
     when /^the field index page$/
       "/dynamic_fieldsets/fields"
