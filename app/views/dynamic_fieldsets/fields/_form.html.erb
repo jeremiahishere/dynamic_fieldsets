@@ -38,6 +38,8 @@
       <br />
     <% end %>
   <% end %>
+  <p><%= link_to_add_fields "Add Field Option", f, :field_options%></p>
+
   <div class="field">
     <%= f.label :required %><br />
     <%= f.check_box :required %>
