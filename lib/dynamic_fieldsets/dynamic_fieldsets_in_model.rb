@@ -89,17 +89,26 @@ module DynamicFieldsets
         end
       end
 
-      # Returns the fieldset associator object for the named fieldset
+      # Returns the fieldset associator object for the named fieldset.
+      # If one doesn't exist, it creates it and returns it
       #
       # @param [Symbol] The name of the name fieldset
       # @param [FieldsetAssociator] The fieldset associator object for the named fieldset
       def fieldset_associator(sym)
         if match_fieldset_associator?(sym)
-          return DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
+          fsa = DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
             :fieldset_model_id => self.id, 
-            :fieldset_model_type => self.class, 
+            :fieldset_model_type => self.class.name, 
             :fieldset_model_name => sym,
-            :fieldset => self.dynamic_fieldsets[sym][:fieldset])
+            :fieldset => self.dynamic_fieldsets[sym][:fieldset]).first
+          if fsa.nil?
+            fsa = DynamicFieldsets::FieldsetAssociator.create(
+            :fieldset_model_id => self.id, 
+            :fieldset_model_type => self.class.name, 
+            :fieldset_model_name => sym.to_s,
+            :fieldset_id => DynamicFieldsets::Fieldset.find_by_nkey(self.dynamic_fieldsets[sym][:fieldset]).id)
+          end
+          return fsa
         else
           return nil
         end

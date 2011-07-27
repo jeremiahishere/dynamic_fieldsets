@@ -15,6 +15,7 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  <%= dynamic_fieldset_form_renderer(@information_form.child_form) %>
   <div class="actions">
     <%= f.submit %>
   </div>

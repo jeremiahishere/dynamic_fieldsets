@@ -1,4 +1,5 @@
 class InformationFormsController < ApplicationController
+  #include DynamicFieldsetsHelper
   # GET /information_forms
   # GET /information_forms.xml
   def index
