@@ -26,12 +26,20 @@ describe DynamicFieldsetsHelper do
     end
   end
 
-  describe "dynamic_fieldset_form_renderer" do
-    it "needs tests"
+  describe "dynamic_fieldset_form_renderer method" do
+    it "should call dynamic_fieldset_renderer with 'form'" do
+      fsa = mock_model(FieldsetAssociator)
+      self.should_receive(:dynamic_fieldset_renderer).with(fsa, "form")
+      dynamic_fieldset_form_renderer(fsa)
+    end
   end
 
   describe "dynamic_fieldset_show_renderer" do
-    it "needs tests"
+    it "should call dynamic_fieldset_renderer with 'show'" do
+      fsa = mock_model(FieldsetAssociator)
+      self.should_receive(:dynamic_fieldset_renderer).with(fsa, "show")
+      dynamic_fieldset_show_renderer(fsa)
+    end
   end
 
   describe ".fieldset_renderer" do
@@ -226,7 +234,20 @@ describe DynamicFieldsetsHelper do
   end
   
   describe "field_renderer method" do
-    it "should call the form helper if the form_type is form"
-    it "should default to the show helper if the form_type is not form"
+    before(:each) do
+      @fsa = mock_model(FieldsetAssociator)
+      @field = Field.new
+      @values = []
+    end
+    
+    it "should call the form helper if the form_type is form" do
+      self.should_receive(:field_form_renderer)
+      field_renderer(@fsa, @field, @values, "form")
+    end
+
+    it "should default to the show helper if the form_type is not form" do
+      self.should_receive(:field_show_renderer)
+      field_renderer(@fsa, @field, @values, "show")
+    end
   end
 end
