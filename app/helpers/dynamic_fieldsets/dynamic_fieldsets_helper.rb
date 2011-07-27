@@ -7,7 +7,43 @@ module DynamicFieldsets
     # @param [Field] field The Field to render
     # @param [Array] values Saved values for the field
     # @return [Array] The HTML elements for the field
-    def field_renderer(fsa, field, values = [])
+    def field_renderer(fsa, field, values = [], form_type)
+      if form_type == "form"
+        return field_form_renderer(fsa, field, values)
+      else
+        return field_show_renderer(fsa, field, values)
+      end
+    end
+
+  
+    # Builds HTML for the provided field for a show page.
+    # @param [FieldsetAssociator] fsa parent FieldsetAssociator
+    # @param [Field] field The Field to render
+    # @param [Array] values Saved values for the field
+    # @return [Array] The HTML elements for the field
+    def field_show_renderer(fsa, field, values = [])
+      lines = []
+      lines.push "<div class='dynamic_fieldsets_field'>"
+      lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
+      lines.push "<div class='dynamic_fieldsets_field_value'>"
+      if values.length > 0 
+        values.each do |value|
+          lines.push value + "<br />"
+        end
+      else
+        lines.push "No answer given"
+      end
+      lines.push "</div>"
+      return lines
+    end
+
+
+    # Builds HTML for the provided field for a form.
+    # @param [FieldsetAssociator] fsa parent FieldsetAssociator
+    # @param [Field] field The Field to render
+    # @param [Array] values Saved values for the field
+    # @return [Array] The HTML elements for the field
+    def field_form_renderer(fsa, field, values = [])
       classes  = "#{field.field_type} "
       classes += ( field.required ? 'required' : 'optional' )
       
@@ -101,14 +137,14 @@ module DynamicFieldsets
     # @param [Field] fieldset The Fieldset to render
     # @param [Hash] values Stored values for the fieldset
     # @return [Array] The HTML elements for the fieldset
-    def fieldset_renderer(fsa, fieldset, values)
+    def fieldset_renderer(fsa, fieldset, values, form_type)
       lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
       lines.push "<ol>"
       fieldset.children.each do |child|
         if child.is_a? Field then
-          lines += field_renderer( fsa, child, values[child.id] )
+          lines += field_renderer( fsa, child, values[child.id], form_type )
         else # child.is_a? Fieldset
-          lines += fieldset_renderer( fsa, child, values )
+          lines += fieldset_renderer( fsa, child, values, form_type )
         end
       end
       lines.push "</ol>"
@@ -116,12 +152,26 @@ module DynamicFieldsets
       return lines
     end
     
-    # Builds HTML for a specific dynamic fieldset.
+    # Build HTML for a specific dynamic fieldset on a show page
     # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
     # @return [String] The HTML for the entire dynamic fieldset
-    def dynamic_fieldset_renderer(fsa)
+    def dynamic_fieldset_show_renderer(fsa)
+      return dynamic_fieldset_renderer(fsa, "show")
+    end
+
+    # Build HTML for a specific dynamic fieldset on a form page
+    # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
+    # @return [String] The HTML for the entire dynamic fieldset
+    def dynamic_fieldset_form_renderer(fsa)
+      return dynamic_fieldset_renderer(fsa, "form")
+    end
+
+    # Builds HTML for a specific dynamic fieldset in a form.
+    # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
+    # @return [String] The HTML for the entire dynamic fieldset
+    def dynamic_fieldset_renderer(fsa, form_type)
       rendered_dynamic_fieldset = ""
-      fieldset_renderer( fsa, fsa.fieldset, fsa.field_values ).each do |line|
+      fieldset_renderer( fsa, fsa.fieldset, fsa.field_values, form_type ).each do |line|
         rendered_dynamic_fieldset += line + "\n"
       end
       return rendered_dynamic_fieldset
