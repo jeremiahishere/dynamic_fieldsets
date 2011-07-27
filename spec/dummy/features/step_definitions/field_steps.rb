@@ -36,6 +36,13 @@ Then /^I should see the data for that field$/ do
       page.should have_content(fd.value)
     end
   end
+
+  if @field.field_html_attributes.length > 0
+    @field.field_html_attributes.each do |fha|
+      page.should have_content(fha.attribute_name)
+      page.should have_content(fha.value)
+    end
+  end
 end
 
 Given /^I record the data for that field$/ do

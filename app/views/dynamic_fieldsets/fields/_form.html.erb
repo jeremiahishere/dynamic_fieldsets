@@ -53,7 +53,14 @@
       <%= render :partial => "field_default_fields", :locals => {:f => field_default_form} %>
     <% end %>
   <% end %>
-  <p><%= link_to_add_fields "Add Field Default", f, :field_defaults %></p>
+  <p><%= link_to_add_fields "Add Default Value", f, :field_defaults %></p>
+
+  <% @field.field_html_attributes.each do |field_html_attribute| %>
+    <%= f.fields_for :field_html_attributes, field_html_attribute do |field_html_attribute_form| %>
+      <%= render :partial => "field_html_attribute_fields", :locals => {:f => field_html_attribute_form} %>
+    <% end %>
+  <% end %>
+  <p><%= link_to_add_fields "Add Html Attribute", f, :field_html_attributes %></p>
 
   <div class="actions">
     <%= f.submit %>

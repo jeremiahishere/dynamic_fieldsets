@@ -55,6 +55,16 @@
   </p>
 <% end %>
 
+<% if @field.field_html_attributes.length > 0 %>
+  <p>
+    <b>Html Attributes:</b><br />
+    <% @field.field_html_attributes.each do |fha| %>
+      <%= fha.attribute_name %>: <%= fha.value %>
+      <br />
+    <% end %>
+  </p>
+<% end %>
+
 
 <%= link_to 'Edit', edit_dynamic_fieldsets_field_path(@field) %> |
 <%= link_to 'Back', dynamic_fieldsets_fields_path %>
