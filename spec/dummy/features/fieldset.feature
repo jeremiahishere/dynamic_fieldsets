@@ -55,14 +55,14 @@ Feature: Managed fieldsets
     Then I should be on the fieldset child page for that fieldset
 
   Scenario: Viewing a one generation fieldset's index page
+    And I am pending
     Given a child fieldset exists
     And I am on the child page of the parent fieldset
-    And I am pending
     When I follow "Children"
     Then I should be on the fieldset child page for that fieldset
 
   Scenario: Viewing a fieldset's view page from the fieldset's child page
-    Given a parent fieldset exists
     And I am pending
+    Given a parent fieldset exists
 
  
