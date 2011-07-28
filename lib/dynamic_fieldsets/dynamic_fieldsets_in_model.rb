@@ -29,11 +29,41 @@ module DynamicFieldsets
           self.dynamic_fieldsets[key] = value
         end
 
+        # hacky system to save fieldset values
+        # needs to be refactored and tested
+        mattr_accessor :dynamic_fieldset_values unless self.respond_to?(:dynamic_fieldset_values)
+        after_save :save_dynamic_fieldsets
+
         include DynamicFieldsets::DynamicFieldsetsInModel::InstanceMethods
       end
     end
 
     module InstanceMethods
+      
+      # hacky system to save fieldset values
+      # needs to be refactored and tested
+      #
+      # among other things, it can edit field records for random fsas if the wrong information comes from the controller
+      def save_dynamic_fieldsets
+        self.dynamic_fieldset_values.keys.each do |key|
+          if key.match(/^fsa-/)
+            key_id = key.gsub(/^fsa-/, "")
+            fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
+            self.dynamic_fieldset_values[key].keys do |sub_key|
+              if sub_key.match(/^field-/)
+                sub_key_id = sub_key.gsub(/^field-/, "")
+                field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
+                if field_record.nil?
+                  field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => params[key][sub_key])
+                else
+                  field_record.value = params[key][sub_key]
+                  field_record.save
+                end
+              end
+            end
+          end
+        end
+      end
 
       # Matches methods that match named_fieldset and named_fieldset_fieldset
       # Or calls super

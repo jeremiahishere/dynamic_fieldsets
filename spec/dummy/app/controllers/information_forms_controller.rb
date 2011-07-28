@@ -58,26 +58,28 @@ class InformationFormsController < ApplicationController
   # PUT /information_forms/1.xml
   def update
     @information_form = InformationForm.find(params[:id])
+    @information_form.dynamic_fieldset_values = params.select{ |key, value| key.match(/^fsa-/) }
 
-    params.keys.each do |key|
-      if key.match(/^fsa-/)
-        key_id = key.gsub(/^fsa-/, "")
-        fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
-        params[key].keys.each do |sub_key|
-          if sub_key.match(/^field-/)
-            sub_key_id = sub_key.gsub(/^field-/, "")
-            #field = DynamicFieldsets::Field.find_by_id(sub_key_id)
-            field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
-            if field_record.nil?
-              field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => params[key][sub_key])
-            else
-              field_record.value = params[key][sub_key]
-              field_record.save
-            end
-          end
-        end
-      end
-    end
+    # this actually works
+#    params.keys.each do |key|
+#      if key.match(/^fsa-/)
+#        key_id = key.gsub(/^fsa-/, "")
+#        fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
+#        params[key].keys.each do |sub_key|
+#          if sub_key.match(/^field-/)
+#            sub_key_id = sub_key.gsub(/^field-/, "")
+#            #field = DynamicFieldsets::Field.find_by_id(sub_key_id)
+#            field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
+#            if field_record.nil?
+#              field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => params[key][sub_key])
+#            else
+#              field_record.value = params[key][sub_key]
+#              field_record.save
+#            end
+#          end
+#        end
+#      end
+#    end
 
 
     respond_to do |format|
