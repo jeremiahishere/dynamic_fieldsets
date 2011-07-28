@@ -47,3 +47,22 @@ Feature: Managed fieldsets
     And I am on the fieldset index page
     When I follow "Destroy"
     Then I should not see that fieldset listed
+
+  Scenario: Viewing child index page from the index page
+    Given a parent fieldset exists
+    And I am on the fieldset index page
+    When I follow "Children"
+    Then I should be on the fieldset child page for that fieldset
+
+  Scenario: Viewing a one generation fieldset's index page
+    Given a child fieldset exists
+    And I am on the child page of the parent fieldset
+    And I am pending
+    When I follow "Children"
+    Then I should be on the fieldset child page for that fieldset
+
+  Scenario: Viewing a fieldset's view page from the fieldset's child page
+    Given a parent fieldset exists
+    And I am pending
+
+ 
