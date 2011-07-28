@@ -89,7 +89,7 @@ describe FieldsetAssociator do
     end
 
     it "should return a hash"  do
-      @field.stub!(:type).and_return("")
+      @field.stub!(:field_type).and_return("")
       @fsa.field_values.should be_a_kind_of Hash
     end
 
@@ -101,27 +101,27 @@ describe FieldsetAssociator do
     # I am aware these two tests aren't really realistic because ids should be different
     # Results should be consistent with these when ids are different
     it "should return multiple select values as an array of ids" do
-      @field.stub!(:type).and_return("multiple_select")
+      @field.stub!(:field_type).and_return("multiple_select")
       @fsa.field_values.should == { 37 => [42, 42] }
     end
 
     it "should return checkboxes values as an array of ids" do
-      @field.stub!(:type).and_return("checkbox")
+      @field.stub!(:field_type).and_return("checkbox")
       @fsa.field_values.should == { 37 => [42, 42] }
     end
 
     it "should return select values as an id" do
-      @field.stub!(:type).and_return("select")
+      @field.stub!(:field_type).and_return("select")
       @fsa.field_values.should == { 37 => 42 }
     end
 
     it "should return radio values as an id" do
-      @field.stub!(:type).and_return("radio")
+      @field.stub!(:field_type).and_return("radio")
       @fsa.field_values.should == { 37 => 42 }
     end
 
     it "should return all other field types as strings" do
-      @field.stub!(:type).and_return("text")
+      @field.stub!(:field_type).and_return("text")
       @fsa.field_values.should == { 37 => "forty two" }
     end
   end

@@ -25,7 +25,9 @@ module DynamicFieldsetsHelper
     lines.push "<div class='dynamic_fieldsets_field'>"
     lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
     lines.push "<div class='dynamic_fieldsets_field_value'>"
-    if values && values.length > 0 
+    if values.is_a?(String)
+      lines.push values
+    elsif values.is_a?(Array) && values.length > 0 
       values.each do |value|
         lines.push value + "<br />"
       end
