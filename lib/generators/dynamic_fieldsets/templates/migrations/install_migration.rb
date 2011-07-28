@@ -25,7 +25,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.integer :fieldset_id
       t.string :name
       t.string :label, :required => true
-      t.string :type, :required => true
+      t.string :field_type, :required => true
       t.boolean :required, :default => false
       t.boolean :enabled, :default => true
       t.integer :order_num, :required => true

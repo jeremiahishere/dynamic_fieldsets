@@ -1,5 +1,6 @@
 require 'spec_helper'
 include DynamicFieldsets
+include ActionView::Helpers
 
 describe DynamicFieldsetsHelper do
   include DynamicFieldsetsHelper
