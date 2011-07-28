@@ -106,7 +106,7 @@ module DynamicFieldsets
             :fieldset_model_id => self.id, 
             :fieldset_model_type => self.class.name, 
             :fieldset_model_name => sym.to_s,
-            :fieldset_id => DynamicFieldsets::Fieldset.find_by_nkey(self.dynamic_fieldsets[sym][:fieldset]).id)
+            :fieldset => DynamicFieldsets::Fieldset.find_by_nkey(self.dynamic_fieldsets[sym][:fieldset]))
           end
           return fsa
         else
