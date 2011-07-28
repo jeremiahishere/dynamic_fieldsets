@@ -59,10 +59,11 @@ module DynamicFieldsets
         if record.field.field_type == "checkbox" || record.field.field_type == "multiple_select"
           output[record.field.id] = [] unless output[record.field.id].is_a?(Array)
           # note record.id array
-          output[record.field.id].push record.id
+          # collect?
+          output[record.field.id].push record.value.to_i
         elsif record.field.field_type == "radio" || record.field.field_type == "select"
           # note record.id
-          output[record.field.id] = record.id
+          output[record.field.id] = record.value.to_i
         else
           # note record.value
           output[record.field.id] = record.value

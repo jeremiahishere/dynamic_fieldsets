@@ -59,7 +59,7 @@ module DynamicFieldsetsHelper
     field_markup.push "</label>"
     
     attrs = { :id => "field-#{field.id}" }
-    field.field_html_attributes.each{ |att,val| attrs.merge({ att.to_sym => val}) }
+    field.field_html_attributes.each{ |a| attrs.merge({ a.attribute_name.to_sym => a.value}) } if !field.field_html_attributes.empty?
     
     case field.field_type.to_sym
     when :select
@@ -67,18 +67,20 @@ module DynamicFieldsetsHelper
       field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :multiple_select
-      attrs.merge multiple: 'multiple'
+      attrs.merge! multiple: 'multiple'
       opts = populate( field, values )
+      opts = [opts] if !opts.is_a? Array
       selected = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
       field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :radio
       field_markup.push "<div id='field-#{field.id}'>"
       field.options.each do |option|
-        attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
-        attrs.merge checked: true if populate(field,values).to_i.eql? option.id
+        attrs[:id] = "field-#{field.id}-#{option.name.parameterize}"
+        these_attrs = attrs
+        these_attrs = attrs.merge checked: true if populate(field,values).to_i.eql? option.id
         field_markup.push "<label for='#{attrs[:id]}'>"
-        field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, attrs
+        field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, these_attrs
         field_markup.push "#{option.name}"
         field_markup.push "</label>"
       end
@@ -91,7 +93,7 @@ module DynamicFieldsetsHelper
       checked = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
       field.options.each do |option|
         attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
-        attrs.merge checked: true if checked.include? option.id
+        attrs.merge! checked: true if checked.include? option.id
         field_markup.push "<label for='#{attrs[:id]}'>"
         field_markup.push check_box "fsa-#{fsa.id}", "field-#{field.id}", attrs
         field_markup.push "#{option.name}"
@@ -100,14 +102,15 @@ module DynamicFieldsetsHelper
       field_markup.push "</div>"
       
     when :textfield
-      attrs.merge({:value => populate( field, values )})
+      attrs.merge!( {:value => populate( field, values )} )
       field_markup.push text_field "fsa-#{fsa.id}", "field-#{field.id}", attrs
       
     when :textarea
-      attrs.merge cols: '40' if !attrs.include? :cols
-      attrs.merge rows: '20' if !attrs.include? :rows
-      attrs.merge name: "fsa-#{fsa.id}[field-#{field.id}]"
-      field_markup.push "<textarea #{attrs}>"
+      attrs.merge! cols: '40' if !attrs.include? :cols
+      attrs.merge! rows: '20' if !attrs.include? :rows
+      attrs.merge! name: "fsa-#{fsa.id}[field-#{field.id}]"
+      field_markup.push "<textarea>"
+      # attrs ...
       field_markup.push populate( field, values )
       field_markup.push "</textarea>"
       
@@ -116,7 +119,7 @@ module DynamicFieldsetsHelper
                         add_month_numbers: true,
                         start_year: Time.now.year - 70 }
       setdate = populate( field, values ) # date string if saved or default
-      date_options.merge default: Time.parse( setdate ) if !setdate.empty?
+      date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
       # attrs.reject!{ |k| k.eql? :id }
       field_markup.push date_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
       
@@ -124,7 +127,7 @@ module DynamicFieldsetsHelper
       date_options = {  add_month_numbers: true,
                         start_year: Time.now.year - 70 }
       setdate = populate( field, values ) # datetime string if saved or default
-      date_options.merge default: Time.parse( setdate ) if !setdate.empty?
+      date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
       # attrs.reject!{ |k| k.eql? :id }
       field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
       
