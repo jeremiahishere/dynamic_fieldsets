@@ -25,11 +25,15 @@ module DynamicFieldsetsHelper
     lines.push "<div class='dynamic_fieldsets_field'>"
     lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
     lines.push "<div class='dynamic_fieldsets_field_value'>"
-    if values.is_a?(String)
-      lines.push values
-    elsif values.is_a?(Array) && values.length > 0 
-      values.each do |value|
-        lines.push value + "<br />"
+    if values
+      if field.field_type == "multiple_select" || field.field_type == "checkboxes"
+        values.each do |value|
+          lines.push value.to_s + "<br />"
+        end
+      elsif field.field_type == "select" || field.field_type == "radio"
+        lines.push values.to_s
+      else
+        lines.push values
       end
     else
       lines.push "No answer given"
@@ -184,13 +188,13 @@ module DynamicFieldsetsHelper
   # @return The saved or default value(s)
   # I know this is messy; this is what happens when we are past deadline.
   def populate(field, value)
-    if value.nil? || value.empty?
+    if value.nil? || (value.is_a?(Array) && value.empty?)
       if field.field_defaults.length == 0
         return ""
       elsif field.field_defaults.length > 1
         return field.field_defaults.collect{ |d| d[:value] }
       else 
-        return field.field_default.value
+        return field.field_defaults.first.value
       end
     else
       return value

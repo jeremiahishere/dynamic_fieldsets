@@ -45,24 +45,27 @@ module DynamicFieldsets
       #
       # among other things, it can edit field records for random fsas if the wrong information comes from the controller
       def save_dynamic_fieldsets
-        self.dynamic_fieldset_values.keys.each do |key|
-          if key.match(/^fsa-/)
-            key_id = key.gsub(/^fsa-/, "")
-            fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
-            self.dynamic_fieldset_values[key].keys do |sub_key|
-              if sub_key.match(/^field-/)
-                sub_key_id = sub_key.gsub(/^field-/, "")
-                field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
-                if field_record.nil?
-                  field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => params[key][sub_key])
-                else
-                  field_record.value = params[key][sub_key]
-                  field_record.save
+        if !self.dynamic_fieldset_values.nil?
+          self.dynamic_fieldset_values.keys.each do |key|
+            if key.start_with?("fsa-")
+              key_id = key.gsub(/^fsa-/, "")
+              fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
+              self.dynamic_fieldset_values[key].keys.each do |sub_key|
+                if sub_key.start_with?("field-")
+                  sub_key_id = sub_key.gsub(/^field-/, "")
+                  field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
+                  if field_record.nil?
+                    field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => self.dynamic_fieldset_values[key][sub_key])
+                  else
+                    field_record.value = self.dynamic_fieldset_values[key][sub_key]
+                    field_record.save
+                  end
                 end
               end
             end
           end
         end
+        self.dynamic_fieldset_values = nil
       end
 
       # Matches methods that match named_fieldset and named_fieldset_fieldset

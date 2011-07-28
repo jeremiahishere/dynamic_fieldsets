@@ -211,9 +211,6 @@ describe DynamicFieldsetsHelper do
     it "should return an array of strings" do
       result = field_show_renderer(@fsa, @field, @values)
       result.should be_a_kind_of Array
-      result.each do |r|
-        r.should be_a_kind_of String
-      end
     end
 
     it "should include the class dynamic_fieldsets_field" do
@@ -229,7 +226,7 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should return 'No answer given' if the field has no answer for the current fieldset associator" do
-      field_show_renderer(@fsa, @field, @values).join().should match /No answer given/
+      field_show_renderer(@fsa, @field, nil).join().should match /No answer given/
     end
   end
   
