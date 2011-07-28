@@ -136,7 +136,7 @@ describe DynamicFieldsetsInModel do
     it "has been updated and needs more tests"
 
     it "should return the fieldset associator object for the specified dynamic fieldset" do
-      DynamicFieldsets::FieldsetAssociator.should_receive(:find_by_fieldset_model_parameters).and_return(@fsa)
+      DynamicFieldsets::FieldsetAssociator.should_receive(:find_by_fieldset_model_parameters).and_return([@fsa])
       @model.fieldset_associator(:child_form).should == @fsa
     end
 

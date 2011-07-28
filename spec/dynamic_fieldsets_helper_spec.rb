@@ -103,7 +103,7 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should call the html_attributes method for the field" do
-      @field.should_receive(:html_attributes)
+      @field.should_receive(:field_html_attributes).and_return([])
       field_form_renderer(@fsa,@field,@values)
     end
 
