@@ -41,6 +41,8 @@ describe FieldsetChild do
     it "should only allow one field per fieldset" do
       pending "doing this one later"
     end
+
+    it "cannot be it's own parent"
   end
 
 end

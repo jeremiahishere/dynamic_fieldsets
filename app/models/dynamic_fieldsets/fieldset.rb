@@ -5,30 +5,21 @@ module DynamicFieldsets
   class Fieldset < ActiveRecord::Base
     # Relations
     has_many :fieldset_associators
-    belongs_to :parent_fieldset, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
-    has_many :child_fieldsets, :class_name => "Fieldset", :foreign_key => "parent_fieldset_id"
-    has_many :fields
+
+    # parents
+    has_many :fieldset_children, :dependent => :destroy, :as => :child
+    has_many :parent_fieldsets, :source => :fieldset, :foreign_key => "fieldset_id", :through => :fieldset_children, :class_name => "Fieldset"
+    # children
+    has_many :fieldset_children, :dependent => :destroy, :foreign_key => "fieldset_id", :class_name => "FieldsetChildren"
+    has_many :child_fields, :source => :child, :through => :fieldset_children, :source_type => "Field", :class_name => "Field"
+    has_many :child_fieldsets, :source => :child, :through => :fieldset_children, :source_type => "Fieldset", :class_name => "Fieldset"
+
 
     # Validations
     validates_presence_of :name
     validates_presence_of :description
     validates_presence_of :nkey
     validates_uniqueness_of :nkey
-    validates_presence_of :order_num, :if => lambda { !self.root? }
-    validate :cannot_be_own_parent
-
-    # looks recursively up the parent_fieldset value to check if it sees itself
-    def cannot_be_own_parent
-      parent = self.parent_fieldset
-      while !parent.nil?
-        if parent == self
-          self.errors.add(:parent_fieldset, "Parent fieldsets must not create a cycle.")
-          parent = nil
-        else
-          parent = parent.parent_fieldset
-        end
-      end
-    end
     
     # @return [Array] Scope: parent-less fieldsets
     scope :roots, :conditions => ["parent_fieldset_id IS NULL"]
