@@ -1,5 +1,8 @@
 Feature: Managed fields
 
+  Background:
+    Given I am pending
+
   Scenario: Listing fields
     Given a field exists
     When I go to the field index page
