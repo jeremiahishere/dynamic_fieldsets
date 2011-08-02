@@ -22,7 +22,12 @@ module DynamicFieldsets
     validates_uniqueness_of :nkey
     
     # @return [Array] Scope: parent-less fieldsets
-    scope :roots, :conditions => ["parent_fieldset_id IS NULL"]
+    def self.roots
+      # the old method used a scope and the old table definition
+      # scope :roots, :conditions => ["parent_fieldset_id IS NULL"]
+      # the new method doesn't use a scope because I am bad at them
+      all.select { |fs| fs.parent_fieldsets.empty? }
+    end
     
     # @return [Array] An array of name, id pairs to be used in select tags
     def self.parent_fieldset_list

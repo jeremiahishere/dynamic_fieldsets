@@ -55,12 +55,17 @@ describe Fieldset do
 
   describe "roots scope" do
     before(:each) do
-      pending "waiting on field child updates"
-      @root_fieldset = Fieldset.new( valid_root_attributes )
+      pending "still not working due to join issue"
+      # we could stub this one but I am not convinced the polymorphic relationships actaully work
+      @root_fieldset = Fieldset.new( valid_attributes )
       @root_fieldset.save
 
-      @child_fieldset = Fieldset.new( valid_child_attributes )
+      @child_fieldset = Fieldset.new( valid_attributes )
+      @child_fieldset.nkey = "something_else" # need to pass validations
       @child_fieldset.save
+
+      @fieldset_children = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset)
+      @fieldset_children.save
     end
     
     it "should respond to roots scope" do
