@@ -55,7 +55,6 @@ describe Fieldset do
 
   describe "roots scope" do
     before(:each) do
-      pending "still not working due to join issue"
       # we could stub this one but I am not convinced the polymorphic relationships actaully work
       @root_fieldset = Fieldset.new( valid_attributes )
       @root_fieldset.save
@@ -64,7 +63,7 @@ describe Fieldset do
       @child_fieldset.nkey = "something_else" # need to pass validations
       @child_fieldset.save
 
-      @fieldset_children = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset)
+      @fieldset_children = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
       @fieldset_children.save
     end
     
@@ -74,12 +73,14 @@ describe Fieldset do
     
     it "should return fieldsets with no parent fieldset" do
       roots = Fieldset.roots
-      roots.select{ |f| f.parent_fieldset.nil? }.should have(1).fieldset
+      roots.each do |root|
+        root.parent_fieldsets.should be_empty
+      end
     end
     
     it "should not return fieldsets with a parent fieldset" do
       roots = Fieldset.roots
-      roots.select{ |f| !f.parent_fieldset.nil? }.should have(0).fieldset
+      roots.should_not include @child_fieldset
     end
   end
 
