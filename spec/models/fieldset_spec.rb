@@ -12,21 +12,16 @@ describe Fieldset do
     it "should have fieldset children and field children"
   end
 
-  it "should respond to fields" do
-    pending "waiting on field child updates"
-    fieldset = Fieldset.new
-    fieldset.should respond_to :fields
+  it "should respond to parent_fieldsets" do 
+    Fieldset.new.should respond_to :parent_fieldsets
   end
 
-  it "should respond to parent_fieldset" do 
-    pending "waiting on field child updates"
-    fieldset = Fieldset.new
-    fieldset.should respond_to :parent_fieldset
+  it "should respond to child_fields" do
+    Fieldset.new.should respond_to :child_fields
   end
 
   it "should respond to child_fieldsets" do
-    fieldset = Fieldset.new
-    fieldset.should respond_to :child_fieldsets
+    Fieldset.new.should respond_to :child_fieldsets
   end
   
   describe "validations" do
@@ -34,18 +29,11 @@ describe Fieldset do
       @fieldset = Fieldset.new
     end
 
-    it "should be valid as a top level fieldset" do
-      @fieldset.attributes = valid_root_attributes
+    it "should be valid" do
+      @fieldset.attributes = valid_attributes
       @fieldset.nkey = "top_level_nkey"
       @fieldset.should be_valid
     end
-
-    it "should be valid as a child fieldset" do
-      @fieldset.attributes = valid_child_attributes
-      @fieldset.nkey = "child_level_nkey"
-      @fieldset.should be_valid
-    end
-
     it "should require a name" do
       @fieldset.should have(1).error_on(:name)
     end
@@ -59,29 +47,9 @@ describe Fieldset do
     end
 
     it "should require a unique nkey" do
-      Fieldset.create(valid_root_attributes)
-      @fieldset.attributes = valid_root_attributes
+      Fieldset.create(valid_attributes)
+      @fieldset.attributes = valid_attributes
       @fieldset.should have(1).error_on(:nkey)
-    end
-
-    it "should not require an order number if there is no parent fieldset" do
-      @fieldset.should have(0).error_on(:order_num)
-    end
-
-    it "should require an order number if there is a parent fieldset" do
-      pending "waiting on field child updates"
-      @fieldset.parent_fieldset = Fieldset.new
-      @fieldset.should have(1).error_on(:order_num)
-    end
-  
-    it "should not allow a parent fieldset when it would create a cycle" do
-      pending "waiting on field child updates"
-      fieldset1 = Fieldset.new(:nkey => "fieldset1")
-      fieldset2 = Fieldset.new(:parent_fieldset => fieldset1, :nkey => "fieldset2")
-      fieldset3 = Fieldset.new(:parent_fieldset => fieldset2, :nkey => "fieldset3")
-      fieldset1.parent_fieldset = fieldset3
-
-      fieldset1.should have(1).error_on(:parent_fieldset)
     end
   end
 

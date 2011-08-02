@@ -43,6 +43,16 @@ describe FieldsetChild do
     end
 
     it "cannot be it's own parent"
+  
+    it "should not allow a parent fieldset when it would create a cycle" do
+      pending
+      fieldset1 = Fieldset.new(:nkey => "fieldset1")
+      fieldset2 = Fieldset.new(:parent_fieldset => fieldset1, :nkey => "fieldset2")
+      fieldset3 = Fieldset.new(:parent_fieldset => fieldset2, :nkey => "fieldset3")
+      fieldset1.parent_fieldset = fieldset3
+
+      fieldset1.should have(1).error_on(:parent_fieldset)
+    end
   end
 
 end
