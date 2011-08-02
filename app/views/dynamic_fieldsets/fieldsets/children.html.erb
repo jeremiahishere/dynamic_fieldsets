@@ -31,15 +31,17 @@
       <td><%= child.name %></td>
       <td><%= child.field_type %></td>
       <td>N/A</td>
-      <td><%= link_to 'Show', dynamic_fieldsets_fieldset_path(child) %></td>
-      <td><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(child) %></td>
-      <td><%= link_to 'Destroy', dynamic_fieldsets_fieldset_path(child), :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></td>
+      <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(child) %></td>
+      <td><%= link_to 'Destroy', dynamic_fieldsets_field_path(child), :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
   <% end %>
 <% end %>
 
 </table>
 
+<%= link_to 'New Child - Field', new_dynamic_fieldsets_field_path(:parent => @parent_fieldset.id)  %> | 
+<%= link_to 'New Child - Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @parent_fieldset.id) %> | 
 <%= link_to 'Return to Main Show', dynamic_fieldsets_fieldset_path(@parent_fieldset) %>
 
 <br />

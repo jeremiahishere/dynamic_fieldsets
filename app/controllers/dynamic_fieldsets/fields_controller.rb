@@ -25,6 +25,10 @@ module DynamicFieldsets
     def new
       @field = DynamicFieldsets::Field.new
 
+      unless params[:parent].nil?
+        @parent = DynamicFieldsets::Field.find(params[:parent])
+      end
+
       respond_to do |format|
         format.html # new.html.erb
       end

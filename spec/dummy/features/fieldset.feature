@@ -56,13 +56,37 @@ Feature: Managed fieldsets
 
   Scenario: Viewing a one generation fieldset's index page
     Given a child fieldset exists
-    And I am on the child page of the parent fieldset
-    And I am pending
+    And I am on the fieldset children page for the parent fieldset
     When I follow "Children"
     Then I should be on the fieldset child page for that fieldset
 
   Scenario: Viewing a fieldset's view page from the fieldset's child page
+    Given a child fieldset exists
+    And I am on the fieldset children page for the parent fieldset
+    When I follow "Show"
+    Then I should be on the child fieldset show page 
+    And I should see the data for that fieldset
+
+  Scenario: Automatically setting fieldset when creating a new child field from the child page
+    Given a child field exists
+    And I am on the fieldset child page for that fieldset
+    And I am pending
+    When I follow "Show"
+    Then I should be on the child field show page
+    And I should see the data for that field
+
+  Scenario: Automatically setting fieldset when creating a new child fieldset from the child page
+    Given a parent fieldset exists
+    And I am on the fieldset child page for that fieldset
+    And I am pending
+    When I follow "New Child - Fieldset"
+    Then I should be on the fieldset new page
+    And the parent fieldset should be selected for the Parent fieldset selector
+
+  Scenario: Creating a new field child from the child page
     Given a parent fieldset exists
     And I am pending
 
- 
+  Scenario: Creating a new fieldset child from the child page
+    Given a parent fieldset exists
+    And I am pending

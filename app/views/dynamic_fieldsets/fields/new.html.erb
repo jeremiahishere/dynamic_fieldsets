@@ -2,4 +2,8 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Back', dynamic_fieldsets_fields_path %>
+<% if params[:parent].nil? %>
+  <%= link_to 'Back', dynamic_fieldsets_fields_path %>
+<% else %>
+  <%= link_to 'Back', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(params[:parent]) %>
+<% end %>
