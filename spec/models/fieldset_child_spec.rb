@@ -22,7 +22,7 @@ describe FieldsetChild do
     end
     it "should be valid" do
       @fieldset_child.attributes = valid_attributes
-      @fieldset_child.should be_valid?
+      @fieldset_child.should be_valid
     end
     
     it "should require fieldset" do

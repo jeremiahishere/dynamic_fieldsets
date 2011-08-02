@@ -19,8 +19,6 @@ module FieldsetHelper
       :name => "Hire Form",
       :description => "Hire a person for a job",
       :nkey => "hire_form",
-      :order_num => 1,
-      :parent_fieldset_id => 1
     }
       # this should be in there but isnt working right now
       #:parent_fieldset => DynamicFieldset::Fieldset.new

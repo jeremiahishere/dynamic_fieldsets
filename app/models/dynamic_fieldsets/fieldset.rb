@@ -38,6 +38,12 @@ module DynamicFieldsets
     # then alphabetically by name in the case of duplicate order numbers.
     # @return [Array] Ordered collection of descendent fields and fieldsets.
     def children
+      # #$*R$)T!#$JHGH!#)J!#$(HT!@$
+      # LOOK AT ME
+      # 18hr4981r-ghr4-h891t4-9t134
+      # this should be removed soon
+      return []
+
       collected_children = []
       fields.reject{|f| !f.enabled}.each{ |field| collected_children.push field }
       child_fieldsets.each{ |fieldset| collected_children.push fieldset }

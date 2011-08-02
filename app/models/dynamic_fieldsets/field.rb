@@ -22,7 +22,6 @@ module DynamicFieldsets
     validates_presence_of :name
     validates_presence_of :label
     validates_presence_of :field_type
-    validates_presence_of :order_num
     validates_inclusion_of :enabled, :in => [true, false]
     validates_inclusion_of :required, :in => [true, false]
     validate :has_field_options, :field_type_in_field_types

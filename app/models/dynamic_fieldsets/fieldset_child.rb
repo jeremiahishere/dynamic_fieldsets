@@ -10,9 +10,11 @@ module DynamicFieldsets
     validate :no_duplicate_fields_in_fieldset_children
 
     def no_duplicate_fields_in_fieldset_children
-      duplicate_children = FieldsetChild.where(:fieldset => self.fieldset, :child_id => self.child_id, :child_type => self.child_type).select { |child| child.id != self.id }
-      if duplicate_children > 0
-        self.errors.add(:child, "There is already a copy of this child in the fieldset.")
+      if self.fieldset && self.child
+        duplicate_children = FieldsetChild.where(:fieldset_id => self.fieldset.id, :child_id => self.child_id, :child_type => self.child_type).select { |child| child.id != self.id }
+        if duplicate_children > 0
+          self.errors.add(:child, "There is already a copy of this child in the fieldset.")
+        end
       end
     end
   end

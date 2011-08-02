@@ -11,6 +11,7 @@ describe Field do
   end
 
   it "should respond to fieldset" do
+    pending "waiting on field child updates"
     Field.new.should respond_to :fieldset
   end
 
@@ -49,6 +50,7 @@ describe Field do
     end
 
     it "should require order number" do
+    pending "waiting on field child updates"
       @field.should have(1).error_on(:order_num)
     end
 
