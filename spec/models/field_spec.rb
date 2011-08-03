@@ -4,9 +4,8 @@ include DynamicFieldsets
 describe Field do
   include FieldHelper
 
-  it "should respond to fieldset" do
-    pending "waiting on field child updates"
-    Field.new.should respond_to :fieldset
+  it "should respond to parent_fieldset" do
+    Field.new.should respond_to :parent_fieldsets
   end
 
   it "should respond to field_options" do
@@ -41,11 +40,6 @@ describe Field do
 
     it "should require field_type" do
       @field.should have(2).error_on(:field_type)
-    end
-
-    it "should require order number" do
-    pending "waiting on field child updates"
-      @field.should have(1).error_on(:order_num)
     end
 
     it "should require type within the allowable types" do
