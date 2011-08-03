@@ -26,7 +26,7 @@ module DynamicFieldsetsHelper
     lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
     lines.push "<div class='dynamic_fieldsets_field_value'>"
     if values
-      if field.field_type == "multiple_select" || field.field_type == "checkboxes"
+      if field.field_type == "multiple_select" || field.field_type == "checkbox"
         values.each do |value|
           lines.push value.to_s + "<br />"
         end
@@ -54,7 +54,7 @@ module DynamicFieldsetsHelper
     
     field_markup = ["<li class='#{classes}' id='field-input-#{field.id}'>"]
     field_markup.push "<label for='field-#{field.id}'>"
-    field_markup.push "#{field.label}"
+    field_markup.push "#{field.label}: "
     field_markup.push "<abbr title='required'>*</abbr>" if field.required?
     field_markup.push "</label>"
     
@@ -67,7 +67,7 @@ module DynamicFieldsetsHelper
       field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :multiple_select
-      attrs.merge! multiple: 'multiple'
+      attrs.merge! multiple: true
       opts = populate( field, values )
       opts = [opts] if !opts.is_a? Array
       selected = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
@@ -79,7 +79,7 @@ module DynamicFieldsetsHelper
         attrs[:id] = "field-#{field.id}-#{option.name.parameterize}"
         these_attrs = attrs
         these_attrs = attrs.merge checked: true if populate(field,values).to_i.eql? option.id
-        field_markup.push "<label for='#{attrs[:id]}'>"
+        field_markup.push "<label for='#{these_attrs[:id]}'>"
         field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, these_attrs
         field_markup.push "#{option.name}"
         field_markup.push "</label>"
@@ -88,14 +88,14 @@ module DynamicFieldsetsHelper
       
     when :checkbox
       field_markup.push "<div id='field-#{field.id}'>"
+      attrs[:name] = "fsa-#{fsa.id}[field-#{field.id}][]"
       opts = populate( field, values )
       checked = []
       checked = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
       field.options.each do |option|
         attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
-        attrs.merge! checked: true if checked.include? option.id
         field_markup.push "<label for='#{attrs[:id]}'>"
-        field_markup.push check_box "fsa-#{fsa.id}", "field-#{field.id}", attrs
+        field_markup.push check_box_tag "#{attrs[:name]}", "#{option.id}", checked.include?(option.id), attrs
         field_markup.push "#{option.name}"
         field_markup.push "</label>"
       end
@@ -107,16 +107,17 @@ module DynamicFieldsetsHelper
       
     when :textarea
       attrs.merge! cols: '40' if !attrs.include? :cols
-      attrs.merge! rows: '20' if !attrs.include? :rows
+      attrs.merge! rows: '6' if !attrs.include? :rows
       attrs.merge! name: "fsa-#{fsa.id}[field-#{field.id}]"
-      field_markup.push "<textarea>"
-      # attrs ...
+      tag = "<textarea"
+      attrs.each{ |att,val| tag += " #{att}=\"#{val}\"" }
+      tag += ">"
+      field_markup.push tag
       field_markup.push populate( field, values )
       field_markup.push "</textarea>"
       
     when :date
-      date_options = {  date_separator: '/',
-                        add_month_numbers: true,
+      date_options = {  add_month_numbers: true,
                         start_year: Time.now.year - 70 }
       setdate = populate( field, values ) # date string if saved or default
       date_options.merge! default: Time.parse( setdate ) if !setdate.empty?

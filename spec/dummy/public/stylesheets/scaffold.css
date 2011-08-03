@@ -54,3 +54,21 @@ div.field, div.actions {
   font-size: 12px;
   list-style: square;
 }
+
+li[id|='field'] {
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px dotted gray;
+}
+
+div[id|='fieldset'] {
+  width: 800px;
+  background-color: #eee;
+  padding: 1em 1em 1em 0;
+  margin-bottom: 2em;
+}
+
+abbr[title='required'] {
+  font-style: bold;
+  color: red;
+}

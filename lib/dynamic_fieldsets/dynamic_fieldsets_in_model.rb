@@ -45,21 +45,75 @@ module DynamicFieldsets
       #
       # among other things, it can edit field records for random fsas if the wrong information comes from the controller
       def save_dynamic_fieldsets
-        if !self.dynamic_fieldset_values.nil?
-          self.dynamic_fieldset_values.keys.each do |key|
+        values = self.dynamic_fieldset_values
+        if !values.nil?
+          values.keys.each do |key|
             if key.start_with?("fsa-")
               key_id = key.gsub(/^fsa-/, "")
               fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
-              self.dynamic_fieldset_values[key].keys.each do |sub_key|
+              
+              # SAVE DATES
+              # 'dates' is an array of the "field-ID"s that have multiple date fields of the format field(1i), field(2i), ...
+              dates = values[key].select{ |k| k =~ /\([0-9]i\)/ }.keys.map{ |k| k.gsub /\([0-9]i\)/, '' }.uniq
+              
+              # deleting the date segments from the hash, while building a YYYY-MM-DD HH:MM string.
+              dates.each do |field|
+                datefield  = ''
+                datefield +=          values[key].delete( "#{field}(1i)" ) # year
+                datefield += '-'
+                datefield += '%02d' % values[key].delete( "#{field}(2i)" ) # month
+                datefield += '-'
+                datefield += '%02d' % values[key].delete( "#{field}(3i)" ) # day
+                if values[key].keys.include? "#{field}(4i)" then
+                  datefield += ' '
+                  datefield += '%02d' % values[key].delete( "#{field}(4i)" ) # hour
+                  datefield += ':'
+                  datefield += '%02d' % values[key].delete( "#{field}(5i)" ) # minute
+                  datefield += ':'
+                  datefield += '00' # second
+                end
+                # adding the formatted string to the hash to be saved.
+                values[key].merge! field => datefield
+              end
+                
+              values[key].keys.each do |sub_key| # EACH FIELD
                 if sub_key.start_with?("field-")
                   sub_key_id = sub_key.gsub(/^field-/, "")
-                  field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
-                  if field_record.nil?
-                    field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => self.dynamic_fieldset_values[key][sub_key])
-                  else
-                    field_record.value = self.dynamic_fieldset_values[key][sub_key]
-                    field_record.save
+                  
+                  this_value = values[key][sub_key]
+                  if this_value.is_a? Array
+                  then # multiple values
+                    debugger
+                    field_records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id)
+                    
+                    this_value.each do |value|
+                      if field_records.select{ |record| record.value.eql? value }.empty? # record does not exist?
+                        #ADD
+                        DynamicFieldsets::FieldRecord.create( :fieldset_associator_id => fsa.id,
+                                                              :field_id => sub_key_id,
+                                                              :value => value)
+                      end
+                    end
+                    field_records.each do |record|
+                      if !this_value.include? record.value then
+                        #DELETE
+                        record.destroy
+                      else
+                        #KEEP
+                      end
+                    end
+                    
+                  else # single value
+                    # retrieve record
+                    field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
+                    if field_record.nil? # create record
+                      field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => this_value)
+                    else # update record
+                      field_record.value = this_value
+                      field_record.save
+                    end
                   end
+                  
                 end
               end
             end
