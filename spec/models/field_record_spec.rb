@@ -4,6 +4,10 @@ include DynamicFieldsets
 describe FieldRecord do
   include FieldRecordHelper
 
+  describe "updates with multiple use fields" do
+    it "should replace fieldset_id with fieldset_child_id"
+  end
+
   it "should respond to field" do
     FieldRecord.new.should respond_to :field
   end

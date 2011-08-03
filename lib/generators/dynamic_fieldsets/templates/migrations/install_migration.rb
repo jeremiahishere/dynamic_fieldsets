@@ -9,12 +9,19 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.timestamps
     end
 
+    create_table :fieldset_children do |t|
+      t.integer :fieldset_id
+      t.integer :child_id
+      t.string :child_type
+      t.integer :order_num
+
+      t.timestamps
+    end
+
     create_table :fieldsets do |t|
       t.string :nkey, :null => false
       t.string :name
       t.text :description
-      t.integer :parent_fieldset_id
-      t.integer :order_num
 
       t.timestamps
     end
@@ -22,13 +29,11 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     
     
     create_table :fields do |t|
-      t.integer :fieldset_id
       t.string :name
       t.string :label, :required => true
       t.string :field_type, :required => true
       t.boolean :required, :default => false
       t.boolean :enabled, :default => true
-      t.integer :order_num, :required => true
 
       t.timestamps
     end
@@ -58,13 +63,16 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
     create_table :field_records do |t|
       t.integer :fieldset_associator_id
-      t.integer :field_id
+      t.integer :fieldset_child_id
       t.text :value
+
+      t.timestamps
     end
   end
 
   def self.down
     drop_table :fieldsets
+    drop_table :fieldset_children
     drop_table :fields
     drop_table :field_options
     drop_table :field_defaults
