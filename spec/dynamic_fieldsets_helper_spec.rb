@@ -76,7 +76,7 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should include markup for the fieldset itself" do
-      fieldset_renderer(@fsa,@fieldset,@values, @form_type).join.should match /id='fieldset-326'/
+      fieldset_renderer(@fsa,@fieldset,@values, @form_type).join.should match /id=["']fieldset-326["']/
     end
     
     it "should return an array of html elements" do
@@ -104,42 +104,96 @@ describe DynamicFieldsetsHelper do
     it "successfully for fieldtype radio" do
       @field.stub!(:field_type).and_return 'radio'
       @field.stub!(:options).and_return [@option]
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype checkbox" do
       @field.stub!(:field_type).and_return 'checkbox'
       @field.stub!(:options).and_return [@option]
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype select" do
       @field.stub!(:field_type).and_return 'select'
       @field.stub!(:options).and_return [@option]
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype multiple_select" do
       @field.stub!(:field_type).and_return 'multiple_select'
       @field.stub!(:options).and_return [@option]
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
-    
     it "successfully for fieldtype textfield" do
       @field.stub!(:field_type).and_return 'textfield'
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype textarea" do
       @field.stub!(:field_type).and_return 'textarea'
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype date" do
       @field.stub!(:field_type).and_return 'date'
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
     it "successfully for fieldtype datetime" do
       @field.stub!(:field_type).and_return 'datetime'
-      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /class=["']test["']/
     end
   end
-
+  
+  describe ".field_form_renderer appends html attributes to the field element" do
+    before(:each) do
+      @fsa = mock_model FieldsetAssociator
+      @field = Field.new
+      @id = 365
+      @field.stub!(:id).and_return @id
+      @field.stub!(:has_default?).and_return false
+      @field.stub!(:default).and_return ""
+      @field.stub!(:options).and_return []
+      @values = []
+      @htmlattr = mock_model FieldHtmlAttribute
+      @htmlattr.stub!(:attribute_name).and_return 'class'
+      @htmlattr.stub!(:value).and_return 'test'
+      @field.stub!(:field_html_attributes).and_return [@htmlattr]
+      @option = mock_model FieldOption
+      @option.stub!(:name).and_return 'option1'
+    end
+    
+    it "successfully for fieldtype radio" do
+      @field.stub!(:field_type).and_return 'radio'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype checkbox" do
+      @field.stub!(:field_type).and_return 'checkbox'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype select" do
+      @field.stub!(:field_type).and_return 'select'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype multiple_select" do
+      @field.stub!(:field_type).and_return 'multiple_select'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype textfield" do
+      @field.stub!(:field_type).and_return 'textfield'
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype textarea" do
+      @field.stub!(:field_type).and_return 'textarea'
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype date" do
+      @field.stub!(:field_type).and_return 'date'
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+    it "successfully for fieldtype datetime" do
+      @field.stub!(:field_type).and_return 'datetime'
+      field_form_renderer(@fsa,@field,@values).join.should match /id=["']field-#{@id}["']/
+    end
+  end
 
   describe ".field_form_renderer" do
     before(:each) do
@@ -154,7 +208,7 @@ describe DynamicFieldsetsHelper do
       @values = []
     end
     
-    it "should include the form object, the field object, and an array of values" do
+    it "includes the form object, the field object, and an array of values" do
       lambda { field_form_renderer(@fsa,@field,@values) }.should_not raise_error
     end
 
@@ -163,25 +217,25 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values)
     end
 
-    it "should call the field_options method for the field if it is a select" do
+    it "calls the field_options method for the field if it is a select" do
       @field.stub!(:field_type).and_return 'select'
       @field.should_receive(:options)
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call the field_options method for the field if it is a multiple select" do
+    it "calls the field_options method for the field if it is a multiple select" do
       @field.stub!(:field_type).and_return 'multiple_select'
       @field.should_receive(:options)
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call the field_options method for the field if it is a checkbox" do
+    it "calls the field_options method for the field if it is a checkbox" do
       @field.stub!(:field_type).and_return 'checkbox'
       @field.should_receive(:options)
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call the field_options method for the field if it is a radio" do
+    it "calls the field_options method for the field if it is a radio" do
       @field.stub!(:field_type).and_return 'radio'
       @field.should_receive(:options)
       field_form_renderer(@fsa,@field,@values)
@@ -225,7 +279,7 @@ describe DynamicFieldsetsHelper do
     
     it "has the multiple attribute set if the type is multiple select" do
       @field.stub!(:field_type).and_return 'multiple_select'
-      field_form_renderer(@fsa,@field,@values).join.should match /multiple=\"multiple\"/
+      field_form_renderer(@fsa,@field,@values).join.should match /multiple=["']multiple["']/
     end
     
     it "calls text_field if the type is textfield" do
@@ -257,20 +311,20 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values).join.should match /<textarea/
     end
 
-    it "should call date_select if the type is date" do
+    it "calls date_select if the type is date" do
       @field.stub!(:field_type).and_return 'date'
       should_receive(:date_select)
       field_form_renderer(@fsa,@field,@values)
     end
 
-    it "should call datetime_select if the type is datetime" do
+    it "calls datetime_select if the type is datetime" do
       @field.stub!(:field_type).and_return 'datetime'
       should_receive(:datetime_select)
       field_form_renderer(@fsa,@field,@values)
     end
 
 
-    it "should return an array of html" do
+    it "returns an array of html" do
       field_form_renderer(@fsa,@field,@values).should be_a_kind_of Array
     end
   end
