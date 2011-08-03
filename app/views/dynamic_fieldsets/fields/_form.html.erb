@@ -12,8 +12,12 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :fieldset_id %>: 
-    <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list), :include_blank => "Choose One"  %>
+    <%= f.label :fieldset_id %><br />
+    <% if params[:parent].nil? %>
+      <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, (@field.fieldset.id unless @field.fieldset.nil?)), :include_blank => "Choose One" %>
+    <% else %>
+      <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, params[:parent]), :include_blank => "Choose One" %>
+    <% end %>  
   </div>
   <div class="field">
     <%= f.label :name %>: (internal)<br/>
