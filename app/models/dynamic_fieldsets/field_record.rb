@@ -5,8 +5,8 @@ module DynamicFieldsets
     belongs_to :fieldset_child
     belongs_to :fieldset_associator
 
-    validates_presence_of :field, :fieldset_associator
-    validates_exclusion_of :value, :in => [nil] 
+    validates_presence_of :fieldset_child, :fieldset_associator
+    validates_exclusion_of :value, :in => [nil]
   end
   
   # @return [Field] Alias for fieldset_child.child.
