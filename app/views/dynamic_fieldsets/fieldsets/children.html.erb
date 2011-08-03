@@ -3,7 +3,6 @@
 <table>
   <tr>
     <th>Type</th>
-    <th>Order Number</th>
     <th>Name</th>
     <th>Description/Field Type</th>
     <th>Fieldset Children</th>
@@ -16,7 +15,6 @@
   <% if child.is_a?(DynamicFieldsets::Fieldset) %>
     <tr>
       <td>Fieldset</td>
-      <td><%= child.order_num %></td>
       <td><%= child.name %></td>
       <td><%= child.description %></td>
       <td><%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(child) %></td>
@@ -27,7 +25,6 @@
   <% elsif child.is_a?(DynamicFieldsets::Field) %>
     <tr>
       <td>Field</td>
-      <td><%= child.order_num %></td>
       <td><%= child.name %></td>
       <td><%= child.field_type %></td>
       <td>N/A</td>

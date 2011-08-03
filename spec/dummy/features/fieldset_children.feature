@@ -1,9 +1,5 @@
 Feature: Managed fieldset children
 
-
-  Background:
-    Given I am pending
-
   Scenario: Viewing child index page from the index page
     Given a parent fieldset exists
     And I am on the fieldset index page
