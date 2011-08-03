@@ -62,7 +62,7 @@ module DynamicFieldsetsHelper
     end
     
     attrs = { :id => "field-#{field.id}" }
-    field.field_html_attributes.each{ |a| attrs.merge({ a.attribute_name.to_sym => a.value}) } if !field.field_html_attributes.empty?
+    field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
     
     case field.field_type.to_sym
     when :select

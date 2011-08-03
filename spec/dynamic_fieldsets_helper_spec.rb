@@ -76,15 +76,70 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should include markup for the fieldset itself" do
-      fieldset_renderer(@fsa,@fieldset,@values, @form_type).should satisfy {
-        |x| !x.select{ |v| v =~ /id='fieldset-326'/ }.nil?
-      }
+      fieldset_renderer(@fsa,@fieldset,@values, @form_type).join.should match /id='fieldset-326'/
     end
     
-    it "should return a array of html elements" do
+    it "should return an array of html elements" do
       fieldset_renderer(@fsa,@fieldset,@values, @form_type).should be_a_kind_of Array
     end
   end
+  
+  describe ".field_form_renderer appends html attributes to the field element" do
+    before(:each) do
+      @fsa = mock_model FieldsetAssociator
+      @field = Field.new
+      @field.stub!(:id).and_return 420
+      @field.stub!(:has_default?).and_return false
+      @field.stub!(:default).and_return ""
+      @field.stub!(:options).and_return []
+      @values = []
+      @htmlattr = mock_model FieldHtmlAttribute
+      @htmlattr.stub!(:attribute_name).and_return 'class'
+      @htmlattr.stub!(:value).and_return 'test'
+      @field.stub!(:field_html_attributes).and_return [@htmlattr]
+      @option = mock_model FieldOption
+      @option.stub!(:name).and_return 'option1'
+    end
+    
+    it "successfully for fieldtype radio" do
+      @field.stub!(:field_type).and_return 'radio'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype checkbox" do
+      @field.stub!(:field_type).and_return 'checkbox'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype select" do
+      @field.stub!(:field_type).and_return 'select'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype multiple_select" do
+      @field.stub!(:field_type).and_return 'multiple_select'
+      @field.stub!(:options).and_return [@option]
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    
+    it "successfully for fieldtype textfield" do
+      @field.stub!(:field_type).and_return 'textfield'
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype textarea" do
+      @field.stub!(:field_type).and_return 'textarea'
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype date" do
+      @field.stub!(:field_type).and_return 'date'
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+    it "successfully for fieldtype datetime" do
+      @field.stub!(:field_type).and_return 'datetime'
+      field_form_renderer(@fsa,@field,@values).join.should match /class=\"test\"/
+    end
+  end
+
 
   describe ".field_form_renderer" do
     before(:each) do
@@ -103,8 +158,8 @@ describe DynamicFieldsetsHelper do
       lambda { field_form_renderer(@fsa,@field,@values) }.should_not raise_error
     end
 
-    it "should call the html_attributes method for the field" do
-      @field.should_receive(:field_html_attributes).and_return([])
+    it "calls the html_attributes method for the field" do
+      @field.should_receive(:field_html_attributes).and_return []
       field_form_renderer(@fsa,@field,@values)
     end
 
@@ -135,31 +190,51 @@ describe DynamicFieldsetsHelper do
     
     ## HELPER TAGS
     
-    it "should have a label tag" do
-      field_form_renderer(@fsa,@field,@values).should satisfy {
-        |x| !x.select{ |v| v =~ /<label for=/ }.nil?
-      }
+    it "has a label tag" do
+      field_form_renderer(@fsa,@field,@values).join.should match /<label for=/
     end
     
-    it "should call select_tag if the type is select" do
+    it "does not have a label tag for type instruction" do
+      @field.stub!(:field_type).and_return 'instruction'
+      field_form_renderer(@fsa,@field,@values).join.should_not match /<label for=/
+    end
+    
+    it "displays label content for type instruction" do
+      @field.stub!(:field_type).and_return 'instruction'
+      @field.stub!(:label).and_return 'some label'
+      field_form_renderer(@fsa,@field,@values).join.should match /some label/
+    end
+    
+    it "output is enclosed in <p> tags for type instruction" do
+      @field.stub!(:field_type).and_return 'instruction'
+      @field.stub!(:label).and_return 'some label'
+      field_form_renderer(@fsa,@field,@values).join.should match /<p>/
+    end
+    
+    it "calls select_tag if the type is select" do
       @field.stub!(:field_type).and_return 'select'
       should_receive(:select_tag)
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call select_tag if the type is multiple select" do
+    it "calls select_tag if the type is multiple select" do
       @field.stub!(:field_type).and_return 'multiple_select'
       should_receive(:select_tag)
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call text_field if the type is textfield" do
+    it "has the multiple attribute set if the type is multiple select" do
+      @field.stub!(:field_type).and_return 'multiple_select'
+      field_form_renderer(@fsa,@field,@values).join.should match /multiple=\"multiple\"/
+    end
+    
+    it "calls text_field if the type is textfield" do
       @field.stub!(:field_type).and_return 'textfield'
       should_receive(:text_field)
       field_form_renderer(@fsa,@field,@values)
     end
 
-    it "should call check_box_tag if the type is checkbox" do
+    it "calls check_box_tag if the type is checkbox" do
       option = mock_model(FieldOption)
       option.stub!(:name).and_return ""
       @field.stub!(:field_type).and_return 'checkbox'
@@ -168,7 +243,7 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should call radio_button if the type is radio" do
+    it "calls radio_button if the type is radio" do
       option = mock_model(FieldOption)
       option.stub!(:name).and_return ""
       @field.stub!(:field_type).and_return 'radio'
@@ -177,10 +252,9 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values)
     end
     
-    it "should have a text_area tag if the type is textarea" do
-      field_form_renderer(@fsa,@field,@values).should satisfy {
-        |x| !x.select{ |v| v =~ /<textarea/ }.nil?
-      }
+    it "has a text_area tag if the type is textarea" do
+      @field.stub!(:field_type).and_return 'textarea'
+      field_form_renderer(@fsa,@field,@values).join.should match /<textarea/
     end
 
     it "should call date_select if the type is date" do
@@ -215,19 +289,19 @@ describe DynamicFieldsetsHelper do
     end
 
     it "should include the class dynamic_fieldsets_field" do
-      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field/
+      field_show_renderer(@fsa, @field, @values).join.should match /dynamic_fieldsets_field/
     end
 
     it "should include the class dynamic_fieldsets_field_label" do
-      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field_label/
+      field_show_renderer(@fsa, @field, @values).join.should match /dynamic_fieldsets_field_label/
     end
 
     it "should include the class dynamic_fieldsets_field_value" do
-      field_show_renderer(@fsa, @field, @values).join().should match /dynamic_fieldsets_field_value/
+      field_show_renderer(@fsa, @field, @values).join.should match /dynamic_fieldsets_field_value/
     end
 
     it "should return 'No answer given' if the field has no answer for the current fieldset associator" do
-      field_show_renderer(@fsa, @field, nil).join().should match /No answer given/
+      field_show_renderer(@fsa, @field, nil).join.should match /No answer given/
     end
   end
   
