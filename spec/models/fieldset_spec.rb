@@ -85,7 +85,6 @@ describe Fieldset do
   end
 
   describe "parent_fieldset_list static method" do
-    pending "waiting on field child updates"
     it "should include values for any fieldset" do
       fieldset = Fieldset.new(:name => "parent_fieldset_list test", :nkey => "parent_fieldset_list_test")
       fieldset.save(:validate => false)
@@ -96,61 +95,53 @@ describe Fieldset do
   describe "children method" do
     before(:each) do
       pending "Waiting on updates to the fieldset child system"
-      @root_fieldset = Fieldset.new( valid_root_attributes )
+      @root_fieldset = Fieldset.new( valid_attributes )
+      @root_fieldset.stub!(:id).and_return(1)
       
       @child_fieldset = mock_model Fieldset
       @child_fieldset.stub!(:id).and_return 2
-      @child_fieldset.stub!(:order_num).and_return 1
-      @child_fieldset.stub!(:name).and_return
+      @cfs = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
+      Fieldset.stub!(:find_by_id).with(2).and_return(@child_fieldset)
       
       @field1 = mock_model Field
       @field1.stub!(:id).and_return 1
-      @field1.stub!(:order_num).and_return 2
-      @field1.stub!(:name).and_return 'z-field'
-      @field1.stub!(:enabled).and_return true
+      @field1.stub!(:enabled?).and_return true
+      @cf1 = FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
+      Field.stub!(:find_by_id).with(1).and_return(@child_fieldset)
       
       @field2 = mock_model Field
       @field2.stub!(:id).and_return 2
-      @field2.stub!(:order_num).and_return 2
-      @field2.stub!(:name).and_return 'a-field'
-      @field2.stub!(:enabled).and_return true
+      @field2.stub!(:enabled?).and_return false
+      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset)
+      Field.stub!(:find_by_id).with(2).and_return(@child_fieldset)
       
+      @root_fieldset_children = [@cfs, @cf1, @cf2]
+      @root_fieldset.stub!(:fieldset_children).and_return(@root_fieldset_children)
     end
     
     it "should respond to children" do
       @root_fieldset.should respond_to :children
     end
     
-    it "should call fields and return them" do
-      @root_fieldset.should_receive(:fields).and_return [@field1]
-      @root_fieldset.children.should include @field1
+    it "should call fieldset children" do
+      @root_fieldset.should_receive(:fieldset_children).and_return(@root_fieldset_children)
+      children = @root_fieldset.children
     end
-    
-    it "should call child_fieldsets and return them" do
-      @root_fieldset.should_receive(:child_fieldsets).and_return [@child_fieldset]
-      @root_fieldset.children.should include @child_fieldset
-    end
-    
+
     it "should return a mixture of fieldsets and fields" do
-      @root_fieldset.stub!(:fields).and_return [@field1]
-      @root_fieldset.stub!(:child_fieldsets).and_return [@child_fieldset]
       children = @root_fieldset.children
       children.should include @field1
       children.should include @child_fieldset
     end
-    
-    it "should maintain the order of the children regardless of class" do
-      @root_fieldset.stub!(:fields).and_return [@field1]
-      @root_fieldset.stub!(:child_fieldsets).and_return [@child_fieldset]
+
+    it "should not include disabled fields" do
       children = @root_fieldset.children
-      children.first.should == @child_fieldset
-      children.last.should == @field1
+      children.should_not include @field2
     end
     
-    it "should handle duplicate order numbers by alphabetical order of name" do
-      @root_fieldset.stub!(:fields).and_return [@field1, @field2]
+    it "should maintain the order of the children regardless of class" do
       children = @root_fieldset.children
-      children.first.should == @field2
+      children.first.should == @child_fieldset
       children.last.should == @field1
     end
   end
