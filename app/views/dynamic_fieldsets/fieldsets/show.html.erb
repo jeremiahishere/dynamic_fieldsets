@@ -15,18 +15,6 @@
   <%= @fieldset.description %>
 </p>
 
-<% if @fieldset.parent_fieldset %>
-  <p>
-    <b>Parent fieldset:</b>
-    <%= @fieldset.parent_fieldset.name %>
-  </p>
-
-  <p>
-    <b>Order num:</b>
-    <%= @fieldset.order_num %>
-  </p>
-<% end %>
-
 <%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset) %> |
 <%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(@fieldset) %> |
 <%= link_to 'Back', dynamic_fieldsets_fieldsets_path %>

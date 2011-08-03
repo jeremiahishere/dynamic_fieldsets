@@ -1,8 +1,5 @@
 Feature: Managed fieldsets
 
-  Background:
-    Given I am pending
-
   Scenario: Listing fieldsets
     Given a fieldset exists
     When I go to the fieldset index page
@@ -24,8 +21,6 @@ Feature: Managed fieldsets
     When I fill in "test_fieldset" for "Nkey"
     And I fill in "Test Fieldset" for "Name"
     And I fill in "This fieldset is being used for testing." for "Description"
-    And I select "Parent Fieldset" from "Parent fieldset"
-    And I fill in "1" for "Order Number"
     And I press "Create Fieldset"
     Then I should be on the fieldset show page for that fieldset
     And I should see "Successfully created a new fieldset"

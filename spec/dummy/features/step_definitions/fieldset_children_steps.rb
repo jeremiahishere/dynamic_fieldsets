@@ -1,57 +1,49 @@
-Given(/^a parent fieldset exists$/) do
-  @parent_fieldset = DynamicFieldsets::Fieldset.create(
+def create_parent_fieldset
+  parent_fieldset = DynamicFieldsets::Fieldset.create(
     :name => "Parent Fieldset",
     :nkey => "parent_fieldset",
     :description => "A test parent fieldset")
+  return parent_fieldset
+end
+
+def create_child_fieldset(parent, order_num = 1)
+  child_fieldset = DynamicFieldsets::Fieldset.create(
+    :name => "Child Fieldset",
+    :nkey => "child_fieldset",
+    :description => "A test child fieldset")
+  DynamicFieldsets::FieldsetChild(:fieldset => parent, :child => child_fieldset, :order_num => order_num)
+  return child_fieldset
+end
+
+def create_child_field(parent, order_num = 1)
+  child_field = DynamicFieldsets::Field.create(
+    :name => "Child Field",
+    :label => "Child Field",
+    :field_type => "textfield",
+    :enabled => true,
+    :required => true)
+  DynamicFieldsets::FieldsetChild(:fieldset => parent, :child => child_field, :order_num => order_num)
+  return child_field
+end
+
+Given(/^a parent fieldset exists$/) do
+  @parent_fieldset = create_parent_fieldset
 end
 
 Given(/^a child fieldset exists$/) do
-  @parent_fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Parent Fieldset",
-    :nkey => "parent_fieldset",
-    :description => "A test parent fieldset")
-  @child_fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Child Fieldset",
-    :nkey => "child_fieldset",
-    :description => "A test child fieldset",
-    :parent_fieldset => @parent_fieldset,
-    :order_num => 1)
+  @parent_fieldset = create_parent_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
 end
 
 Given /^a child field exists$/ do
-  @parent_fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Parent Fieldset",
-    :nkey => "parent_fieldset",
-    :description => "A test parent fieldset")
-  @child_field = DynamicFieldsets::Field.create(
-    :name => "Child Field",
-    :label => "Child Field",
-    :field_type => "textfield",
-    :order_num => 1,
-    :enabled => true,
-    :required => true,
-    :fieldset => @parent_fieldset)
+  @parent_fieldset = create_parent_fieldset
+  @child_field = create_child_field(@parent_fieldset, 1) 
 end
 
 Given /^a child field and fieldset exists$/ do
-  @parent_fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Parent Fieldset",
-    :nkey => "parent_fieldset",
-    :description => "A test parent fieldset")
-  @child_field = DynamicFieldsets::Field.create(
-    :name => "Child Field",
-    :label => "Child Field",
-    :field_type => "textfield",
-    :order_num => 1,
-    :enabled => true,
-    :required => true,
-    :fieldset => @parent_fieldset)
-  @child_fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Child Fieldset",
-    :nkey => "child_fieldset",
-    :description => "A test child fieldset",
-    :parent_fieldset => @parent_fieldset,
-    :order_num => 2)
+  @parent_fieldset = create_parent_fieldset 
+  @child_field = create_child_field(@parent_fieldset, 1) 
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 2) 
 end
 
 Then /^the Parent Fieldset should be selected for "([^"]*)"$/ do |field|

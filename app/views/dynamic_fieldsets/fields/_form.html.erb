@@ -12,14 +12,6 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :fieldset_id %><br />
-    <% if params[:parent].nil? %>
-      <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, (@field.fieldset.id unless @field.fieldset.nil?)), :include_blank => "Choose One" %>
-    <% else %>
-      <%= f.select :fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, params[:parent]), :include_blank => "Choose One" %>
-    <% end %>  
-  </div>
-  <div class="field">
     <%= f.label :name %>: (internal)<br/>
     <%= f.text_field :name %>
   </div>
@@ -46,10 +38,6 @@
   <div class="field">
     <%= f.label :enabled %>
     <%= f.check_box :enabled %>
-  </div>
-  <div class="field">
-    <%= f.label :order_num, "Order Number" %>: 
-    <%= f.text_field :order_num, :size => 3 %>
   </div>
 
   <% @field.field_defaults.each do |field_default| %>
