@@ -4,7 +4,14 @@ include DynamicFieldsets
 describe Field do
   include FieldHelper
 
+  describe "updates for multiple use for fields" do
+    it "should no longer have a fieldset id"
+    it "should no longer have a fieldset"
+    it "should no longer have an order number"
+  end
+
   it "should respond to fieldset" do
+    pending "waiting on field child updates"
     Field.new.should respond_to :fieldset
   end
 
@@ -43,6 +50,7 @@ describe Field do
     end
 
     it "should require order number" do
+    pending "waiting on field child updates"
       @field.should have(1).error_on(:order_num)
     end
 

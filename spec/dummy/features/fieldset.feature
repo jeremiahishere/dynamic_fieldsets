@@ -1,5 +1,8 @@
 Feature: Managed fieldsets
 
+  Background:
+    Given I am pending
+
   Scenario: Listing fieldsets
     Given a fieldset exists
     When I go to the fieldset index page

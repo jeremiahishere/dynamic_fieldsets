@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110727210451) do
+ActiveRecord::Schema.define(:version => 20110801232214) do
 
   create_table "field_defaults", :force => true do |t|
     t.integer  "field_id"
@@ -36,19 +36,19 @@ ActiveRecord::Schema.define(:version => 20110727210451) do
   end
 
   create_table "field_records", :force => true do |t|
-    t.integer "fieldset_associator_id"
-    t.integer "field_id"
-    t.text    "value"
+    t.integer  "fieldset_associator_id"
+    t.integer  "fieldset_child_id"
+    t.text     "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "fields", :force => true do |t|
-    t.integer  "fieldset_id"
     t.string   "name"
     t.string   "label"
     t.string   "field_type"
-    t.boolean  "required",    :default => false
-    t.boolean  "enabled",     :default => true
-    t.integer  "order_num"
+    t.boolean  "required",   :default => false
+    t.boolean  "enabled",    :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -62,12 +62,19 @@ ActiveRecord::Schema.define(:version => 20110727210451) do
     t.datetime "updated_at"
   end
 
+  create_table "fieldset_children", :force => true do |t|
+    t.integer  "fieldset_id"
+    t.integer  "child_id"
+    t.string   "child_type"
+    t.integer  "order_num"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "fieldsets", :force => true do |t|
-    t.string   "nkey",               :null => false
+    t.string   "nkey",        :null => false
     t.string   "name"
     t.text     "description"
-    t.integer  "parent_fieldset_id"
-    t.integer  "order_num"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
