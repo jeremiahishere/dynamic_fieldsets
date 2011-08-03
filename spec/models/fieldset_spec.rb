@@ -92,28 +92,34 @@ describe Fieldset do
     end
   end
 
+  # gave up on stubs and mocks on this one due to how the data is constantized
   describe "children method" do
     before(:each) do
-      pending "Waiting on updates to the fieldset child system"
       @root_fieldset = Fieldset.new( valid_attributes )
-      @root_fieldset.stub!(:id).and_return(1)
+      @root_fieldset.stub!(:id).and_return(1234)
       
-      @child_fieldset = mock_model Fieldset
-      @child_fieldset.stub!(:id).and_return 2
+      @child_fieldset = Fieldset.new( valid_attributes )
+      @child_fieldset.nkey = "child_fieldset"
+      @child_fieldset.save
       @cfs = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
-      Fieldset.stub!(:find_by_id).with(2).and_return(@child_fieldset)
       
-      @field1 = mock_model Field
-      @field1.stub!(:id).and_return 1
-      @field1.stub!(:enabled?).and_return true
+      @field1 = Field.new(
+        :name => "Test field name",
+        :label => "Test field label",
+        :field_type => "textfield",
+        :required => true,
+        :enabled => true)
+      @field1.save
       @cf1 = FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
-      Field.stub!(:find_by_id).with(1).and_return(@child_fieldset)
       
-      @field2 = mock_model Field
-      @field2.stub!(:id).and_return 2
-      @field2.stub!(:enabled?).and_return false
-      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset)
-      Field.stub!(:find_by_id).with(2).and_return(@child_fieldset)
+      @field2 = Field.new(
+        :name => "Test field name",
+        :label => "Test field label",
+        :field_type => "textfield",
+        :required => true,
+        :enabled => false)
+      @field2.save
+      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset, :order_num => 3)
       
       @root_fieldset_children = [@cfs, @cf1, @cf2]
       @root_fieldset.stub!(:fieldset_children).and_return(@root_fieldset_children)
@@ -141,6 +147,7 @@ describe Fieldset do
     
     it "should maintain the order of the children regardless of class" do
       children = @root_fieldset.children
+      puts children.to_s
       children.first.should == @child_fieldset
       children.last.should == @field1
     end
