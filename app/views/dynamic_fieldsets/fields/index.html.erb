@@ -19,7 +19,7 @@
     <td><%= field.order_num %></td>
     <td><%= link_to 'Show', dynamic_fieldsets_field_path(field) %></td>
     <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(field) %></td>
-    <td><%= link_to 'Destroy', dynamic_fieldsets_field_path(field), :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= button_to 'Destroy', dynamic_fieldsets_field_path(field), :method => :delete %></td>
   </tr>
 <% end %>
 </table>

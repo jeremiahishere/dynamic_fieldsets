@@ -20,16 +20,16 @@
     <% end %>  
   </div>
   <div class="field">
-    <%= f.label :name %><br />
+    <%= f.label :name %>: (internal)<br/>
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :label %><br />
+    <%= f.label :label %>: (displayed on the form)<br/>
     <%= f.text_field :label %>
   </div>
 
   <div class="field">
-    <%= f.label :field_type %><br />
+    <%= f.label :field_type %>: 
     <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types, @field.field_type), :include_blank => "Choose One" %>
   </div>
   <% @field.field_options.each do |field_option| %>
@@ -40,16 +40,16 @@
   <p><%= link_to_add_fields "Add Field Option", f, :field_options %></p>
 
   <div class="field">
-    <%= f.label :required %><br />
+    <%= f.label :required %>
     <%= f.check_box :required %>
   </div>
   <div class="field">
-    <%= f.label :enabled %><br />
+    <%= f.label :enabled %>
     <%= f.check_box :enabled %>
   </div>
   <div class="field">
-    <%= f.label :order_num, "Order Number" %><br />
-    <%= f.text_field :order_num %>
+    <%= f.label :order_num, "Order Number" %>: 
+    <%= f.text_field :order_num, :size => 3 %>
   </div>
 
   <% @field.field_defaults.each do |field_default| %>
@@ -72,14 +72,14 @@
 <% end %>
 
 <script>
-function remove_fields(link) {  
-  $(link).prev("input[type=hidden]").val("1");  
-  $(link).closest(".fields").hide();  
-}  
-  
-function add_fields(link, association, content) {  
-  var new_id = new Date().getTime();  
-  var regexp = new RegExp("new_" + association, "g");  
-  $(link).parent().before(content.replace(regexp, new_id));  
-}  
+function remove_fields(link) {
+  $(link).prev("input[type=hidden]").val("1");
+  $(link).closest(".fields").hide();
+}
+
+function add_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $(link).parent().before(content.replace(regexp, new_id));
+}
 </script>
