@@ -159,7 +159,6 @@ describe Fieldset do
     
     it "should maintain the order of the children regardless of class" do
       children = @root_fieldset.children
-      puts children.to_s
       children.first.should == @child_fieldset
       children.last.should == @field1
     end
