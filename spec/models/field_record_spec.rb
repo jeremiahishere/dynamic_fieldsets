@@ -22,14 +22,14 @@ describe FieldRecord do
     end
     
     it "should be valid" do
-      @field_record.field = Field.new
+      @field_record.fieldset_child = FieldsetChild.new
       @field_record.fieldset_associator = FieldsetAssociator.new
       @field_record.value = "42"
       @field_record.should be_valid
     end
 
     it "should require field" do
-      @field_record.should have(1).error_on(:field)
+      @field_record.should have(1).error_on(:fieldset_child)
     end
 
     it "should require fieldset_associator" do
