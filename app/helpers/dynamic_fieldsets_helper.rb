@@ -53,10 +53,13 @@ module DynamicFieldsetsHelper
     classes += ( field.required ? 'required' : 'optional' )
     
     field_markup = ["<li class='#{classes}' id='field-input-#{field.id}'>"]
-    field_markup.push "<label for='field-#{field.id}'>"
-    field_markup.push "#{field.label}: "
-    field_markup.push "<abbr title='required'>*</abbr>" if field.required?
-    field_markup.push "</label>"
+    
+    if !field.field_type.eql?('instruction')
+      field_markup.push "<label for='field-#{field.id}'>"
+      field_markup.push "#{field.label}: "
+      field_markup.push "<abbr title='required'>*</abbr>" if field.required?
+      field_markup.push "</label>"
+    end
     
     attrs = { :id => "field-#{field.id}" }
     field.field_html_attributes.each{ |a| attrs.merge({ a.attribute_name.to_sym => a.value}) } if !field.field_html_attributes.empty?
@@ -197,7 +200,7 @@ module DynamicFieldsetsHelper
         return ""
       elsif field.field_defaults.length > 1
         return field.field_defaults.collect{ |d| d[:value] }
-      else 
+      else
         return field.field_defaults.first.value
       end
     else

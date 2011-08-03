@@ -159,12 +159,12 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values)
     end
 
-    it "should call check_box if the type is checkbox" do
+    it "should call check_box_tag if the type is checkbox" do
       option = mock_model(FieldOption)
       option.stub!(:name).and_return ""
       @field.stub!(:field_type).and_return 'checkbox'
       @field.stub!(:options).and_return [option]
-      should_receive(:check_box)
+      should_receive(:check_box_tag)
       field_form_renderer(@fsa,@field,@values)
     end
     
@@ -250,6 +250,46 @@ describe DynamicFieldsetsHelper do
   end
 
   describe "populate method" do
-    it "needs tests"
+    before(:each) do
+      @field = mock_model Field
+    end
+    
+    it "calls field_defaults if no value is passed" do
+      value = nil
+      @field.should_receive(:field_defaults).and_return []
+      populate(@field,value)
+    end
+    
+    it "calls field_defaults if empty value array is passed" do
+      value = []
+      @field.should_receive(:field_defaults).and_return []
+      populate(@field,value)
+    end
+    
+    it "returns value if one is passed" do
+      value = "test"
+      result = populate(@field,value)
+      result.should == "test"
+    end
+    
+    it "returns a default value if one exists" do
+      @default = mock_model FieldDefault
+      @default.stub!(:value).and_return "test"
+      value = nil
+      @field.stub!(:field_defaults).and_return [@default]
+      result = populate(@field,value)
+      result.should == "test"
+    end
+    
+    it "returns multiple defaults if they exist" do
+      @default1 = mock_model FieldDefault
+      @default1.stub!(:value).and_return "Robin"
+      @default2 = mock_model FieldDefault
+      @default2.stub!(:value).and_return "Sparrow"
+      value = nil
+      @field.stub!(:field_defaults).and_return [@default1, @default2]
+      populate(@field,value)
+    end
+    
   end
 end

@@ -72,3 +72,11 @@ abbr[title='required'] {
   font-style: bold;
   color: red;
 }
+
+form#new_dynamic_fieldsets_field {
+
+}
+
+label[for|='field'] {
+  display: block;
+}
