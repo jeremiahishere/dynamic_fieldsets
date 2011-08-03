@@ -7,12 +7,12 @@ module DynamicFieldsets
     has_many :fieldset_associators
 
     # parents
-    has_many :fieldset_children, :dependent => :destroy, :as => :child
-    has_many :parent_fieldsets, :source => :fieldset, :foreign_key => "fieldset_id", :through => :fieldset_children, :class_name => "Fieldset"
+    has_many :fieldset_parents, :dependent => :destroy, :class_name => "FieldsetChild", :as => :child
+    has_many :parent_fieldsets, :source => :fieldset, :foreign_key => "fieldset_id", :through => :fieldset_parents, :class_name => "DynamicFieldsets::Fieldset"
     # children
     has_many :fieldset_children, :dependent => :destroy, :foreign_key => "fieldset_id", :class_name => "FieldsetChild"
-    has_many :child_fields, :source => :child, :through => :fieldset_children, :source_type => "Field", :class_name => "DynamicFieldsets::Field"
-    has_many :child_fieldsets, :source => :child, :through => :fieldset_children, :source_type => "Fieldset", :class_name => "DynamicFieldsets::Fieldset"
+    has_many :child_fields, :source => :child, :through => :fieldset_children, :source_type => "DynamicFieldsets::Field", :class_name => "DynamicFieldsets::Field"
+    has_many :child_fieldsets, :source => :child, :through => :fieldset_children, :source_type => "DynamicFieldsets::Fieldset", :class_name => "DynamicFieldsets::Fieldset"
 
 
     # Validations
