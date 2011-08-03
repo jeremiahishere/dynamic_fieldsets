@@ -38,14 +38,18 @@ describe FieldsetChild do
       @fieldset_child.should have(1).error_on(:order_num)
     end
 
-    it "should only allow one field per fieldset" do
-      pending "doing this one later"
+    it "should only not allow duplicate entries of the same field" do
+      pending "to be done by hex"
+      fieldset = Fieldset.new(:nkey => "parent fieldset")
+      field = Field.new
     end
 
     it "cannot be it's own parent"
+      pending "to be done by hex"
+    end
   
     it "should not allow a parent fieldset when it would create a cycle" do
-      pending
+      pending "to be finished by hex"
       fieldset1 = Fieldset.new(:nkey => "fieldset1")
       fieldset2 = Fieldset.new(:parent_fieldset => fieldset1, :nkey => "fieldset2")
       fieldset3 = Fieldset.new(:parent_fieldset => fieldset2, :nkey => "fieldset3")
