@@ -5,8 +5,6 @@ describe Fieldset do
   include FieldsetHelper
 
   describe "updates for multiple use fields" do
-    it "should no longer have a parent fieldset in the model"
-    it "should no longer have an order number"
     it "should still be able to tell if it is a top level fieldset"
     it "should get children from the fieldsetchild model"
     it "should have fieldset children and field children"
@@ -81,6 +79,26 @@ describe Fieldset do
     it "should not return fieldsets with a parent fieldset" do
       roots = Fieldset.roots
       roots.should_not include @child_fieldset
+    end
+  end
+
+  describe "root? method" do
+    before(:each) do
+      @fieldset = Fieldset.new
+    end
+
+    it "should call parent fieldsets" do  
+      @fieldset.should_receive(:parent_fieldsets).and_return([])
+      @fieldset.root?
+    end
+
+    it "should return true if parent fieldsets is empty" do
+      @fieldset.stub!(:parent_fieldsets).and_return([])
+      @fieldset.root?.should be_true
+    end
+    it "should return false if parent fieldsets is not empty" do
+      @fieldset.stub!(:parent_fieldsets).and_return(["some object goes here"])
+      @fieldset.root?.should be_false
     end
   end
 

@@ -36,7 +36,7 @@ module DynamicFieldsets
 
     # @return [Boolean] True if fieldset has no parent
     def root?
-      return parent_fieldset.nil?
+      return parent_fieldsets.empty?
     end
     
     # The collected descendents of a fieldset.  
