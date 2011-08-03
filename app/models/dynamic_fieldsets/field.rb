@@ -31,9 +31,9 @@ module DynamicFieldsets
       end
     end
     
-    # Custom validation for fields with multiple options
+    # Custom validation for fields with multiple options on update
     def has_field_options
-      if options? 
+      if options? && self.field_options.empty?
         self.errors.add(:field_options, "This field must have options")
       end
     end

@@ -1,0 +1,22 @@
+<%= form_for(@information_form) do |f| %>
+  <% if @information_form.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@information_form.errors.count, "error") %> prohibited this information_form from being saved:</h2>
+
+      <ul>
+      <% @information_form.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <%= dynamic_fieldset_form_renderer(@information_form.child_form) %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

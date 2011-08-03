@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @information_form.name %>
+</p>
+
+<%= dynamic_fieldset_show_renderer(@information_form.child_form) %>
+
+<%= link_to 'Edit', edit_information_form_path(@information_form) %> |
+<%= link_to 'Back', information_forms_path %>

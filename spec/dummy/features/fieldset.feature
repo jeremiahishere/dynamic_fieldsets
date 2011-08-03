@@ -47,4 +47,3 @@ Feature: Managed fieldsets
     And I am on the fieldset index page
     When I follow "Destroy"
     Then I should not see that fieldset listed
-

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110726215814) do
+ActiveRecord::Schema.define(:version => 20110727210451) do
 
   create_table "field_defaults", :force => true do |t|
     t.integer  "field_id"

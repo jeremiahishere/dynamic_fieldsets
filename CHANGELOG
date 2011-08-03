@@ -1,0 +1,10 @@
+== 0.0.3
+
+* Removed ActionView::Helpers from the include.  There were errors when it is included twice.
+* Fixed typo in migratiosn
+* Pended some failing tests
+
+== 0.0.2
+
+* Initial release
+* Still missing a bunch of features and tests

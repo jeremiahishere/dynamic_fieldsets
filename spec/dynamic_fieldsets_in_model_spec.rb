@@ -134,7 +134,15 @@ describe DynamicFieldsetsInModel do
     end
 
     it "should return the fieldset associator object for the specified dynamic fieldset" do
-      DynamicFieldsets::FieldsetAssociator.should_receive(:find_by_fieldset_model_parameters).and_return(@fsa)
+      DynamicFieldsets::FieldsetAssociator.should_receive(:find_by_fieldset_model_parameters).and_return([@fsa])
+      @model.fieldset_associator(:child_form).should == @fsa
+    end
+
+    it "should create a new fieldset associator object if one does not exist" do
+      DynamicFieldsets::FieldsetAssociator.stub!(:find_by_fieldset_model_parameters).and_return([])
+      DynamicFieldsets::FieldsetAssociator.stub!(:create).and_return(@fsa)
+
+      # don't know why I need this, should be handled by the create stub
       @model.fieldset_associator(:child_form).should == @fsa
     end
 

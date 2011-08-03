@@ -1,0 +1,23 @@
+<h1>Listing information_forms</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @information_forms.each do |information_form| %>
+  <tr>
+    <td><%= information_form.name %></td>
+    <td><%= link_to 'Show', information_form %></td>
+    <td><%= link_to 'Edit', edit_information_form_path(information_form) %></td>
+    <td><%= link_to 'Destroy', information_form, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Information form', new_information_form_path %>
