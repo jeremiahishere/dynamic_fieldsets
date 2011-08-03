@@ -4,12 +4,6 @@ include DynamicFieldsets
 describe Fieldset do
   include FieldsetHelper
 
-  describe "updates for multiple use fields" do
-    it "should still be able to tell if it is a top level fieldset"
-    it "should get children from the fieldsetchild model"
-    it "should have fieldset children and field children"
-  end
-
   it "should respond to parent_fieldsets" do 
     Fieldset.new.should respond_to :parent_fieldsets
   end
