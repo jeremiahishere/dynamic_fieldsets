@@ -4,10 +4,6 @@ include DynamicFieldsets
 describe FieldRecord do
   include FieldRecordHelper
 
-  describe "updates with multiple use fields" do
-    it "should replace fieldset_id with fieldset_child_id"
-  end
-
   it "should respond to field" do
     FieldRecord.new.should respond_to :field
   end
@@ -25,6 +21,8 @@ describe FieldRecord do
       @field_record.fieldset_child = FieldsetChild.new
       @field_record.fieldset_associator = FieldsetAssociator.new
       @field_record.value = "42"
+      child = mock_model(DynamicFieldsets::Field)
+      @field_record.fieldset_child = FieldsetChild.new(:child => child)
       @field_record.should be_valid
     end
 
@@ -43,6 +41,13 @@ describe FieldRecord do
     it "should not error if value is a blank string" do
       @field_record.value = ""
       @field_record.should have(0).error_on(:value)
+    end
+
+    it "should error if the fieldset_child has the wrong type" do
+      child = mock_model(DynamicFieldsets::Fieldset)
+      @field_record.fieldset_child = FieldsetChild.new(:child => child)
+      @field_record.valid?
+      @field_record.should have(1).error_on(:fieldset_child)
     end
   end
 end
