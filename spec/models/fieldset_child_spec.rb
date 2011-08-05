@@ -38,20 +38,36 @@ describe FieldsetChild do
       @fieldset_child.should have(1).error_on(:order_num)
     end
 
-    it "should only allow one field per fieldset" do
-      pending "doing this one later"
+    it "should not allow duplicate pairings of fieldsets and fields" do
+      fieldset = Fieldset.new
+      field = Field.new
+      field.stub!(:id).and_return(100)
+      fieldset_child1 = FieldsetChild.new(:fieldset => fieldset, :child => field, :order_num => 1)
+      fieldset_child1.stub!(:id).and_return(100)
+      fieldset_child2 = FieldsetChild.new(:fieldset => fieldset, :child => field, :order_num => 2)
+      FieldsetChild.stub!(:where).and_return([fieldset_child1])
+      fieldset_child2.should have(1).error_on(:child_id)
     end
 
-    it "cannot be it's own parent"
+    # this should have two errors, because it's also a loop
+    it "cannot be it's own parent" do
+      fieldset = Fieldset.new
+      fieldset.stub!(:id).and_return(100)
+      fieldset_child = FieldsetChild.new(:fieldset_id => fieldset.id, :child => fieldset, :order_num => 1)
+      fieldset_child.should have(2).error_on(:child_id)
+    end
   
     it "should not allow a parent fieldset when it would create a cycle" do
-      pending
-      fieldset1 = Fieldset.new(:nkey => "fieldset1")
-      fieldset2 = Fieldset.new(:parent_fieldset => fieldset1, :nkey => "fieldset2")
-      fieldset3 = Fieldset.new(:parent_fieldset => fieldset2, :nkey => "fieldset3")
-      fieldset1.parent_fieldset = fieldset3
-
-      fieldset1.should have(1).error_on(:parent_fieldset)
+      fieldset1 = Fieldset.new
+      fieldset1.stub!(:id).and_return(100)
+      fieldset2 = Fieldset.new
+      fieldset2.stub!(:id).and_return(200)
+      fieldset3 = Fieldset.new
+      fieldset3.stub!(:id).and_return(300)
+      fieldset_child1 = FieldsetChild.create(:fieldset_id => fieldset1.id, :child => fieldset2, :order_num => 1)
+      fieldset_child2 = FieldsetChild.create(:fieldset_id => fieldset2.id, :child => fieldset3, :order_num => 1)
+      fieldset_child3 = FieldsetChild.new(:fieldset_id => fieldset3.id, :child => fieldset1, :order_num => 1)
+      fieldset_child3.should have(1).error_on(:child_id)
     end
   end
 
