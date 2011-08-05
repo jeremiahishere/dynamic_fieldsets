@@ -68,6 +68,16 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    create_table :dependencies do |t|
+      t.timestamps
+    end
+
+    create_table :dependency_clauses do |t|
+      t.integer :dependency_group_id
+
+      t.timestamps
+    end
   end
 
   def self.down
@@ -78,5 +88,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     drop_table :field_defaults
     drop_table :field_html_attributes
     drop_table :field_records
+
+    drop_table :dependencies
+    drop_table :dependency_clauses
   end
 end
