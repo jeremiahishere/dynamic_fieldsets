@@ -23,18 +23,6 @@
     <%= f.label :description %><br />
     <%= f.text_area :description %>
   </div>
-  <div class="field">
-    <%= f.label :parent_fieldset_id %><br />
-    <% if params[:parent].nil? %>
-      <%= f.select :parent_fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, (@fieldset.parent_fieldset_id unless @fieldset.parent_fieldset_id.nil?)), :include_blank => "Choose One"  %>
-    <% else %>
-      <%= f.select :parent_fieldset_id, options_for_select(DynamicFieldsets::Fieldset.parent_fieldset_list, params[:parent]), :include_blank => "Choose One"  %>
-    <% end %>
-  </div>
-  <div class="field">
-    <%= f.label :order_num, "Order Number" %><br />
-    <%= f.text_field :order_num %>
-  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

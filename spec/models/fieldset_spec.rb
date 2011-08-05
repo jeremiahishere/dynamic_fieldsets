@@ -4,14 +4,6 @@ include DynamicFieldsets
 describe Fieldset do
   include FieldsetHelper
 
-  describe "updates for multiple use fields" do
-    it "should no longer have a parent fieldset in the model"
-    it "should no longer have an order number"
-    it "should still be able to tell if it is a top level fieldset"
-    it "should get children from the fieldsetchild model"
-    it "should have fieldset children and field children"
-  end
-
   it "should respond to parent_fieldsets" do 
     Fieldset.new.should respond_to :parent_fieldsets
   end
@@ -84,6 +76,26 @@ describe Fieldset do
     end
   end
 
+  describe "root? method" do
+    before(:each) do
+      @fieldset = Fieldset.new
+    end
+
+    it "should call parent fieldsets" do  
+      @fieldset.should_receive(:parent_fieldsets).and_return([])
+      @fieldset.root?
+    end
+
+    it "should return true if parent fieldsets is empty" do
+      @fieldset.stub!(:parent_fieldsets).and_return([])
+      @fieldset.root?.should be_true
+    end
+    it "should return false if parent fieldsets is not empty" do
+      @fieldset.stub!(:parent_fieldsets).and_return(["some object goes here"])
+      @fieldset.root?.should be_false
+    end
+  end
+
   describe "parent_fieldset_list static method" do
     it "should include values for any fieldset" do
       fieldset = Fieldset.new(:name => "parent_fieldset_list test", :nkey => "parent_fieldset_list_test")
@@ -92,28 +104,34 @@ describe Fieldset do
     end
   end
 
+  # gave up on stubs and mocks on this one due to how the data is constantized
   describe "children method" do
     before(:each) do
-      pending "Waiting on updates to the fieldset child system"
       @root_fieldset = Fieldset.new( valid_attributes )
-      @root_fieldset.stub!(:id).and_return(1)
+      @root_fieldset.stub!(:id).and_return(1234)
       
-      @child_fieldset = mock_model Fieldset
-      @child_fieldset.stub!(:id).and_return 2
+      @child_fieldset = Fieldset.new( valid_attributes )
+      @child_fieldset.nkey = "child_fieldset"
+      @child_fieldset.save
       @cfs = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
-      Fieldset.stub!(:find_by_id).with(2).and_return(@child_fieldset)
       
-      @field1 = mock_model Field
-      @field1.stub!(:id).and_return 1
-      @field1.stub!(:enabled?).and_return true
+      @field1 = Field.new(
+        :name => "Test field name",
+        :label => "Test field label",
+        :field_type => "textfield",
+        :required => true,
+        :enabled => true)
+      @field1.save
       @cf1 = FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
-      Field.stub!(:find_by_id).with(1).and_return(@child_fieldset)
       
-      @field2 = mock_model Field
-      @field2.stub!(:id).and_return 2
-      @field2.stub!(:enabled?).and_return false
-      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset)
-      Field.stub!(:find_by_id).with(2).and_return(@child_fieldset)
+      @field2 = Field.new(
+        :name => "Test field name",
+        :label => "Test field label",
+        :field_type => "textfield",
+        :required => true,
+        :enabled => false)
+      @field2.save
+      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset, :order_num => 3)
       
       @root_fieldset_children = [@cfs, @cf1, @cf2]
       @root_fieldset.stub!(:fieldset_children).and_return(@root_fieldset_children)

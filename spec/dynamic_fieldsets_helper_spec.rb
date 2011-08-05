@@ -139,7 +139,7 @@ describe DynamicFieldsetsHelper do
     end
   end
   
-  describe ".field_form_renderer appends html attributes to the field element" do
+  describe ".field_form_renderer appends the id attribute to the field element" do
     before(:each) do
       @fsa = mock_model FieldsetAssociator
       @field = Field.new
@@ -253,16 +253,10 @@ describe DynamicFieldsetsHelper do
       field_form_renderer(@fsa,@field,@values).join.should_not match /<label for=/
     end
     
-    it "displays label content for type instruction" do
+    it "displays label content enclosed in <p> tags for type instruction" do
       @field.stub!(:field_type).and_return 'instruction'
       @field.stub!(:label).and_return 'some label'
-      field_form_renderer(@fsa,@field,@values).join.should match /some label/
-    end
-    
-    it "output is enclosed in <p> tags for type instruction" do
-      @field.stub!(:field_type).and_return 'instruction'
-      @field.stub!(:label).and_return 'some label'
-      field_form_renderer(@fsa,@field,@values).join.should match /<p>/
+      field_form_renderer(@fsa,@field,@values).join.should match /<p>some label<\/p>/
     end
     
     it "calls select_tag if the type is select" do

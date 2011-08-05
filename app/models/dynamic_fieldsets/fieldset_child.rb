@@ -2,6 +2,8 @@ module DynamicFieldsets
   class FieldsetChild < ActiveRecord::Base
     belongs_to :child, :polymorphic => true
     belongs_to :fieldset
+    
+    has_many :field_records
 
     validates_presence_of :fieldset_id
     validates_presence_of :child_id

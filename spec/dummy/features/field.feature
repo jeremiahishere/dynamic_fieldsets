@@ -1,8 +1,5 @@
 Feature: Managed fields
 
-  Background:
-    Given I am pending
-
   Scenario: Listing fields
     Given a field exists
     When I go to the field index page
@@ -13,7 +10,6 @@ Feature: Managed fields
     When I fill in "test_field" for "Label"
     And I fill in "Test field" for "Name"
     And I select "textfield" from "Field type"
-    And I fill in "1" for "Order Number"
     And I press "Create Field"
     Then I should be on the field show page for that field
     And I should see "Successfully created a new field"
@@ -35,7 +31,7 @@ Feature: Managed fields
     Given a field exists
     And I record the data for that field
     And I am on the field index page
-    When I follow "Destroy"
+    When I press "Destroy"
     Then I should not see that field listed
 
   # this test should be a javascript test and actually test the javascript at some point

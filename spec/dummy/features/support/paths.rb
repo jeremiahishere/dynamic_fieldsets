@@ -19,7 +19,7 @@ module NavigationHelpers
     when /^the fieldset child page for that fieldset$/
       "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.id.to_s + "/children"
     when /^the fieldset children page for the parent fieldset$/
-      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::Fieldset.last.parent_fieldset_id.to_s + "/children"
+      "/dynamic_fieldsets/fieldsets/" + DynamicFieldsets::FieldsetChild.last.fieldset_id.to_s + "/children"
     when /^the child field show page$/
       "/dynamic_fieldsets/fields/" + DynamicFieldsets::Field.last.id.to_s
     when /^the child fieldset show page$/

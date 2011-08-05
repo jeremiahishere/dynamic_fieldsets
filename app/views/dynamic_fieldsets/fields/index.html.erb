@@ -2,10 +2,8 @@
 
 <table>
   <tr>
-    <th>Fieldset</th>
     <th>Name</th>
     <th>Type</th>
-    <th>Order num</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,10 +11,8 @@
 
 <% @fields.each do |field| %>
   <tr>
-    <td><%= field.fieldset.name if field.fieldset %></td>
     <td><%= field.name %></td>
     <td><%= field.field_type %></td>
-    <td><%= field.order_num %></td>
     <td><%= link_to 'Show', dynamic_fieldsets_field_path(field) %></td>
     <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(field) %></td>
     <td><%= button_to 'Destroy', dynamic_fieldsets_field_path(field), :method => :delete %></td>
