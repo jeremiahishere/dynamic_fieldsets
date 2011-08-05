@@ -78,6 +78,11 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    create_table :dependency_groups do |t|
+
+      t.timestamps
+    end
   end
 
   def self.down
@@ -91,5 +96,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
     drop_table :dependencies
     drop_table :dependency_clauses
+    drop_table :dependency_group
   end
 end

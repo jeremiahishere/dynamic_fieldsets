@@ -1,7 +1,6 @@
 module DynamicFieldsets
   class DependencyClause < ActiveRecord::Base
-    # uncomment when dependency group gets added
-    #belongs_to :dependency_group  
+    belongs_to :dependency_group  
     has_many :dependencies
 
     validates_presence_of :dependency_group
