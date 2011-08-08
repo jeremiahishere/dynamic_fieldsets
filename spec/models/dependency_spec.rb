@@ -52,28 +52,24 @@ describe Dependency do
       @fieldset_child.stub!(:id).and_return(100)
       @dependency = Dependency.new
       @dependency.attributes = valid_attributes
-      @input_hash = {100 => "test_value"}
+      @input_hash = {100 => "test value"}
     end
 
     it "should take a hash's input" do
-      pending "hex is working on this"
-      evaluate(@input_hash).should_not raise_error
+      lambda{@dependency.evaluate(@input_hash)}.should_not raise_error
     end
 
     it "should return true when input matches requirements" do
-      pending "hex is working on this"
       @dependency.stub!(:process_relationship).and_return(true)
-      evaluate(@input_hash).should be_true
+      @dependency.evaluate(@input_hash).should be_true
     end
 
     it "should return false when input does not match requirements" do
-      pending "hex is working on this"
       @dependency.stub!(:process_relationship).and_return(false)
       @dependency.evaluate(@input_hash).should be_false
     end
 
     it "should return false when key pairing does not exist" do
-      pending "hex is working on this"
       @dependency.stub!(:process_relationship).and_return(false)
       @dependency.evaluate({1 => "test_value"}).should be_false
     end
@@ -81,7 +77,11 @@ describe Dependency do
   end
 
   describe "relationship_list" do
-    it "should return an array"
+    it "should return an array" do
+      @dependency = Dependency.new
+      @dependency.attributes = valid_attributes
+      @dependency.relationship_list.should be_an_instance_of Array
+    end
   end
 
   describe "process_relationship" do
@@ -92,9 +92,8 @@ describe Dependency do
     end
 
     it "should take a string as input" do
-      pending
       input_value = "test string"
-      @dependency.process_relationship(input_value).should_not raise_error
+      lambda{@dependency.process_relationship(input_value)}.should_not raise_error
     end
 
     it "should return true if the value and input_value are equal and relatinship is equal" do
