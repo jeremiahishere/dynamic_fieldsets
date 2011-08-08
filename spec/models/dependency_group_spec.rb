@@ -54,14 +54,18 @@ describe DependencyGroup do
   describe "dependent_fieldset_children method" do
     before(:each) do
       @group = DependencyGroup.new
-      @clause = DependencyClause.new(:dependency_group => @group)
-      @dependency = Dependency.new(:dependency_clause => @clause, :fieldset_child_id => 42)
+      @group.attributes = valid_attributes
+      @group.save
+      @clause = DependencyClause.create(:dependency_group => @group)
+      @dependency = Dependency.create(:value => 5, :relationship => "equals", :dependency_clause_id => @clause.id, :fieldset_child_id => 42)
     end
+
     it "should return an array" do
       @group.dependent_fieldset_children.should be_a_kind_of(Array)
     end
       
     it "should return fieldset children ids included in the group" do
+      #debugger
       @group.dependent_fieldset_children.should include 42
     end
 
