@@ -2,12 +2,27 @@ require 'spec_helper'
 include DynamicFieldsets
 
 describe DependencyClause do
-  it "should respond to dependency_group"
-  it "should respond to dependencies"
+  it "should respond to dependency_group" do
+    DependencyClause.new.should respond_to :dependency_group
+  end
+  
+  it "should respond to dependencies" do
+    DependencyClause.new.should respond_to :dependencies
+  end
 
   describe "validations" do
-    it "should be valid"
-    it "should require a dependency group"
+    before(:each) do
+      @clause = DependencyClause.new
+    end
+
+    it "should be valid" do
+      @clause.dependency_group_id = 1
+      @clause.should be_valid
+    end
+
+    it "should require a dependency group" do
+      @clause.should have(1).error_on(:dependency_group_id)
+    end
   end
 
   describe "evaluate" do
