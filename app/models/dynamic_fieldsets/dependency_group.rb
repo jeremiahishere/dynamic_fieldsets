@@ -11,14 +11,14 @@ module DynamicFieldsets
 
     # adds an error if the success action isn't in the action list
     def success_action_in_action_list
-      if !self.action_list.include(self.success_action)
+      if !self.action_list.include?(self.success_action)
         self.errors.add(:success_action, "The success action must be set to one of the provided values.")
       end
     end
 
     # adds an error if the failure action isn't in the action list
     def failure_action_in_action_list
-      if !self.action_list.include(self.failure_action)
+      if !self.action_list.include?(self.failure_action)
         self.errors.add(:failure_action, "The failure action must be set to one of the provided values.")
       end
     end

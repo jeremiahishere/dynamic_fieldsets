@@ -2,21 +2,56 @@ require 'spec_helper'
 include DynamicFieldsets
 
 describe DependencyGroup do
-  it "should respond to fieldset_child"
-  it "should respond to dependencies"
+  include DependencyGroupHelper
+
+  it "should respond to fieldset_child" do
+    DependencyGroup.new.should respond_to :fieldset_child
+  end
+
+  it "should respond to dependency_clauses" do
+    DependencyGroup.new.should respond_to :dependency_clauses
+  end
 
   describe "validations" do
-    it "should be valid"
-    it "should require a fieldset_child"
+    before(:each) do
+      @group = DependencyGroup.new
+    end
+
+    it "should be valid" do
+      @group.attributes = valid_attributes
+      pending "not sure how I messed this one up"
+      @group.should be_valid
+    end
+
+    it "should require a fieldset_child" do
+      @group.should have(1).error_on(:fieldset_child)
+    end
+
     it "should have at least one dependency clause"
-    it "should have a success action"
-    it "success action should be in action_list"
-    it "should have a failure action"
-    it "failure action should be in action_list"
+
+    it "should have a success action" do
+      @group.should have(2).error_on(:success_action)
+    end
+
+    it "success action should be in action_list" do
+      @group.success_action = "invalid action"
+      @group.should have(1).error_on(:success_action)
+    end
+
+    it "should have a failure action" do
+      @group.should have(2).error_on(:failure_action)
+    end
+
+    it "failure action should be in action_list" do
+      @group.failure_action = "invalid action"
+      @group.should have(1).error_on(:failure_action)
+    end
   end
 
   describe "action_list method" do
-    it "should return an array"
+    it "should return an array" do
+      DependencyGroup.new.action_list.should be_a_kind_of(Array)
+    end
   end
 
   describe "dependent_fieldset_children method" do
