@@ -55,15 +55,47 @@ describe DependencyGroup do
   end
 
   describe "dependent_fieldset_children method" do
-    it "should return an array"
-    it "should return fieldset children ids included in the group"
-    it "should not return fieldset children ids not included in the group"
+    before(:each) do
+      pending "waiting on the dependency ticket"
+      @group = DependencyGroup.new
+      @clause = DependencyClause.new(:dependency_group => @group)
+      @dependency = Dependency.new(:dependency_clause => @clause, :fieldset_child_id => 42)
+    end
+    it "should return an array" do
+      @group.dependent_fieldset_children.should be_a_kind_of(Array)
+    end
+      
+    it "should return fieldset children ids included in the group" do
+      @group.dependent_fieldset_children.should include 42
+    end
+
+    it "should not return fieldset children ids not included in the group" do
+      @group.dependent_fieldset_children.should_not include 41
+    end
   end
 
   describe "action method" do
-    it "should take a hash as input"
-    it "should return the success action if evaluate returns true"
-    it "should return the failure action if evaluate returns false"
+    before(:each) do
+      @group = DependencyGroup.new
+      @group.stub!(:evaluate).and_return(true)
+    end
+
+    it "should take a hash as input" do
+      pending "no idea why this doesn't work"
+      # I am pretty dumb, dealing with this later
+      @group.action({}).should_not raise_error
+    end
+
+    it "should return the success action if evaluate returns true" do
+      @group.success_action = "show"
+      @group.action({}).should == "show"
+    end
+
+    it "should return the failure action if evaluate returns false" do
+      @group.failure_action = "hide"
+      @group.stub!(:evaluate).and_return(false)
+      @group.action({}).should == "hide"
+    end
   end
 
   describe "evaluate method" do
@@ -75,7 +107,12 @@ describe DependencyGroup do
       @input_values = {}
     end
 
-    it "should take a hash as input"
+    it "should take a hash as input" do
+      pending "no idea why this doesn't work"
+      # I am pretty dumb, dealing with this later
+      @group.stub!(:dependency_clauses).and_return([])
+      @group.evaluate({}).should_not raise_error
+    end
 
     it "should return true if all the clauses evaluate to true" do
       @clause1.stub!(:evaluate).and_return(true)
