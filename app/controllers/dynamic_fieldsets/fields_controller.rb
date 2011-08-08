@@ -37,10 +37,15 @@ module DynamicFieldsets
 
     # POST /dynamic_fieldsets/fields
     def create
+      parent_id = params[:parent]
       @field = DynamicFieldsets::Field.new(params[:dynamic_fieldsets_field])
 
       respond_to do |format|
         if @field.save
+          if !parent_id.empty?
+            parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
+            DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @field )
+          end
           format.html { redirect_to(@field, :notice => 'Successfully created a new field.') }
         else
           format.html { render :action => "new" }

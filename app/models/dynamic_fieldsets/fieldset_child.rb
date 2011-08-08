@@ -12,6 +12,14 @@ module DynamicFieldsets
     validate :no_duplicate_fields_in_fieldset_children
     validate :cannot_be_own_parent
     validate :no_parental_loop
+    
+    before_validation :assign_order
+    
+    # This method is called when FieldsetChildren is instantiated. 
+    # It ensures that the Child has a valid order number.
+    def assign_order
+      self.order_num = self.last_order_num + 1 if self.order_num.nil?
+    end
 
     def no_duplicate_fields_in_fieldset_children
       if self.fieldset && self.child
@@ -43,5 +51,16 @@ module DynamicFieldsets
       parent_array.pop
       return false
     end
+    
+    # @return [Array] Collection of FieldsetChildren that share the same parent; ascending order.
+    def siblings
+      FieldsetChild.where( :fieldset_id => self.fieldset_id ).order 'order_num asc'
+    end
+    
+    # @return [Integer] The order number of the last sibling.
+    def last_order_num
+      self.siblings.last[:order_num]
+    end
+    
   end
 end

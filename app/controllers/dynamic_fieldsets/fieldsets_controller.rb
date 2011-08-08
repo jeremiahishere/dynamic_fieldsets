@@ -3,7 +3,7 @@ module DynamicFieldsets
   class FieldsetsController < ApplicationController
     unloadable
   
-    # Show all record
+    # Show all fieldsets
     def index
       @fieldsets = DynamicFieldsets::Fieldset.all
 
@@ -12,7 +12,16 @@ module DynamicFieldsets
       end
     end
     
-    # Show single record
+    # Show all root fieldsets
+    def roots
+      @fieldsets = DynamicFieldsets::Fieldset.roots
+
+      respond_to do |format|
+        format.html { render action: 'index' }
+      end
+    end
+    
+    # Show single fieldset
     def show
       @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
 
@@ -21,7 +30,7 @@ module DynamicFieldsets
       end
     end 
 
-    # Create new record
+    # Create new fieldset
     def new
       @fieldset = DynamicFieldsets::Fieldset.new()
 
@@ -41,20 +50,34 @@ module DynamicFieldsets
 
     # Show a record and all children
     def children
-      @fieldset_family = DynamicFieldsets::Fieldset.find_by_id(params[:id]).children
-      @parent_fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      
+      if fieldset.root?
+        @fieldset_family = fieldset.children
+        @parent_fieldset = fieldset
 
-      respond_to do |format|
-        format.html
+        respond_to do |format|
+          format.html
+        end
+        
+      else
+        respond_to do |format|
+          format.html { redirect_to( :action => 'index', :notice => "#{fieldset.name} is not a root fieldset." )}
+        end
       end
     end
     
     # Save new record
     def create
+      parent_id = params[:parent]
       @fieldset = DynamicFieldsets::Fieldset.new(params[:dynamic_fieldsets_fieldset])
 
       respond_to do |format|
         if @fieldset.save
+          if !parent_id.empty?
+            parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
+            DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @fieldset )
+          end
           format.html { redirect_to( dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Successfully created a new fieldset" )}
         else
           format.html { render :action => "new" }

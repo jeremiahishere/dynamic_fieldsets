@@ -10,6 +10,8 @@
       </ul>
     </div>
   <% end %>
+  
+  <%= hidden_field_tag :parent, params[:parent] %>
 
   <div class="field">
     <%= f.label :name %>: (internal)<br/>
