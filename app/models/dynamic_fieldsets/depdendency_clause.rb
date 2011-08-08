@@ -11,7 +11,7 @@ module DynamicFieldsets
     # Evaluates the depdendencies in the claus by ORing them together
     # Short circuit evaluation returns true as soon as possible
     #
-    # @param [Hash] A hash of fieldset_child_id:value pairs to test against
+    # @param [Hash] input_values A hash of fieldset_child_id:value pairs to test against
     # @return [Boolean] True if one of the dependencies is true
     def evaluate(input_values)
       self.dependencies.each do |dependency|

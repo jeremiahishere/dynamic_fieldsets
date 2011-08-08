@@ -9,6 +9,8 @@ module DynamicFieldsets
     validates_presence_of :failure_action
     validate :success_action_in_action_list, :failure_action_in_action_list
 
+    need to change these to inclusion validators
+
     # adds an error if the success action isn't in the action list
     def success_action_in_action_list
       if !self.action_list.include?(self.success_action)
@@ -46,6 +48,8 @@ module DynamicFieldsets
       end
       return children
     end
+
+    need to change to a single success/failure action column in table
 
     # Returns the success or failure action depending on what evaluate returns
     #
