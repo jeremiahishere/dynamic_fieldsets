@@ -70,7 +70,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     end
 
     create_table :dependencies do |t|
-      t.integer :field_id
+      t.integer :fieldset_child_id
       t.string :value
       t.string :relationship
       t.integer :dependency_clause_id
