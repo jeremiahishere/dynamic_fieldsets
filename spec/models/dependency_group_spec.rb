@@ -19,15 +19,12 @@ describe DependencyGroup do
 
     it "should be valid" do
       @group.attributes = valid_attributes
-      pending "not sure how I messed this one up"
       @group.should be_valid
     end
 
     it "should require a fieldset_child" do
-      @group.should have(1).error_on(:fieldset_child)
+      @group.should have(1).error_on(:fieldset_child_id)
     end
-
-    it "should have at least one dependency clause"
 
     it "should have a success action" do
       @group.should have(2).error_on(:success_action)
@@ -81,9 +78,7 @@ describe DependencyGroup do
     end
 
     it "should take a hash as input" do
-      pending "no idea why this doesn't work"
-      # I am pretty dumb, dealing with this later
-      @group.action({}).should_not raise_error
+      @group.action({}).should_not raise_error ArgumentError
     end
 
     it "should return the success action if evaluate returns true" do
@@ -108,10 +103,8 @@ describe DependencyGroup do
     end
 
     it "should take a hash as input" do
-      pending "no idea why this doesn't work"
-      # I am pretty dumb, dealing with this later
       @group.stub!(:dependency_clauses).and_return([])
-      @group.evaluate({}).should_not raise_error
+      @group.evaluate({}).should_not raise_error ArgumentError
     end
 
     it "should return true if all the clauses evaluate to true" do

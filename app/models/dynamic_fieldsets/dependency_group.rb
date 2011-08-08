@@ -4,7 +4,7 @@ module DynamicFieldsets
     belongs_to :fieldset_child
 
 
-    validates_presence_of :fieldset_child
+    validates_presence_of :fieldset_child_id
     validates_presence_of :success_action
     validates_presence_of :failure_action
     validate :success_action_in_action_list, :failure_action_in_action_list

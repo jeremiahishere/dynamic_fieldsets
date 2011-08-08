@@ -31,20 +31,25 @@ describe DependencyClause do
       @dependency1 = Dependency.new
       @dependency2 = Dependency.new
       @clause.stub!(:dependencies).and_return([@dependency1, @dependency2])
+      @evaluate_args = {}
     end
 
-    it "should take a hash as input"
+    it "should take a hash as input" do
+      @dependency1.stub!(:evaluate).and_return(true)
+      @dependency2.stub!(:evaluate).and_return(false)
+      @clause.evaluate(@evaluate_args).should_not raise_error ArgumentError
+    end
 
     it "should return true if at least one of the dependencies evaluateds to true" do
       @dependency1.stub!(:evaluate).and_return(true)
       @dependency2.stub!(:evaluate).and_return(false)
-      @clause.evaluate.should be_true
+      @clause.evaluate(@evaluate_args).should be_true
     end
 
     it "should return false if none of the dependencies evaluatue to true" do
       @dependency1.stub!(:evaluate).and_return(false)
       @dependency2.stub!(:evaluate).and_return(false)
-      @clause.evaluate.should be_false
+      @clause.evaluate(@evaluate_args).should be_false
     end
   end
 end
