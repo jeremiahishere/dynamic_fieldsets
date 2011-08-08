@@ -33,6 +33,8 @@ describe DependencyClause do
       @clause.stub!(:dependencies).and_return([@dependency1, @dependency2])
     end
 
+    it "should take a hash as input"
+
     it "should return true if at least one of the dependencies evaluateds to true" do
       @dependency1.stub!(:evaluate).and_return(true)
       @dependency2.stub!(:evaluate).and_return(false)

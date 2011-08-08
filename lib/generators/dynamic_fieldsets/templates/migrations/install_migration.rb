@@ -80,7 +80,10 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     end
 
     create_table :dependency_groups do |t|
-
+      t.string :success_action
+      t.string :failure_action
+      t.integer :fieldset_child_id
+      
       t.timestamps
     end
   end
