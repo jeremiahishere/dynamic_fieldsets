@@ -1,4 +1,7 @@
 module DynamicFieldsets
+  # A clause in CNF expression for question dependencies
+  #
+  # @author Jeremiah Hemphill
   class DependencyClause < ActiveRecord::Base
     belongs_to :dependency_group  
     has_many :dependencies
