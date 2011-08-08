@@ -1,7 +1,7 @@
 require 'spec_helper'
 include DynamicFieldsets
 
-describe DependencyClause do
+describe DependencyGroup do
   it "should respond to fieldset_child"
   it "should respond to dependencies"
 
