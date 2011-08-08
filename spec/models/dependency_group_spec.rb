@@ -53,7 +53,6 @@ describe DependencyGroup do
 
   describe "dependent_fieldset_children method" do
     before(:each) do
-      pending "waiting on the dependency ticket"
       @group = DependencyGroup.new
       @clause = DependencyClause.new(:dependency_group => @group)
       @dependency = Dependency.new(:dependency_clause => @clause, :fieldset_child_id => 42)
