@@ -39,6 +39,10 @@ module DynamicFieldsets
       return children
     end
 
+    def dependency_group_fieldset_children
+      return {self.fieldset_child_id => self.dependent_fieldset_children }.to_json
+    end
+
     # Returns the success or failure action depending on what evaluate returns
     #
     # @param [Hash] input_values A hash of fieldset_child_id:value pairs to test against

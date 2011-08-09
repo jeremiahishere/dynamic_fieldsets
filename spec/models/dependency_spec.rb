@@ -8,8 +8,8 @@ describe Dependency do
     Dependency.new.should respond_to :fieldset_child
   end
 
-  it "should respond to dependency_clauses" do
-    Dependency.new.should respond_to :dependency_clauses
+  it "should respond to dependency_clause" do
+    Dependency.new.should respond_to :dependency_clause
   end
 
   describe "validations" do

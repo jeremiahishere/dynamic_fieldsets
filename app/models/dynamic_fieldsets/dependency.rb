@@ -10,7 +10,7 @@ module DynamicFieldsets
     # Relations    
 
     belongs_to :fieldset_child
-    has_many :dependency_clauses
+    belongs_to :dependency_clause
 
     # Validations
     validates_presence_of :fieldset_child_id

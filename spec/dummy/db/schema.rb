@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110808212129) do
+ActiveRecord::Schema.define(:version => 20110809161724) do
 
   create_table "dependencies", :force => true do |t|
     t.integer  "fieldset_child_id"
@@ -28,8 +28,7 @@ ActiveRecord::Schema.define(:version => 20110808212129) do
   end
 
   create_table "dependency_groups", :force => true do |t|
-    t.string   "success_action"
-    t.string   "failure_action"
+    t.string   "action"
     t.integer  "fieldset_child_id"
     t.datetime "created_at"
     t.datetime "updated_at"
