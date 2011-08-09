@@ -58,10 +58,10 @@ describe DependencyGroup do
       @input_hash.should be_a_kind_of(Hash)
     end
     it "should return an array of fieldset children that are tied to a dependency group through the dependency clause for the value" do
-      @input_hash.first.last.should == [@fieldset_child_1.id, @fieldset_child_2.id]
+      lambda{@input_hash.has_value?([@fieldset_child_1.id, @fieldset_child_2.id])}.should be_true
     end
     it "should return the dependency group's fieldset child for the key" do
-      @input_hash.first.first.should == @fieldset_child_3.id.to_s
+      lambda{@input_hash.has_key?(@fieldset_child_3.id.to_s)}.should be_true
     end
   end
 
