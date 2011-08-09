@@ -4,6 +4,7 @@ module DynamicFieldsets
     belongs_to :fieldset
     
     has_many :field_records
+    has_one :dependency_group
 
     validates_presence_of :fieldset_id
     validates_presence_of :child_id

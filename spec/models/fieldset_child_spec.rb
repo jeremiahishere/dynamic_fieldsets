@@ -12,6 +12,14 @@ describe FieldsetChild do
     FieldsetChild.new.should respond_to :child
   end
 
+  it "should respond to dependency_group" do
+    FieldsetChild.new.should respond_to :dependency_group
+  end
+
+  it "should respond to field_records" do
+    FieldsetChild.new.should respond_to :field_records
+  end
+
   it "should respond to order_num" do
     FieldsetChild.new.should respond_to :order_num
   end

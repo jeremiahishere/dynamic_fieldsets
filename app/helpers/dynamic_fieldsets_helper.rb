@@ -1,6 +1,37 @@
 module DynamicFieldsetsHelper
   #include ActionView::Helpers
   
+  # Creates a json object of dependency groups and their fieldset children
+  # Useful because when a field is update, it needs to figure out if it is part of
+  # a dependency group.  If it is, all other fields in the dependency group must be also 
+  # sent to the dependency calculator through the ajax call.  We are trying to 
+  # minimize the amount of data being sent through ajax but we need to make sure
+  # that we send all of the import data
+  #
+  # @param [Fieldset] fieldset The fieldset object
+  # @return [JSON Object] A json object representing all of the dependency groups and dependent fields for the fieldset
+  def dependent_fieldset_children(fieldset)
+    dependency_groups = {}
+    # all_child_fields needs to return all child fields of a fieldset at any level
+    # it should return fieldset ids
+    # this is not existing functionality
+    fieldset.all_child_fields.each do |child|
+      # don't need to mess with polymorphic stuff here because we know it is a field
+      # may need a namespace
+      field = Field.find_by_id(child.id)
+      # add the dependency information to the hash if it exists
+      if field.dependency_group
+        if dependency_groups[child.id] = nil
+          dependency_groups[child.id] = []
+        end
+        # merge here on the off chance there are multiple dependency groups for a single field
+        # In the current system this is impossible
+        dependency_groups[child.id] |= field.dependency_groups.dependent_fieldset_children
+      end
+    end
+    return dependency_groups.to_json
+  end
+
   # Builds HTML for the provided field.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
   # @param [Field] field The Field to render
