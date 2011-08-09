@@ -39,8 +39,13 @@ module DynamicFieldsets
       return children
     end
 
+    # Parses the dependnecy_group's fieldset_child and ones inherited through dependency clause and creates a 
+    # hash where the key is the dependency_group's fieldset_child and the value is an array of all fieldset
+    # children dependent on this group. This is returned as a JSON object
+    #
+    # @returns [JSON] A hash inside a Json object
     def dependency_group_fieldset_children
-      return {self.fieldset_child_id => self.dependent_fieldset_children }.to_json
+      return { self.fieldset_child_id => self.dependent_fieldset_children }.to_json
     end
 
     # Returns the success or failure action depending on what evaluate returns
