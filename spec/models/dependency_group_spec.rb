@@ -26,28 +26,19 @@ describe DependencyGroup do
       @group.should have(1).error_on(:fieldset_child_id)
     end
 
-    it "should have a success action" do
-      @group.should have(2).error_on(:success_action)
+    it "should have an action" do
+      @group.should have(2).error_on(:action)
     end
 
-    it "success action should be in action_list" do
-      @group.success_action = "invalid action"
-      @group.should have(1).error_on(:success_action)
-    end
-
-    it "should have a failure action" do
-      @group.should have(2).error_on(:failure_action)
-    end
-
-    it "failure action should be in action_list" do
-      @group.failure_action = "invalid action"
-      @group.should have(1).error_on(:failure_action)
+    it "action should be in Action_list" do
+      @group.action = "invalid action"
+      @group.should have(1).error_on(:action)
     end
   end
 
   describe "action_list method" do
-    it "should return an array" do
-      DependencyGroup.new.action_list.should be_a_kind_of(Array)
+    it "should return an hash" do
+      DependencyGroup.new.action_list.should be_a_kind_of(Hash)
     end
   end
 
@@ -74,25 +65,24 @@ describe DependencyGroup do
     end
   end
 
-  describe "action method" do
+  describe "get_action method" do
     before(:each) do
       @group = DependencyGroup.new
       @group.stub!(:evaluate).and_return(true)
+      @group.action = "show"
     end
 
     it "should take a hash as input" do
-      @group.action({}).should_not raise_error ArgumentError
+      @group.get_action({}).should_not raise_error ArgumentError
     end
 
     it "should return the success action if evaluate returns true" do
-      @group.success_action = "show"
-      @group.action({}).should == "show"
+      @group.get_action({}).should == "show"
     end
 
     it "should return the failure action if evaluate returns false" do
-      @group.failure_action = "hide"
       @group.stub!(:evaluate).and_return(false)
-      @group.action({}).should == "hide"
+      @group.get_action({}).should == "hide"
     end
   end
 
