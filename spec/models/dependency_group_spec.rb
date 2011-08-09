@@ -42,13 +42,36 @@ describe DependencyGroup do
     end
   end
 
+  describe "dependency_group_fieldset_chldren method" do
+    before(:each) do
+      @fieldset_child_1 = FieldsetChild.create(:fieldset_id => 1, :child_id => 1, :child_type => "DynamicFieldsets::Field", :order_num => 1)
+      @fieldset_child_2 = FieldsetChild.create(:fieldset_id => 2, :child_id => 2, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+      @fieldset_child_3 = FieldsetChild.create(:fieldset_id => 3, :child_id => 3, :child_type => "DynamicFieldsets::Field", :order_num => 3)
+      @group = DependencyGroup.create(:fieldset_child => @fieldset_child_3, :action => "show")
+      @clause = DependencyClause.create(:dependency_group => @group)
+      @dependency_1 = Dependency.create(:fieldset_child => @fieldset_child_1, :dependency_clause => @clause, :value => "5", :relationship => "equals")
+      @dependency_2 = Dependency.create(:fieldset_child => @fieldset_child_2, :dependency_clause => @clause, :value => "5", :relationship => "equals")
+      @input_hash = JSON.parse(@group.dependency_group_fieldset_children)
+    end
+
+    it "should return a hash object once parsed from json" do
+      @input_hash.should be_a_kind_of(Hash)
+    end
+    it "should return an array of fieldset children that are tied to a dependency group through the dependency clause for the value" do
+      @input_hash.first.last.should == [@fieldset_child_1.id, @fieldset_child_2.id]
+    end
+    it "should return the dependency group's fieldset child for the key" do
+      @input_hash.first.first.should == @fieldset_child_3.id.to_s
+    end
+  end
+
   describe "dependent_fieldset_children method" do
     before(:each) do
       @group = DependencyGroup.new
       @group.attributes = valid_attributes
       @group.save
       @clause = DependencyClause.create(:dependency_group => @group)
-      @dependency = Dependency.create(:value => 5, :relationship => "equals", :dependency_clause_id => @clause.id, :fieldset_child_id => 42)
+      @dependency = Dependency.create(:value => 5, :relationship => "equals", :dependency_clause => @clause, :fieldset_child_id => 42)
     end
 
     it "should return an array" do
