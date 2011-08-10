@@ -52,14 +52,25 @@ module DynamicFieldsets
       return false
     end
     
+    # scope for ascending order
+    def self.ordered
+      order 'order_num asc'
+    end
+    
     # @return [Array] Collection of FieldsetChildren that share the same parent; ascending order.
     def siblings
-      FieldsetChild.where( :fieldset_id => self.fieldset_id ).order 'order_num asc'
+      sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered
+      sib.delete self
+      sib
     end
     
     # @return [Integer] The order number of the last sibling.
     def last_order_num
-      self.siblings.last[:order_num]
+      begin
+        self.siblings.last[:order_num]
+      rescue
+        0
+      end
     end
     
   end

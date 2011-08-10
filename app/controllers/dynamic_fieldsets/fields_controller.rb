@@ -44,7 +44,9 @@ module DynamicFieldsets
         if @field.save
           if !parent_id.empty?
             parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
-            DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @field )
+            relation = @fieldset.fieldset_children.build( :fieldset => parent )
+            relation.child = @field
+            relation.save
           end
           format.html { redirect_to(@field, :notice => 'Successfully created a new field.') }
         else

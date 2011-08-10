@@ -39,19 +39,17 @@ module DynamicFieldsets
       return parent_fieldsets.empty?
     end
     
-    # The collected descendents of a fieldset.  
+    # The collected descendents of a fieldset.
     # This group is sorted by order number on the fieldsetchild model 
     # @return [Array] Ordered collection of descendent fields and fieldsets.
     def children
       collected_children = []
-      self.fieldset_children.sort_by{ |child| child.order_num }.each do |child|
-        child_obj = child.child_type.constantize.find_by_id(child.child_id)
-        if child_obj.respond_to?(:enabled?)
-          if child_obj.enabled?
-            collected_children.push child_obj
-          end
-        else
-          collected_children.push child_obj
+      self.fieldset_children.sort_by(&:order_num).each do |fs_child|
+        child = fs_child.child_type.constantize.find_by_id fs_child.child_id
+        if child.respond_to? :enabled? and child.enabled?
+          collected_children.push child
+        elsif !child.respond_to? :enabled?
+          collected_children.push child
         end
       end
       return collected_children
