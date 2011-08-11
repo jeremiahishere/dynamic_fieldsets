@@ -1,0 +1,18 @@
+<% fieldset.children.each do |child| %>
+  <% if child.is_a? DynamicFieldsets::Fieldset then %>
+    <li id="<%= child.id %>">
+      <span class="name"><%= child.name %></span>
+      <span class="admin show"><%= link_to 'Show', dynamic_fieldsets_fieldset_path(child) %></span>
+      <span class="admin edit"><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(child) %></span>
+      <span class="admin destroy"><%= button_to 'Destroy', dynamic_fieldsets_fieldset_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
+    </li>
+    <% if child.has_children? then %>
+      <ul>
+        <%= render :partial => 'child', :locals => { :fieldset => child } %>
+      </ul>
+    <% end %>
+  <% elsif child.is_a? DynamicFieldsets::Fieldset then %>
+  
+  <% end %>
+
+<% end %>

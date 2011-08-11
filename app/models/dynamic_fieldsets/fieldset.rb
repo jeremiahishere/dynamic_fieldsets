@@ -28,15 +28,15 @@ module DynamicFieldsets
       # the new method doesn't use a scope because I am bad at them
       all.select { |fs| fs.parent_fieldsets.empty? }
     end
-    
-    # @return [Array] An array of name, id pairs to be used in select tags
-    def self.parent_fieldset_list
-      all.collect { |f| [f.name, f.id] }
-    end
 
     # @return [Boolean] True if fieldset has no parent
     def root?
       return parent_fieldsets.empty?
+    end
+    
+    # @return [Array] An array of name, id pairs to be used in select tags
+    def self.parent_fieldset_list
+      all.collect { |f| [f.name, f.id] }
     end
     
     # The collected descendents of a fieldset.
@@ -53,6 +53,10 @@ module DynamicFieldsets
         end
       end
       return collected_children
+    end
+    
+    def has_children?
+      return !self.fieldset_children.empty?
     end
 
   end

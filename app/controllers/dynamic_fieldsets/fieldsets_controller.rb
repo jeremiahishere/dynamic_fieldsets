@@ -50,20 +50,10 @@ module DynamicFieldsets
 
     # Show a record and all children
     def children
-      fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
-      
-      if fieldset.root?
-        @fieldset_family = fieldset.children
-        @parent_fieldset = fieldset
+      @fieldset = DynamicFieldsets::Fieldset.find_by_id params[:id]
 
-        respond_to do |format|
-          format.html
-        end
-        
-      else
-        respond_to do |format|
-          format.html { redirect_to( :action => 'index', :notice => "#{fieldset.name} is not a root fieldset." )}
-        end
+      respond_to do |format|
+        format.html
       end
     end
     
@@ -76,9 +66,10 @@ module DynamicFieldsets
         if @fieldset.save
           if !parent_id.empty?
             parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
-            relation = @fieldset.fieldset_children.build( :fieldset => parent )
-            relation.child = @fieldset
-            relation.save
+            DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @fieldset )
+            #relation = @fieldset.fieldset_children.build( :fieldset => parent )
+            #relation.child = @fieldset
+            #relation.save
           end
           format.html { redirect_to( dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Successfully created a new fieldset" )}
         else

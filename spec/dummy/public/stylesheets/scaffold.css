@@ -74,9 +74,23 @@ abbr[title='required'] {
 }
 
 form#new_dynamic_fieldsets_field {
-
 }
 
 label[for|='field'] {
   display: block;
+}
+
+li span.name {
+  font-weight: bold;
+  padding-right: 3em;
+}
+li span.admin {
+  display: inline-block;
+  padding: 0 3px;
+  font-size: 10px;
+  font-weight: bold;
+}
+li .admin a {
+  color: #666;
+  text-decoration: none;
 }

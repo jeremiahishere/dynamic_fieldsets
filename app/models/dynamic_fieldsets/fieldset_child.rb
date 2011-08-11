@@ -66,11 +66,8 @@ module DynamicFieldsets
     
     # @return [Integer] The order number of the last sibling.
     def last_order_num
-      begin
-        self.siblings.last[:order_num]
-      rescue
-        0
-      end
+      return 0 if siblings.empty?
+      return self.siblings.last[:order_num]
     end
     
   end

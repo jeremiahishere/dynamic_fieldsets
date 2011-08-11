@@ -1,45 +1,12 @@
-<h1>Listing fieldset children of <%= @parent_fieldset.name %></h1>
+<h1>Listing children of '<%= @fieldset.name %>'</h1>
 
-<table>
-  <tr>
-    <th>Type</th>
-    <th>Name</th>
-    <th>Description/Field Type</th>
-    <th>Fieldset Children</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<ul>
+  <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
+</ul>
 
-<% @fieldset_family.each do |child| %>
-  <% if child.is_a?(DynamicFieldsets::Fieldset) %>
-    <tr>
-      <td>Fieldset</td>
-      <td><%= child.name %></td>
-      <td><%= child.description %></td>
-      <td><%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(child) %></td>
-      <td><%= link_to 'Show', dynamic_fieldsets_fieldset_path(child) %></td>
-      <td><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(child) %></td>
-      <td><%= button_to 'Destroy', dynamic_fieldsets_fieldset_path(child), :confirm => 'Are you sure?', :method => :delete %></td>
-    </tr>
-  <% elsif child.is_a?(DynamicFieldsets::Field) %>
-    <tr>
-      <td>Field</td>
-      <td><%= child.name %></td>
-      <td><%= child.field_type %></td>
-      <td>N/A</td>
-      <td><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></td>
-      <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(child) %></td>
-      <td><%= button_to 'Destroy', dynamic_fieldsets_field_path(child), :confirm => 'Are you sure?', :method => :delete %></td>
-    </tr>
-  <% end %>
-<% end %>
-
-</table>
-
-<%= link_to 'New Child - Field', new_dynamic_fieldsets_field_path(:parent => @parent_fieldset.id)  %> | 
-<%= link_to 'New Child - Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @parent_fieldset.id) %> | 
-<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@parent_fieldset) %> |
+<%= link_to 'New Child - Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
+<%= link_to 'New Child - Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
+<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> |
 <%= link_to 'Return to Manager', dynamic_fieldsets_fieldsets_path %>
 
 <br />
