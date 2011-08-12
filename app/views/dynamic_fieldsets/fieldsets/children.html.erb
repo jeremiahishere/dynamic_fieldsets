@@ -1,7 +1,7 @@
-<h1>Listing children of '<%= @fieldset.name %>'</h1>
+<h1><%= @fieldset.name %></h1>
 
-<ul>
-  <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
+<ul id="children">
+<%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
 </ul>
 
 <%= link_to 'New Child - Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 

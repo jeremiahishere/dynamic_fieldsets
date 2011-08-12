@@ -80,11 +80,49 @@ label[for|='field'] {
   display: block;
 }
 
-li span.name {
+
+input[type='submit'] {
+  background-color: white;
+  border: none;
   font-weight: bold;
-  padding-right: 3em;
+  color: purple;
+  cursor: pointer;
+}
+
+ul#children {
+  width: 600px;
+}
+ul#children,
+ul#children ul {
+  padding-left: 2.5em;
+  position: relative;
+}
+ul#children li {
+  display: block;
+  background-color: #eee;
+  margin: 2px 0;
+  padding: 4px 1em;
+}
+ul#children li.fieldset {
+  background-color: white;
+  border-left: 1em solid #999;
+}
+ul#children li.field {
+  background-color: white;
+  border-left: 1em solid #eee;
+  
+}
+li span.fieldtype {
+  color: #999;
+}
+li span.name {
+  color: black;
 }
 li span.admin {
+  position: absolute;
+  right: 0;
+}
+li span.admin span {
   display: inline-block;
   padding: 0 3px;
   font-size: 10px;
