@@ -1,12 +1,12 @@
-<h1><%= @fieldset.name %></h1>
-
+<h3 class="fieldset name"><%= @fieldset.name %></h3>
+<p class="fieldset description"><%= @fieldset.description %></p>
 <ul id="children">
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
 </ul>
 
-<%= link_to 'New Child - Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
-<%= link_to 'New Child - Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
+<%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
+<%= link_to 'Add Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
 <%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> |
-<%= link_to 'Return to Manager', dynamic_fieldsets_fieldsets_path %>
+<%= link_to 'Return to Manager', :controller => :fieldsets, :action => :roots %>
 
 <br />

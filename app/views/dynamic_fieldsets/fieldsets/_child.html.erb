@@ -1,12 +1,18 @@
 <% fieldset.children.each do |child| %>
   <% if child.is_a? DynamicFieldsets::Fieldset then %>
-    <li id="<%= child.id %>" class="fieldset">
+    <li id="child-<%= child.id %>" class="fieldset">
       <span class="name"><%= child.name %></span>
       <span class="admin">
-        <span class="children"><%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(child) %></span>
+        <span class="children">
+          <% if child.has_children? then %>
+            <%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(child) %>
+          <% else %>
+            <%= link_to 'Add to', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(child) %>
+          <% end %>
+        </span>
         <span class="show"><%= link_to 'Show', dynamic_fieldsets_fieldset_path(child) %></span>
         <span class="edit"><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(child) %></span>
-        <span class="destroy"><%= button_to 'Destroy', dynamic_fieldsets_fieldset_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
+        <span class="destroy"><%= button_to 'Destroy!', dynamic_fieldsets_fieldset_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
       </span>
     </li>
     <% if child.has_children? then %>
@@ -15,13 +21,13 @@
       </ul>
     <% end %>
   <% elsif child.is_a? DynamicFieldsets::Field then %>
-    <li id="<%= child.id %>" class="field">
+    <li id="child-<%= child.id %>" class="field<%= ' required' if child.required? %>">
       <span class="fieldtype"><%= child.field_type %>:</span>
       <span class="name"><%= child.label %></span>
       <span class="admin">
         <span class="show"><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></span>
         <span class="edit"><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(child) %></span>
-        <span class="destroy"><%= button_to 'Destroy', dynamic_fieldsets_field_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
+        <span class="destroy"><%= button_to 'Destroy!', dynamic_fieldsets_field_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
       </span>
     </li>
   <% end %>
