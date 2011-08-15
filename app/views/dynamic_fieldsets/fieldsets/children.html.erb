@@ -1,8 +1,26 @@
 <h3 class="fieldset name"><%= @fieldset.name %></h3>
 <p class="fieldset description"><%= @fieldset.description %></p>
-<ul id="children">
+
+<script>
+$(function() {
+  $( "#children" ).nestedSortable({
+      forcePlaceholderSize: true,
+      disableNesting: 'field',
+      handle: 'div',
+      helper:	'clone',
+      items: 'li',
+      opacity: .6,
+      placeholder: 'placeholder',
+      revert: 250,
+      tabSize: 25,
+      toleranceElement: 'div'
+    });
+});
+</script>
+
+<ol id="children">
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
-</ul>
+</ol>
 
 <%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
 <%= link_to 'Add Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 

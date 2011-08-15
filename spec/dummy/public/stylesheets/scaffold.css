@@ -89,32 +89,36 @@ input[type='submit'] {
   cursor: pointer;
 }
 
-ul#children {
+ol#children {
   width: 600px;
 }
-ul#children,
-ul#children ul {
-  padding-left: 2.5em;
+ol#children,
+ol#children ol {
+  padding: .4em 0;
+  padding-left: 1.5em;
   position: relative;
 }
-ul#children li {
+ol#children li {
+  cursor: move;
   display: block;
   background-color: #eee;
   margin: 2px 0;
   padding: 4px 1em;
-  border: 1px solid #eee;
   border-left: 2px solid;
+  border-right: none;
+  padding-right: 0;
+  
 }
-ul#children li.fieldset {
+ol#children li.fieldset {
   background-color: white;
   border-left-color: #999;
 }
-ul#children li.field {
+ol#children li.field {
   background-color: white;
   border-left-color: #ddd;
   
 }
-ul#children li.required.field {
+ol#children li.required.field {
   border-left-color: #e9705e;
 }
 li span.fieldtype {
