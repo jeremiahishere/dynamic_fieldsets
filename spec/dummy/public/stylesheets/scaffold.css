@@ -1,5 +1,9 @@
 body { background-color: #fff; color: #333; }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: .5em 0;
+}
+
 body, p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
   font-size:   13px;
@@ -61,11 +65,13 @@ li[id|='field'] {
   border-bottom: 1px dotted gray;
 }
 
-div[id|='fieldset'] {
+div[id|='fsa'] {
   width: 800px;
   background-color: #eee;
-  padding: 1em 1em 1em 0;
-  margin-bottom: 2em;
+  padding: 1em;
+}
+
+div[id|='fieldset'] {
 }
 
 abbr[title='required'] {
@@ -74,6 +80,13 @@ abbr[title='required'] {
 }
 
 form#new_dynamic_fieldsets_field {
+}
+
+div[id|='fieldset'] ol {
+  list-style-position: inside;
+  padding: 0;
+  padding-left: 1em;
+  border-left: 1px dotted gray;
 }
 
 label[for|='field'] {

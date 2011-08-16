@@ -61,7 +61,7 @@ module DynamicFieldsetsHelper
       field_markup.push "</label>"
     end
     
-    attrs = { :id => "field-#{field.id}" }
+    attrs = { :id => "field-#{field.id}-child-#{}" }
     field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
     
     case field.field_type.to_sym
@@ -151,6 +151,7 @@ module DynamicFieldsetsHelper
   # @return [Array] The HTML elements for the fieldset
   def fieldset_renderer(fsa, fieldset, values, form_type)
     lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
+    lines.push "<h3 class='name'>#{fieldset.name}</h3>"
     lines.push "<ol>"
     fieldset.children.each do |child|
       if child.is_a? DynamicFieldsets::Field then
@@ -182,10 +183,11 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
-    rendered_dynamic_fieldset = ""
+    rendered_dynamic_fieldset = "<div id='fsa-#{fsa.id}'>"
     fieldset_renderer( fsa, fsa.fieldset, fsa.field_values, form_type ).each do |line|
       rendered_dynamic_fieldset += line + "\n"
     end
+    rendered_dynamic_fieldset += "</div>"
     return rendered_dynamic_fieldset.html_safe
   end
   
