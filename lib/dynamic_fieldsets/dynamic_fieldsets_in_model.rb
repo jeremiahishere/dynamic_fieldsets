@@ -83,14 +83,13 @@ module DynamicFieldsets
                   this_value = values[key][sub_key]
                   if this_value.is_a? Array
                   then # multiple values
-                    debugger
-                    field_records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id)
+                    field_records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => sub_key_id)
                     
                     this_value.each do |value|
                       if field_records.select{ |record| record.value.eql? value }.empty? # record does not exist?
                         #ADD
                         DynamicFieldsets::FieldRecord.create( :fieldset_associator_id => fsa.id,
-                                                              :field_id => sub_key_id,
+                                                              :fieldset_child_id => sub_key_id,
                                                               :value => value)
                       end
                     end
@@ -105,9 +104,9 @@ module DynamicFieldsets
                     
                   else # single value
                     # retrieve record
-                    field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :field_id => sub_key_id).first
+                    field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => sub_key_id).first
                     if field_record.nil? # create record
-                      field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :field_id => sub_key_id, :value => this_value)
+                      field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :fieldset_child_id => sub_key_id, :value => this_value)
                     else # update record
                       field_record.value = this_value
                       field_record.save

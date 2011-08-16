@@ -85,8 +85,9 @@ form#new_dynamic_fieldsets_field {
 div[id|='fieldset'] ol {
   list-style-position: inside;
   padding: 0;
-  padding-left: 1em;
+  padding-left: 12px;
   border-left: 1px dotted gray;
+  margin-left: 2px;
 }
 
 label[for|='field'] {

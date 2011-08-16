@@ -3,24 +3,25 @@ module DynamicFieldsetsHelper
   
   # Builds HTML for the provided field.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
-  # @param [Field] field The Field to render
+  # @param [FieldsetChild] fieldset_child The FieldsetChild to render
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
-  def field_renderer(fsa, field, values = [], form_type)
+  def field_renderer(fsa, fieldset_child, values = [], form_type)
     if form_type == "form"
-      return field_form_renderer(fsa, field, values)
+      return field_form_renderer(fsa, fieldset_child, values)
     else
-      return field_show_renderer(fsa, field, values)
+      return field_show_renderer(fsa, fieldset_child, values)
     end
   end
 
 
   # Builds HTML for the provided field for a show page.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
-  # @param [Field] field The Field to render
+  # @param [FieldsetChild] fieldset_child The FieldsetChild to render
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
-  def field_show_renderer(fsa, field, values = [])
+  def field_show_renderer(fsa, fieldset_child, values = [])
+    field = DynamicFieldsets::Field.find_by_id fieldset_child.child_id
     lines = []
     lines.push "<div class='dynamic_fieldsets_field'>"
     lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
@@ -45,10 +46,11 @@ module DynamicFieldsetsHelper
 
   # Builds HTML for the provided field for a form.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
-  # @param [Field] field The Field to render
+  # @param [FieldsetChild] fieldset_child The FieldsetChild to render
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
-  def field_form_renderer(fsa, field, values = [])
+  def field_form_renderer(fsa, fieldset_child, values = [])
+    field = DynamicFieldsets::Field.find_by_id fieldset_child.child_id
     classes  = "#{field.field_type} "
     classes += ( field.required ? 'required' : 'optional' )
     
@@ -61,20 +63,20 @@ module DynamicFieldsetsHelper
       field_markup.push "</label>"
     end
     
-    attrs = { :id => "field-#{field.id}-child-#{}" }
+    attrs = { :id => "field-#{field.id}-child-#{fieldset_child.id}" }
     field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
     
     case field.field_type.to_sym
     when :select
       selected = populate(field,values).to_i # should return the ID of the saved or default option
-      field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
+      field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :multiple_select
       attrs.merge! multiple: true
       opts = populate( field, values )
       opts = [opts] if !opts.is_a? Array
       selected = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
-      field_markup.push select_tag "fsa-#{fsa.id}[field-#{field.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
+      field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :radio
       field_markup.push "<div id='field-#{field.id}'>"
@@ -83,15 +85,15 @@ module DynamicFieldsetsHelper
         these_attrs = attrs
         these_attrs = attrs.merge checked: true if populate(field,values).to_i.eql? option.id
         field_markup.push "<label for='#{these_attrs[:id]}'>"
-        field_markup.push radio_button "fsa-#{fsa.id}", "field-#{field.id}", option.id, these_attrs
+        field_markup.push radio_button "fsa-#{fsa.id}", "field-#{fieldset_child.id}", option.id, these_attrs
         field_markup.push "#{option.name}"
         field_markup.push "</label>"
       end
       field_markup.push "</div>"
       
     when :checkbox
-      field_markup.push "<div id='field-#{field.id}'>"
-      attrs[:name] = "fsa-#{fsa.id}[field-#{field.id}][]"
+      field_markup.push "<div id='field-#{fieldset_child.id}'>"
+      attrs[:name] = "fsa-#{fsa.id}[field-#{fieldset_child.id}][]"
       opts = populate( field, values )
       checked = []
       checked = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
@@ -106,12 +108,12 @@ module DynamicFieldsetsHelper
       
     when :textfield
       attrs.merge!( {:value => populate( field, values )} )
-      field_markup.push text_field "fsa-#{fsa.id}", "field-#{field.id}", attrs
+      field_markup.push text_field "fsa-#{fsa.id}", "field-#{fieldset_child.id}", attrs
       
     when :textarea
       attrs.merge! cols: '40' if !attrs.include? :cols
       attrs.merge! rows: '6' if !attrs.include? :rows
-      attrs.merge! name: "fsa-#{fsa.id}[field-#{field.id}]"
+      attrs.merge! name: "fsa-#{fsa.id}[field-#{fieldset_child.id}]"
       tag = "<textarea"
       attrs.each{ |att,val| tag += " #{att}=\"#{val}\"" }
       tag += ">"
@@ -120,20 +122,18 @@ module DynamicFieldsetsHelper
       field_markup.push "</textarea>"
       
     when :date
-      date_options = {  add_month_numbers: true,
-                        start_year: Time.now.year - 70 }
+      date_options = { start_year: Time.now.year - 70 }
       setdate = populate( field, values ) # date string if saved or default
       date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
       # attrs.reject!{ |k| k.eql? :id }
-      field_markup.push date_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
+      field_markup.push date_select "fsa-#{fsa.id}", "field-#{fieldset_child.id}", date_options, attrs
       
     when :datetime
-      date_options = {  add_month_numbers: true,
-                        start_year: Time.now.year - 70 }
+      date_options = { start_year: Time.now.year - 70 }
       setdate = populate( field, values ) # datetime string if saved or default
       date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
       # attrs.reject!{ |k| k.eql? :id }
-      field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{field.id}", date_options, attrs
+      field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{fieldset_child.id}", date_options, attrs
       
     when :instruction
       field_markup.push "<p>#{field.label}</p>"
@@ -146,7 +146,7 @@ module DynamicFieldsetsHelper
   
   # Builds HTML for the provided fieldset and its children.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
-  # @param [Field] fieldset The Fieldset to render
+  # @param [Fieldset] fieldset The Fieldset to render
   # @param [Hash] values Stored values for the fieldset
   # @return [Array] The HTML elements for the fieldset
   def fieldset_renderer(fsa, fieldset, values, form_type)
@@ -155,7 +155,8 @@ module DynamicFieldsetsHelper
     lines.push "<ol>"
     fieldset.children.each do |child|
       if child.is_a? DynamicFieldsets::Field then
-        lines += field_renderer( fsa, child, values[child.id], form_type )
+        fieldset_child = DynamicFieldsets::FieldsetChild.find_by_child_id child.id
+        lines += field_renderer( fsa, fieldset_child, values[fieldset_child.id], form_type )
       else # child.is_a? Fieldset
         lines += fieldset_renderer( fsa, child, values, form_type )
       end
