@@ -62,8 +62,28 @@ namespace :hudson do
   end
 end
 
-#general cucumber rake task
+#general cucumber rake tasks
 require 'cucumber/rake/task'
-Cucumber::Rake::Task.new(:cucumber, 'run features that should pass') do |t|
-  t.cucumber_opts = "spec/dummy/features --format progress"
+namespace :cucumber do
+  Cucumber::Rake::Task.new(:all, 'run features that should pass') do |t|
+    t.cucumber_opts = "spec/dummy/features --format progress"
+  end
+  Cucumber::Rake::Task.new(:no_js, 'run features that should pass') do |t|
+    t.cucumber_opts = "spec/dummy/features --format progress --tags ~@javascript"
+  end
+
+  task :setup_js_with_vnc4server do
+    puts "Cucumber test with vnc4server"
+    ENV['DISPLAY'] = ":99"
+    %x{vncserver :99 2>/dev/null >/dev/null &}
+    %x{DISPLAY=:99 firefox 2>/dev/null >/dev/null &}
+  end
+
+  task :kill_js do
+    puts "Killing vnc, xvfb, and ff processes"
+    %x{killall Xvnc4}
+    %x{killall Xvfb}
+    %x{killall firefox}
+  end
 end
+task :cucumber => ['cucumber:setup_js_with_vnc4server', 'cucumber:all', 'cucumber:kill_js']

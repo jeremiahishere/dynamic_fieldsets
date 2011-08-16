@@ -50,4 +50,3 @@ Feature: Managed fields
     And I should see "Field option value"
     And I should see "Html attribute name"
     And I should see "Html attribute value"
-
