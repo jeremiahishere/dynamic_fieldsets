@@ -68,20 +68,14 @@ module DynamicFieldsets
     
     # @return [Array] Alias for field_defaults
     def defaults
-      if options?
-        return self.field_defaults
-      else 
-        return nil
-      end
+      return self.field_defaults if options?
+      return nil
     end
     
     # @return [String] Alias for field_defaults.first
     def default
-      if options?
-        return nil
-      else
-        return self.field_defaults.first
-      end
+      return nil if options?
+      return self.field_defaults.first
     end
     
   end

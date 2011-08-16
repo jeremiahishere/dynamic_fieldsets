@@ -20,27 +20,30 @@ describe FieldsetChild do
     before(:each) do
       @fieldset_child = FieldsetChild.new
     end
-    it "should be valid" do
+    it "are valid" do
       @fieldset_child.attributes = valid_attributes
       @fieldset_child.should be_valid
     end
     
-    it "should require fieldset" do
+    it "require fieldset" do
       @fieldset_child.should have(1).error_on(:fieldset_id)
     end
 
-    it "should require child" do
+    it "require child" do
       @fieldset_child.should have(1).error_on(:child_id)
       @fieldset_child.should have(1).error_on(:child_type)
     end
 
-    it "should require order number" do
+    it "require order_num" do
+      @fieldset_child.stub!(:assign_order)
       @fieldset_child.should have(1).error_on(:order_num)
     end
 
-    it "should require child_type to be only either 'field' or fieldset'"
-
-    it "should not allow duplicate pairings of fieldsets and fields" do
+    it "require child_type to be only either 'field' or fieldset'" do
+      pending
+    end
+    
+    it "do not allow duplicate pairings of fieldsets and fields" do
       fieldset = Fieldset.new
       field = Field.new
       field.stub!(:id).and_return(100)

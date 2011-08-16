@@ -1,6 +1,4 @@
-<h1>Listing Fieldsets</h1>
-
-<p id="notice"><%= notice %></p>
+<h1>Listing fieldsets</h1>
 
 <table>
   <tr>
@@ -21,7 +19,7 @@
     <td><%= link_to 'Children', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(fieldset) %></td>
     <td><%= link_to 'Show', dynamic_fieldsets_fieldset_path(fieldset) %></td>
     <td><%= link_to 'Edit', edit_dynamic_fieldsets_fieldset_path(fieldset) %></td>
-    <td><%= button_to 'Destroy', dynamic_fieldsets_fieldset_path(fieldset), :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', dynamic_fieldsets_fieldset_path(fieldset), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

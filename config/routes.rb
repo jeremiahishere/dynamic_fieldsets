@@ -4,10 +4,10 @@ Rails.application.routes.draw do
     match "/fieldsets/new(/:parent)" => "fieldsets#new", :as => :new_dynamic_fieldsets_fieldset
     match "/fields/new(/:parent)" => "fields#new", :as => :new_dynamic_fieldsets_field
     resources :fieldset_associators
-    resources :fieldsets do
-      resources :fields
-    end
+    match "/fieldsets/roots" => "fieldsets#roots"
+    resources :fieldsets
     resources :fields
+    resources :fieldset_children
   end
 
 end
