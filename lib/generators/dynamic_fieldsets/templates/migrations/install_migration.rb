@@ -68,6 +68,28 @@ class <%= migration_class_name %> < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    create_table :dependencies do |t|
+      t.integer :fieldset_child_id
+      t.string :value
+      t.string :relationship
+      t.integer :dependency_clause_id
+
+      t.timestamps 
+    end
+
+    create_table :dependency_clauses do |t|
+      t.integer :dependency_group_id
+
+      t.timestamps
+    end
+
+    create_table :dependency_groups do |t|
+      t.string :action
+      t.integer :fieldset_child_id
+      
+      t.timestamps
+    end
   end
 
   def self.down
@@ -78,5 +100,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     drop_table :field_defaults
     drop_table :field_html_attributes
     drop_table :field_records
+
+    drop_table :dependencies
+    drop_table :dependency_clauses
+    drop_table :dependency_group
   end
 end

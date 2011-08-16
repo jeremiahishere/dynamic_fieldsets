@@ -21,6 +21,8 @@ module DynamicFieldsets
       self.order_num = self.last_order_num + 1 if self.order_num.nil?
     end
 
+    #TODO - validate that child_type only be "field" or "fieldset"
+
     def no_duplicate_fields_in_fieldset_children
       if self.fieldset && self.child
         duplicate_children = FieldsetChild.where(:fieldset_id => self.fieldset.id, :child_id => self.child_id, :child_type => self.child_type).select { |fieldset_child| fieldset_child.id != self.id }

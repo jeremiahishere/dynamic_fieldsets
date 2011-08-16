@@ -39,6 +39,10 @@ describe FieldsetChild do
       @fieldset_child.should have(1).error_on(:order_num)
     end
 
+    it "require child_type to be only either 'field' or fieldset'" do
+      pending
+    end
+    
     it "do not allow duplicate pairings of fieldsets and fields" do
       fieldset = Fieldset.new
       field = Field.new
