@@ -4,8 +4,8 @@ include DynamicFieldsets
 describe Fieldset do
   include FieldsetHelper
 
-  it "should respond to parent_fieldsets" do 
-    Fieldset.new.should respond_to :parent_fieldsets
+  it "should respond to parent" do 
+    Fieldset.new.should respond_to :parent
   end
 
   it "should respond to child_fields" do
@@ -45,9 +45,9 @@ describe Fieldset do
     end
   end
 
-  describe "roots scope" do
+  describe ".roots scope" do
     before(:each) do
-      # we could stub this one but I am not convinced the polymorphic relationships actaully work
+      # we could stub this one but I am not convinced the polymorphic relationships actually work
       @root_fieldset = Fieldset.new( valid_attributes )
       @root_fieldset.save
 
@@ -59,39 +59,39 @@ describe Fieldset do
       @fieldset_children.save
     end
     
-    it "should respond to roots scope" do
+    it ": Fieldset responds to .roots" do
       Fieldset.should respond_to :roots
     end
     
-    it "should return fieldsets with no parent fieldset" do
+    it "returns fieldsets with no parent" do
       roots = Fieldset.roots
       roots.each do |root|
-        root.parent_fieldsets.should be_empty
+        root.parent.should be_nil
       end
     end
     
-    it "should not return fieldsets with a parent fieldset" do
+    it "does not return fieldsets with a parent" do
       roots = Fieldset.roots
       roots.should_not include @child_fieldset
     end
   end
 
-  describe "root? method" do
+  describe ".root? method" do
     before(:each) do
       @fieldset = Fieldset.new
     end
 
-    it "should call parent fieldsets" do  
-      @fieldset.should_receive(:parent_fieldsets).and_return([])
+    it "calls parent" do  
+      @fieldset.should_receive(:parent).and_return nil
       @fieldset.root?
     end
 
-    it "should return true if parent fieldsets is empty" do
-      @fieldset.stub!(:parent_fieldsets).and_return([])
+    it "returns true if parent is nil" do
+      @fieldset.stub!(:parent).and_return nil
       @fieldset.root?.should be_true
     end
-    it "should return false if parent fieldsets is not empty" do
-      @fieldset.stub!(:parent_fieldsets).and_return(["some object goes here"])
+    it "returns false if parent is not nil" do
+      @fieldset.stub!(:parent).and_return "some object goes here"
       @fieldset.root?.should be_false
     end
   end
