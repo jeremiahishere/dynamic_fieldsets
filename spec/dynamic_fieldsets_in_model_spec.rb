@@ -172,4 +172,23 @@ describe DynamicFieldsetsInModel do
       @model.fieldset(:not_child_form).should be_nil
     end
   end
+  
+  # {"fsa-1"=>{"field-19"=>"Blahfaceee", "field-20"=>"8", "field-21"=>"No...",
+  # "field-22"=>["9"], "field-24"=>"10", "field-17(1i)"=>"1952", "field-17(2i)"=>"2",
+  # "field-17(3i)"=>"24", "field-18"=>["4", "5"]}}
+  describe "save_dynamic_fieldset method" do
+    before(:each) do
+      values = { "fsa-1" => { "field-42" => "testing" } }
+      @model = InformationForm.new
+      @model.stub!(:dynamic_fieldset_values).and_return values
+    end
+    
+    it "calls dynamic_fieldset_values" do
+      @model.should respond_to :dynamic_fieldset_values
+    end
+    
+    it ""
+    
+  end
+  
 end

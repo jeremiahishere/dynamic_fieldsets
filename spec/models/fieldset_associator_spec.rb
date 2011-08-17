@@ -78,12 +78,12 @@ describe FieldsetAssociator do
       @fsa = FieldsetAssociator.new
 
       @field = mock_model DynamicFieldsets::Field
-      @field.stub!(:id).and_return 37
       @fieldset_child = mock_model DynamicFieldsets::FieldsetChild
       @fieldset_child.stub!(:child).and_return @field
+      @fieldset_child.stub!(:id).and_return 37
 
       @field_record = mock_model DynamicFieldsets::FieldRecord
-      @field_record.stub!(:field).and_return @field
+      @field_record.stub!(:fieldset_child).and_return @fieldset_child
       @field_record.stub!(:value).and_return 42
 
       @fsa.stub!(:field_records).and_return [@field_record, @field_record]

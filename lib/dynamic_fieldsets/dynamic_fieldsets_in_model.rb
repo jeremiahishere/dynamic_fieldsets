@@ -40,6 +40,11 @@ module DynamicFieldsets
 
     module InstanceMethods
       
+      # Stores the dynamic fieldset values
+      def set_fieldset_values( params )
+        self.dynamic_fieldset_values = params.select{ |key| key.match(/^fsa-/) }
+      end
+      
       # hacky system to save fieldset values
       # needs to be refactored and tested
       #

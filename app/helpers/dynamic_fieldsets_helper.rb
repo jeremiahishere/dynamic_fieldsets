@@ -21,7 +21,7 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_show_renderer(fsa, fieldset_child, values = [])
-    field = DynamicFieldsets::Field.find_by_id fieldset_child.child_id
+    field = fieldset_child.child
     lines = []
     lines.push "<div class='dynamic_fieldsets_field'>"
     lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
@@ -50,7 +50,7 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_form_renderer(fsa, fieldset_child, values = [])
-    field = DynamicFieldsets::Field.find_by_id fieldset_child.child_id
+    field = fieldset_child.child
     classes  = "#{field.field_type} "
     classes += ( field.required ? 'required' : 'optional' )
     
@@ -79,7 +79,7 @@ module DynamicFieldsetsHelper
       field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
       
     when :radio
-      field_markup.push "<div id='field-#{field.id}'>"
+      field_markup.push "<div id='field-#{field.id}-child-#{fieldset_child.id}'>"
       field.options.each do |option|
         attrs[:id] = "field-#{field.id}-#{option.name.parameterize}"
         these_attrs = attrs
@@ -92,7 +92,7 @@ module DynamicFieldsetsHelper
       field_markup.push "</div>"
       
     when :checkbox
-      field_markup.push "<div id='field-#{fieldset_child.id}'>"
+      field_markup.push "<div id='field-#{field.id}-child-#{fieldset_child.id}'>"
       attrs[:name] = "fsa-#{fsa.id}[field-#{fieldset_child.id}][]"
       opts = populate( field, values )
       checked = []
@@ -155,7 +155,7 @@ module DynamicFieldsetsHelper
     lines.push "<ol>"
     fieldset.children.each do |child|
       if child.is_a? DynamicFieldsets::Field then
-        fieldset_child = DynamicFieldsets::FieldsetChild.find_by_child_id child.id
+        fieldset_child = DynamicFieldsets::FieldsetChild.where( :child_id => child.id, :fieldset_id => fieldset.id, :child_type => child.class.name ).first
         lines += field_renderer( fsa, fieldset_child, values[fieldset_child.id], form_type )
       else # child.is_a? Fieldset
         lines += fieldset_renderer( fsa, child, values, form_type )

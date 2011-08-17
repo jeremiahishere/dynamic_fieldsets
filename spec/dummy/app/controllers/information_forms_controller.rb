@@ -58,7 +58,7 @@ class InformationFormsController < ApplicationController
   # PUT /information_forms/1.xml
   def update
     @information_form = InformationForm.find(params[:id])
-    @information_form.dynamic_fieldset_values = params.select{ |key| key.match(/^fsa-/) }
+    @information_form.set_fieldset_values( params )
 
     respond_to do |format|
       if @information_form.update_attributes(params[:information_form])

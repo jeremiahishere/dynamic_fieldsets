@@ -56,17 +56,18 @@ module DynamicFieldsets
     def field_values
       output = {}
       self.field_records.each do |record|
-        field = record.fieldset_child.child
-        if field.field_type == "checkbox" || field.field_type == "multiple_select"
-          output[record.fieldset_child.id] = [] unless output[record.fieldset_child.id].is_a? Array
+        fieldtype = record.fieldset_child.child.field_type
+        child_id = record.fieldset_child.id
+        if fieldtype == "checkbox" || fieldtype == "multiple_select"
+          output[child_id] = [] unless output[child_id].is_a? Array
           # note record.id array
-          output[record.fieldset_child.id].push record.value.to_i
-        elsif field.field_type == "radio" || field.field_type == "select"
+          output[child_id].push record.value.to_i
+        elsif fieldtype == "radio" || fieldtype == "select"
           # note record.id
-          output[record.fieldset_child.id] = record.value.to_i
+          output[child_id] = record.value.to_i
         else
           # note record.value
-          output[record.fieldset_child.id] = record.value
+          output[child_id] = record.value
         end
       end
       return output
