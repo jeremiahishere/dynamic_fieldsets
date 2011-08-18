@@ -5,6 +5,7 @@ include ActionView::Helpers
 describe DynamicFieldsetsHelper do
   include DynamicFieldsetsHelper
   include FieldsetHelper
+
   describe ".dynamic_fieldset_renderer" do
     before(:each) do
       @fsa = mock_model(FieldsetAssociator)

@@ -148,6 +148,7 @@ DEPENDENCIES
   cucumber-rails
   database_cleaner
   jeweler (~> 1.6.3)
+  json
   rails (= 3.0.7)
   rcov
   rspec (~> 2.6.0)

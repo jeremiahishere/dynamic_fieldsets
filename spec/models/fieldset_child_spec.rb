@@ -12,6 +12,14 @@ describe FieldsetChild do
     FieldsetChild.new.should respond_to :child
   end
 
+  it "should respond to dependency_group" do
+    FieldsetChild.new.should respond_to :dependency_group
+  end
+
+  it "should respond to field_records" do
+    FieldsetChild.new.should respond_to :field_records
+  end
+
   it "should respond to order_num" do
     FieldsetChild.new.should respond_to :order_num
   end
@@ -39,11 +47,22 @@ describe FieldsetChild do
       @fieldset_child.should have(1).error_on(:order_num)
     end
 
-    it "require child_type to be only either 'field' or fieldset'" do
-      pending
+    it "should allow a child type of 'DynamicFieldsets::Field'" do
+      @fieldset_child.child_type = "DynamicFieldsets::Field"
+      @fieldset_child.should have(0).error_on(:child_type)
     end
-    
-    it "do not allow duplicate pairings of fieldsets and fields" do
+
+    it "should allow a child type of 'DynamicFieldsets::Fieldset'" do
+      @fieldset_child.child_type = "DynamicFieldsets::Fieldset"
+      @fieldset_child.should have(0).error_on(:child_type)
+    end
+
+    it "should not allow a child type if not 'DynamicFieldsets::Field' or 'DynamicFieldsets::Fieldset'" do
+      @fieldset_child.child_type = "Not Field or Fieldset"
+      @fieldset_child.should have(1).error_on(:child_type)
+    end
+ 
+    it "should not allow duplicate pairings of fieldsets and fields" do
       fieldset = Fieldset.new
       field = Field.new
       field.stub!(:id).and_return(100)

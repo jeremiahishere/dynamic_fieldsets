@@ -1,6 +1,6 @@
 module DynamicFieldsetsHelper
   #include ActionView::Helpers
-  
+
   # Builds HTML for the provided field.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
   # @param [FieldsetChild] fieldset_child The FieldsetChild to render
