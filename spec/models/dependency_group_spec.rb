@@ -61,7 +61,7 @@ describe DependencyGroup do
       lambda{@input_hash.has_value?([@fieldset_child_1.id, @fieldset_child_2.id])}.should be_true
     end
     it "should return the dependency group's fieldset child for the key" do
-      lambda{@input_hash.has_key?(@fieldset_child_3.id.to_s)}.should be_true
+      @input_hash.has_key?(@fieldset_child_3.id.to_s).should be_true
     end
   end
 
@@ -135,4 +135,92 @@ describe DependencyGroup do
       @group.evaluate(@input_values).should be_false
     end
   end
+
+  describe "to_hash" do
+    before(:each) do
+      @fieldset_child1 = FieldsetChild.new
+      @fieldset_child1.stub!(:id).and_return 100
+      @fieldset_child2 = FieldsetChild.new
+      @fieldset_child2.stub!(:id).and_return 200
+
+      @dependency = Dependency.new
+      @dependency.stub!(:id).and_return 100
+      @dependency.stub!(:fieldset_child_id).and_return @fieldset_child1.id
+      @dependency.stub!(:relationship).and_return "equals"
+      @dependency.stub!(:value).and_return 5
+
+      @clause = DependencyClause.new
+      @clause.stub!(:id).and_return 100
+
+      @group = DependencyGroup.new
+      @group.stub!(:id).and_return 100
+      @group.stub!(:fieldset_child_id).and_return @fieldset_child2.id
+      @group.stub!(:action).and_return "show"
+    
+      @fieldset_child1.stub!(:dependencies).and_return [@dependency]
+      @dependency.stub!(:fieldset_child).and_return @fieldset_child1
+      @dependency.stub!(:dependency_clause).and_return @clause
+      @clause.stub!(:dependencies).and_return [@dependency]
+      @clause.stub!(:dependency_group).and_return @group
+      @group.stub!(:fieldset_child).and_return @fieldset_child2
+      @group.stub!(:dependency_clauses).and_return [@clause]
+    end
+
+    it "should return a hash" do
+      @group.to_hash.should be_a_kind_of Hash
+    end
+
+    it "should have a specific return structure" do
+      expected_result = {
+        "fieldset_child_id" => @group.fieldset_child_id,
+        "action" => @group.action,
+        @clause.id => {
+          @dependency.id => {
+            "fieldset_child_id" => @dependency.fieldset_child_id,
+            "relationship" => @dependency.relationship,
+            "value" => @dependency.value
+          }
+        }
+      }
+
+      @group.to_hash.should == expected_result
+    end
+
+    it "should have a specific return structure even with a greater complexity" do
+      fieldset_child3 = FieldsetChild.new
+      fieldset_child3.stub!(:id).and_return 300
+      
+      dependency2 = Dependency.new
+      dependency2.stub!(:id).and_return 200
+      dependency2.stub!(:relationship).and_return "equals"
+      dependency2.stub!(:value).and_return 5
+      dependency2.stub!(:fieldset_child_id).and_return fieldset_child3.id
+
+      fieldset_child3.stub!(:dependencies).and_return [dependency2]
+      dependency2.stub!(:fieldset_child).and_return fieldset_child3
+      dependency2.stub!(:dependency_clause).and_return @clause
+      @clause.stub!(:dependencies).and_return [@dependency, dependency2]
+
+      expected_result = {
+          "fieldset_child_id" => @group.fieldset_child_id,
+          "action" => @group.action,
+          @clause.id => {
+            @dependency.id => {
+              "fieldset_child_id" => @dependency.fieldset_child_id,
+              "relationship" => @dependency.relationship,
+              "value" => @dependency.value
+            },
+            dependency2.id => {
+              "fieldset_child_id" => dependency2.fieldset_child_id,
+              "relationship" => dependency2.relationship,
+              "value" => dependency2.value
+            }
+          }
+      }
+
+      @group.to_hash.should == expected_result
+    end
+
+  end
+
 end

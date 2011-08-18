@@ -65,5 +65,8 @@ module DynamicFieldsets
       end
     end
 
+    def to_hash
+      return { "id" => self.id, "fieldset_child_id" => self.fieldset_child_id, "value" => self.value, "relationship" => self.relationship, "dependency_clause_id" => self.dependency_clause_id }
+    end
   end
 end

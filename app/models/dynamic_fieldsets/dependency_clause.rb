@@ -21,5 +21,10 @@ module DynamicFieldsets
       end
       return false
     end
+
+    def to_hash
+      return { "id" => self.id, "dependency_group_id" => self.dependency_group_id }
+    end
+
   end
 end

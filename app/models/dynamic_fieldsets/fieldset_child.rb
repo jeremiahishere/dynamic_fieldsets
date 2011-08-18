@@ -14,7 +14,16 @@ module DynamicFieldsets
     belongs_to :fieldset
     
     has_many :field_records
+
+    # this is a little confusing, so let's explain:
+    # a fieldset_child can have many dependencies when it is a part of several dependencies
+    # which each belong to a dependency_clause, which consequently belongs to a dependency_group.
+    # a fieldset_child belongs to a dependency_group when it is at the END of a dependency_clause
+    # statement:
+    #   IF Field1 == A AND Field2 == B THEN show Field3
+    # In that example, Field1 and Field2 belong to dependencies and Field3 belongs to a dependency_group
     has_one :dependency_group
+    has_many :dependencies
 
     # Validations
 
@@ -81,6 +90,10 @@ module DynamicFieldsets
       return true if FieldsetChild.where(:fieldset_id => self.child_id).find { |f| f.has_loop? parent_array }
       parent_array.pop
       return false
+    end
+
+    def to_hash
+      return { "id" => self.id, "fieldset_id" => self.fieldset_id, "child_id" => self.child_id, "child_type" => self.child_type }
     end
   end
 end

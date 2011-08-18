@@ -73,5 +73,32 @@ module DynamicFieldsets
       end
       return true
     end
+
+    # Creates a nested hash that has information on the dependency_group as well
+    # as all dependency_clauses and nested dependencies within it. To be used
+    # when capturing dependencies for interacting with jQuery.
+    #
+    # @param [None]
+    # @return [Hash] A nested hash of the dependency group and related dependency_clauses and dependencies
+    def to_hash
+      dependency_group_hash =
+      {
+          "action" => self.action, 
+          "fieldset_child_id" => self.fieldset_child_id 
+      }
+      for dependency_clause in self.dependency_clauses
+        dependency_group_hash[dependency_clause.id] = {}
+        for dependency in dependency_clause.dependencies
+          dependency_group_hash[dependency_clause.id][dependency.id] = 
+          {
+            "fieldset_child_id" => dependency.fieldset_child.id,
+            "relationship" => dependency.relationship,
+            "value" => dependency.value
+          }
+        end
+      end
+      dependency_group_hash
+    end
+
   end
 end
