@@ -3,20 +3,52 @@
 
 <script>
 $(function() {
-  $( "#children" ).nestedSortable({
-      forcePlaceholderSize: true,
-      disableNesting: 'field',
-      handle: 'div',
-      helper:	'clone',
-      items: 'li',
-      opacity: .6,
-      placeholder: 'placeholder',
-      revert: 250,
-      tabSize: 25,
-      toleranceElement: 'div'
+
+    $( "#enable-sorting" ).toggle( function() {
+      // Enable sorting
+      $( "#children" ).sortable('enable');
+      $( "#children" ).addClass('sort');
+      $( "#children" ).find('.admin').css('visibility','hidden');
+      $("#enable-sorting").html('Save');
+    }, function() {
+      // Disable sorting, save results
+      $( "#children" ).sortable('disable');
+      $( "#children" ).removeClass('sort');
+      $( "#children" ).find('.admin').css('visibility','visible');
+      reorder = $.map($('#children').nestedSortable('toArray'), function(k) { return [[ k.item_id, k.parent_id ]] } );
+      reorder.shift();
+      $("#enable-sorting").html('Change Ordering');
     });
+    
+    $( "#children" ).nestedSortable({
+        forcePlaceholderSize: true,
+        disableNesting: 'field',
+        handle: 'div',
+        helper: 'clone',
+        items: 'li',
+        opacity: .75,
+        placeholder: 'placeholder',
+        revert: 250,
+        tabSize: 25,
+        toleranceElement: 'div'
+      }).sortable('disable');
+      
+    order = $.map($('#children').nestedSortable('toArray'), function(k) { return [[ k.item_id, k.parent_id ]] } );
+    order.shift();
+    
+    function getOrdering() {
+      array = $('#children').nestedSortable('toArray');
+      newArray = $.map(array, function(k) { return [[ k.item_id, k.parent_id ]] } );
+      newArray.shift();
+      return newArray;
+    }
+    
+    // $.map(myarray, function(k) { [ parseInt(k.item_id), parseInt(k.parent_id) ] } )
+    
 });
 </script>
+
+<button type="button" id="enable-sorting">Change Ordering</button>
 
 <ol id="children">
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>

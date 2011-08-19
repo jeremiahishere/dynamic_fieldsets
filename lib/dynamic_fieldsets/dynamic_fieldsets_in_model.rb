@@ -23,7 +23,7 @@ module DynamicFieldsets
       # @param [Hash] args A hash of arguments for the fieldsets.
       def acts_as_dynamic_fieldset(args)
         mattr_accessor :dynamic_fieldsets unless self.respond_to?(:dynamic_fieldsets)
-        self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a?(Hash)
+        self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a? Hash
 
         args.each_pair do |key, value|
           self.dynamic_fieldsets[key] = value
