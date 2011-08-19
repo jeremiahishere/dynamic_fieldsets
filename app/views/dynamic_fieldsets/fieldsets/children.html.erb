@@ -15,9 +15,7 @@ $(function() {
       $( "#children" ).sortable('disable');
       $( "#children" ).removeClass('sort');
       $( "#children" ).find('.admin').css('visibility','visible');
-      reorder = $.map($('#children').nestedSortable('toArray'), function(k) { return [[ k.item_id, k.parent_id ]] } );
-      reorder.shift();
-      $("#enable-sorting").html('Change Ordering');
+      newOrder = getOrdering( $('#children').nestedSortable('toArray') );
     });
     
     $( "#children" ).nestedSortable({
@@ -33,17 +31,26 @@ $(function() {
         toleranceElement: 'div'
       }).sortable('disable');
       
-    order = $.map($('#children').nestedSortable('toArray'), function(k) { return [[ k.item_id, k.parent_id ]] } );
-    order.shift();
+    order = getOrdering( $('#children').nestedSortable('toArray') );
     
-    function getOrdering() {
-      array = $('#children').nestedSortable('toArray');
-      newArray = $.map(array, function(k) { return [[ k.item_id, k.parent_id ]] } );
+    function getOrdering(arr) {
+      var newArray = arr.map( function(val,index) { return index + ":" + val.item_id + ":" + val.parent_id } );
       newArray.shift();
       return newArray;
     }
     
-    // $.map(myarray, function(k) { [ parseInt(k.item_id), parseInt(k.parent_id) ] } )
+    function delta(base_arr, new_arr) {
+      var del = new Array;
+      for( i in new_arr ) {
+        if( jQuery.inArray( new_arr[i], base_arr ) == -1 ) { // is NOT in base array
+          del.push(new_arr[i]);
+        }
+      }
+      return del;
+    }
+    
+    window.r=delta
+    
     
 });
 </script>
