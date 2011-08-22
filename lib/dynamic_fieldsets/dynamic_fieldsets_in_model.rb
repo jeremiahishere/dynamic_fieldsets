@@ -39,6 +39,28 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+
+      # Overrides the ActiveModel Validations run_validations! method
+      # It additionally adds validations for the fields that are required
+      #
+      # I am not sure if this is the correct place to put this.  Seems like a reasonable one.
+      #
+      # @return [Boolean] The result of run_validations! with the extra errors added, should be true if errors.empty? 
+      def run_validations!
+        run_dynamic_fieldset_validations!
+        super
+      end
+
+      # Runs the dynamic fieldset validations for required fields and adds them to the errors array
+      # 
+      # finish stubbing out method later
+      def run_dynamic_fieldset_validations!
+        # iterate over fynamic_fieldset_values
+        # if the field of the fieldset child is required
+        #   and the field has a blank/nil value
+        #     add an error for that field
+        puts "Running dynamic fieldset validations"
+      end
       
       # Stores the dynamic fieldset values
       def set_fieldset_values( params )

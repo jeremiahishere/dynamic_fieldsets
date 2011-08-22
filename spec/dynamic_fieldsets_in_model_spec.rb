@@ -30,6 +30,20 @@ describe DynamicFieldsetsInModel do
     end
   end
 
+  describe "run_validations! method" do
+    it "should call run_dynamic_fieldset_validations!"
+    it "should call super if I can figure out how to test this"
+    it "should return true if run_dynamic_fieldset_validations! has added an error but the regular validations have not"
+  end
+
+  describe "run_dynamic_fieldset_validatiosn! method" do
+    it "should iterate over dynamic_fieldset_values"
+    it "should check if the fieldset_child.field.required is true"
+    it "should check if the required field has a blank value"
+    it "should check if the required field has a nil value"
+    it "should add an error for that field"
+  end
+
   describe "method missing method" do
     before(:each) do
       @model = InformationForm.new
