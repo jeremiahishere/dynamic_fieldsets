@@ -16,6 +16,7 @@
     <%= f.text_field :name %>
   </div>
   <%= dynamic_fieldset_form_renderer(@information_form.child_form) %>
+  <%= dynamic_fieldset_form_renderer(@information_form.parent_form) %>
   <div class="actions">
     <%= f.submit %>
   </div>
