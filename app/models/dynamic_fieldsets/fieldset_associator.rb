@@ -75,6 +75,12 @@ module DynamicFieldsets
 
   end
 
+  # OMG COMMENT
+  #
+  # TODO: Fill in actual comments
+  #
+  # @params - stuff
+  # @returns - other stuff
   def dependency_child_hash
     @fieldset_child_collection = []
     look_for_dependents(self.fieldset)
@@ -87,14 +93,25 @@ module DynamicFieldsets
         output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
       end
     end
-
     output
   end
 
+  def i_like_monkeys
+    "monkeys rule"
+  end
+
+  # OMG COMMENT
+  #
+  # TODO: Fill in actual comments
+  #
+  # @params - stuff
+  # @returns - other stuff
   def look_for_dependents(parent_fieldset)
     for fieldset_child in parent_fieldset.fieldset_children
       if (fieldset_child.child_type == "DynamicFieldsets::Field") && (!fieldset_child.dependencies.empty?)
         @fieldset_child_collection.push(fieldset_child)
+        return
+      elsif (fieldset_child.child_type == "DynamicFieldsets::Field") && (fieldset_child.dependencies.empty?)
         return
       else
         look_for_dependents(fieldset_child.child)

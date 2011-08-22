@@ -217,9 +217,16 @@ module DynamicFieldsetsHelper
   # @params [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The javascript variable that shows what fields have dependencies
   def javascript_renderer(fsa)
-    rendered_javascript = "<script type='text/javascript'> var json_holder = #{fsa.dependency_child_hash.to_json}; </script>"
-    rendered_javasctipt += render :partial => "dynamic_fieldsets/javascript_watcher"
-    return rendered_javascript.html_safe
+    unless fsa.id == nil
+
+      debugger
+
+      rendered_javascript = "<script type='text/javascript'> var json_holder = #{fsa.dependency_child_hash.to_json}; </script>"
+      rendered_javasctipt += render :partial => "dynamic_fieldsets/javascript_watcher"
+      return rendered_javascript.html_safe
+    else
+      return ""
+    end
   end
 
 end

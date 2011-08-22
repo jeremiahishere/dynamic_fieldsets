@@ -19,3 +19,5 @@ Feature: How to test with and without javascript
     When I follow "Add Field Option"
     Then I should not see "remove" within "a"
 
+  @javascript
+  Scenario: 
