@@ -36,12 +36,16 @@ describe DynamicFieldsetsInModel do
     it "should return true if run_dynamic_fieldset_validations! has added an error but the regular validations have not"
   end
 
-  describe "run_dynamic_fieldset_validatiosn! method" do
-    it "should iterate over dynamic_fieldset_values"
-    it "should check if the fieldset_child.field.required is true"
-    it "should check if the required field has a blank value"
-    it "should check if the required field has a nil value"
-    it "should add an error for that field"
+  describe "run_dynamic_fieldset_validations! method" do
+    it "should iterate over dynamic_fieldset keys"
+    it "should call run_fieldset_child_validations for each key"
+  end
+
+  describe "run_fieldset_child_validations! method" do
+    it "should add an error if there is no matching field in self.dynamic_fieldset_values"
+    it "should add an error if the field is required, the value is an array, and the value is empty"
+    it "should add an error if the field is required, the value is not an array, and the value is an empty string"
+    it "should add an error if the field is required, the value is not an array, and the value is a nil"
   end
 
   describe "method missing method" do

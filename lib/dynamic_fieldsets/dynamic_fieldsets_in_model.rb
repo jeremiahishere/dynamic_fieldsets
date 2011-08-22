@@ -51,15 +51,55 @@ module DynamicFieldsets
         super
       end
 
-      # Runs the dynamic fieldset validations for required fields and adds them to the errors array
-      # 
-      # finish stubbing out method later
+      # Iterates over the fieldset associator's children and adds errors
       def run_dynamic_fieldset_validations!
-        # iterate over fynamic_fieldset_values
-        # if the field of the fieldset child is required
-        #   and the field has a blank/nil value
-        #     add an error for that field
-        puts "Running dynamic fieldset validations"
+        # for each fsa
+        self.dynamic_fieldsets.keys.each do |key|
+          puts key
+          fsa = self.fieldset_associator(key)
+          fsa.fieldset.children.each do |child|
+            run_fieldset_child_validations!(fsa.id, child)
+          end
+        end
+      end
+
+      # Checks if a fieldset child is required and adds an error if it's value is blank
+      # Adds errors to the sel.errors array, does not return them
+      #
+      # @param [Integer] fsa_id The id for the fieldset associator the child belongs to
+      # @param [Field or Fieldset[ child The child of the fieldset associator
+      def run_fieldset_child_validations!(fsa_id, child)
+        if child.is_a?(DynamicFieldsets::Fieldset)
+          # if a fieldset, then recurse
+          run_fieldset_child_validations!(fsa_key, child)
+        elsif child.is_a?(DynamicFieldsets::Field)
+          # if a child, check if the params value is set, check if it is required, check if it satisfies condition
+          if !self.dynamic_fieldset_values.has_key?("fsa-" + fsa_id.to_s) || !self.dynamic_fieldset_values["fsa-" + fsa_id.to_s].has_key?("field-" + child.id.to_s)
+            puts "no value found in params"
+            self.errors.add(:base, child.label + " is required")
+          else
+            # get the value
+            value = self.dynamic_fieldset_values["fsa-" + fsa_id.to_s]["field-" + child.id.to_s]
+            if child.required?
+              # if an array and it is empty, add an error
+              if value.is_a?(Array)
+                if value.empty?
+                  puts "found an error"
+                  self.errors.add(:base, child.label + " is required")
+                end
+              else
+                # otherwise, check for nil or empty string
+                if value.nil? or value.length == 0
+                  puts "found an error"
+                  self.errors.add(:base, child.label + " is required")
+                end
+              end
+            end
+          end
+        else
+          # found a major problem, not sure how to get here
+          puts "found a child that wasn't a field or fieldset" + child.inspect
+        end
       end
       
       # Stores the dynamic fieldset values
