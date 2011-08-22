@@ -15,7 +15,10 @@ $(function() {
       $( "#children" ).sortable('disable');
       $( "#children" ).removeClass('sort');
       $( "#children" ).find('.admin').css('visibility','visible');
-      newOrder = getOrdering( $('#children').nestedSortable('toArray') );
+      $("#enable-sorting").html('Change Ordering');
+      $.post( "children/reorder",
+              $('#children').nestedSortable('serialize')
+            );
     });
     
     $( "#children" ).nestedSortable({
@@ -30,32 +33,12 @@ $(function() {
         tabSize: 25,
         toleranceElement: 'div'
       }).sortable('disable');
-      
-    order = getOrdering( $('#children').nestedSortable('toArray') );
-    
-    function getOrdering(arr) {
-      var newArray = arr.map( function(val,index) { return index + ":" + val.item_id + ":" + val.parent_id } );
-      newArray.shift();
-      return newArray;
-    }
-    
-    function delta(base_arr, new_arr) {
-      var del = new Array;
-      for( i in new_arr ) {
-        if( jQuery.inArray( new_arr[i], base_arr ) == -1 ) { // is NOT in base array
-          del.push(new_arr[i]);
-        }
-      }
-      return del;
-    }
-    
-    window.r=delta
-    
-    
 });
 </script>
 
 <button type="button" id="enable-sorting">Change Ordering</button>
+
+<div id="result"></div>
 
 <ol id="children">
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>

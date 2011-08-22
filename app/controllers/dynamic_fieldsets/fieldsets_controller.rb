@@ -57,6 +57,44 @@ module DynamicFieldsets
       end
     end
     
+    # ...
+    def reorder
+      root = params[:id]
+      parent_child_pairs = params[:child].inject({}) do |hash,(key,val)|
+        if val.eql? 'root' then hash[key.to_i] = root.to_i
+        else hash[key.to_i] = val.to_i
+        end
+        hash
+      end
+      
+      @order = {}
+      parent_child_pairs.each do |key,val|
+        if @order.keys.include? val then @order[val].push key
+        else @order.merge! val=>[key]
+        end
+      end
+      
+      
+      # { 4 => [3,4,6], 5 => [8,9] }
+      @order.each do |parent_id,children|
+        children.each_with_index do |child_id,index|
+          old_child = DynamicFieldsets::FieldsetChild.find_by_child_id child_id
+          child_type = old_child.child_type
+          old_child.destroy
+          fieldset_child = DynamicFieldsets::FieldsetChild.new
+          fieldset_child.fieldset_id = parent_id
+          fieldset_child.child_id = child_id
+          fieldset_child.child_type = child_type
+          fieldset_child.order_num = index+1
+          fieldset_child.save
+        end
+      end
+
+      respond_to do |format|
+        format.json { render :json => @order }
+      end
+    end
+    
     # Save new record
     def create
       parent_id = params[:parent]
