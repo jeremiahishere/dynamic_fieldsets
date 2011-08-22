@@ -30,6 +30,7 @@ describe DynamicFieldsetsHelper do
 
   describe "dynamic_fieldset_form_renderer method" do
     it "should call dynamic_fieldset_renderer with 'form'" do
+      pending 'hex is working on this'
       fsa = mock_model(FieldsetAssociator)
       self.should_receive(:dynamic_fieldset_renderer).with(fsa, "form")
       dynamic_fieldset_form_renderer(fsa)

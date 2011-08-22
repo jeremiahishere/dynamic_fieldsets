@@ -222,6 +222,7 @@ describe FieldsetAssociator do
           @group.id => {
             "action" => "show",
             "fieldset_child_id" => @fsc3.id,
+            "field_id" => @field2.id,
             @clause.id => {
                 @dependency.id => {
                   "fieldset_child_id" => @fsc2.id,
