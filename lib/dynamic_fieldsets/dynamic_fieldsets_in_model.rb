@@ -73,11 +73,13 @@ module DynamicFieldsets
           end
         elsif child.is_a?(DynamicFieldsets::Field)
           # if a child, check if the params value is set, check if it is required, check if it satisfies condition
-          if !self.dynamic_fieldset_values.has_key?("fsa-" + fsa_id.to_s) || !self.dynamic_fieldset_values["fsa-" + fsa_id.to_s].has_key?("field-" + child.id.to_s)
+          fsa_tag_id = "fsa-" + fsa_id.to_s
+          field_tag_id = "field-" + child.id.to_s
+          if !self.dynamic_fieldset_values.has_key?(fsa_tag_id) || !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
             self.errors.add(:base, child.label + " is required and the input is missing")
           else
             # get the value
-            value = self.dynamic_fieldset_values["fsa-" + fsa_id.to_s]["field-" + child.id.to_s]
+            value = self.dynamic_fieldset_values[fsa_tag_id][field_tag_id]
             if child.required?
               # empty works on array or string, so simplifying here
               self.errors.add(:base, child.label + " is required") if value.nil? || value.empty?
