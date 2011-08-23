@@ -1,7 +1,6 @@
 Feature: Managing fieldset associators
 
   Scenario: I should be able to see all fieldset associators on the index page
-    Given I am pending
     Given a fieldset exists
     And an information form exists
     And a fieldset associator exists
@@ -11,7 +10,6 @@ Feature: Managing fieldset associators
     And I should see "Fingerprint Form"
 
   Scenario: I should be able to see a fieldset associator on the show page
-    Given I am pending
     Given a fieldset exists
     And an information form exists
     And a fieldset associator exists
