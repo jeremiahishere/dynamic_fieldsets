@@ -196,12 +196,14 @@ describe FieldsetAssociator do
     # The next two tests are specifically for look_for_dependents
 
     it "should update the correct array" do
+      pending
       @fieldset_child_collection = []
       look_for_dependents(@fieldset1)
       @fieldset_child_collection.empty?.should be_false
     end
 
     it "should update the array to appropriate value" do
+      pending
       @fieldset_child_collection = []
       expected_results = [@fsc2]
       look_for_dependents(@fieldset1)
@@ -223,14 +225,15 @@ describe FieldsetAssociator do
             "action" => "show",
             "fieldset_child_id" => @fsc3.id,
             "field_id" => @field2.id,
-            @clause.id => {
-                @dependency.id => {
-                  "fieldset_child_id" => @fsc2.id,
-                  "relationship" => "equals",
-                  "value" => 5
-                }
+            "clause" => {
+              @clause.id => {
+                  @dependency.id => {
+                    "fieldset_child_id" => @fsc2.id,
+                    "relationship" => "equals",
+                    "value" => 5
+                  }
               }
-            
+            }
           }
         }
       }

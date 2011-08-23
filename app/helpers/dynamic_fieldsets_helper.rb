@@ -163,6 +163,7 @@ module DynamicFieldsetsHelper
     end
     lines.push "</ol>"
     lines.push "</div>"
+
     return lines
   end
   
@@ -184,11 +185,13 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
+
     rendered_dynamic_fieldset = "<div id='fsa-#{fsa.id}'>"
     fieldset_renderer( fsa, fsa.fieldset, fsa.field_values, form_type ).each do |line|
       rendered_dynamic_fieldset += line + "\n"
     end
     rendered_dynamic_fieldset += "</div>"
+
     return rendered_dynamic_fieldset.html_safe
   end
   
@@ -218,11 +221,8 @@ module DynamicFieldsetsHelper
   # @return [String] The javascript variable that shows what fields have dependencies
   def javascript_renderer(fsa)
     unless fsa.id == nil
-
-      debugger
-
       rendered_javascript = "<script type='text/javascript'> var json_holder = #{fsa.dependency_child_hash.to_json}; </script>"
-      rendered_javasctipt += render :partial => "dynamic_fieldsets/javascript_watcher"
+      rendered_javascript += render "dynamic_fieldsets/shared/javascript_watcher"
       return rendered_javascript.html_safe
     else
       return ""

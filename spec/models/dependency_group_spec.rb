@@ -180,11 +180,13 @@ describe DependencyGroup do
         "action" => @group.action,
         "fieldset_child_id" => @fieldset_child2.id,
         "field_id" => @field.id,
-        @clause.id => {
-          @dependency.id => {
-            "fieldset_child_id" => @dependency.fieldset_child_id,
-            "relationship" => @dependency.relationship,
-            "value" => @dependency.value
+        "clause" => {
+          @clause.id => {
+            @dependency.id => {
+              "fieldset_child_id" => @dependency.fieldset_child_id,
+              "relationship" => @dependency.relationship,
+              "value" => @dependency.value
+            }
           }
         }
       }
@@ -211,16 +213,18 @@ describe DependencyGroup do
           "action" => @group.action,
           "fieldset_child_id" => @group.fieldset_child_id,
           "field_id" => @field.id,
-          @clause.id => {
-            @dependency.id => {
-              "fieldset_child_id" => @dependency.fieldset_child_id,
-              "relationship" => @dependency.relationship,
-              "value" => @dependency.value
-            },
-            dependency2.id => {
-              "fieldset_child_id" => dependency2.fieldset_child_id,
-              "relationship" => dependency2.relationship,
-              "value" => dependency2.value
+          "clause" => {
+            @clause.id => {
+              @dependency.id => {
+                "fieldset_child_id" => @dependency.fieldset_child_id,
+                "relationship" => @dependency.relationship,
+                "value" => @dependency.value
+              },
+              dependency2.id => {
+                "fieldset_child_id" => dependency2.fieldset_child_id,
+                "relationship" => dependency2.relationship,
+                "value" => dependency2.value
+              }
             }
           }
       }

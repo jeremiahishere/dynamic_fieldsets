@@ -73,50 +73,47 @@ module DynamicFieldsets
       return output
     end
 
-  end
 
-  # OMG COMMENT
-  #
-  # TODO: Fill in actual comments
-  #
-  # @params - stuff
-  # @returns - other stuff
-  def dependency_child_hash
-    @fieldset_child_collection = []
-    look_for_dependents(self.fieldset)
+    # OMG COMMENT
+    #
+    # TODO: Fill in actual comments
+    #
+    # @params - stuff
+    # @returns - other stuff
+    def dependency_child_hash
+      @fieldset_child_collection = []
+      look_for_dependents(self.fieldset)
+  
+      output = {}
+      for fieldset_child in @fieldset_child_collection
+        output[fieldset_child.id] = {}
+        for dependency in fieldset_child.dependencies
+          dependency_group = dependency.dependency_clause.dependency_group
+          output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
+        end
+      end
+      output
+    end
+ 
 
-    output = {}
-    for fieldset_child in @fieldset_child_collection
-      output[fieldset_child.id] = {}
-      for dependency in fieldset_child.dependencies
-        dependency_group = dependency.dependency_clause.dependency_group
-        output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
+    # OMG COMMENT
+    #
+    # TODO: Fill in actual comments
+    #
+    # @params - stuff
+    # @returns - other stuff
+    def look_for_dependents(parent_fieldset)
+      for fieldset_child in parent_fieldset.fieldset_children
+        if (fieldset_child.child_type == "DynamicFieldsets::Field") && (!fieldset_child.dependencies.empty?)
+          @fieldset_child_collection.push(fieldset_child)
+          return
+        elsif (fieldset_child.child_type == "DynamicFieldsets::Field") && (fieldset_child.dependencies.empty?)
+          return
+        else
+          look_for_dependents(fieldset_child.child)
+        end
       end
     end
-    output
-  end
 
-  def i_like_monkeys
-    "monkeys rule"
   end
-
-  # OMG COMMENT
-  #
-  # TODO: Fill in actual comments
-  #
-  # @params - stuff
-  # @returns - other stuff
-  def look_for_dependents(parent_fieldset)
-    for fieldset_child in parent_fieldset.fieldset_children
-      if (fieldset_child.child_type == "DynamicFieldsets::Field") && (!fieldset_child.dependencies.empty?)
-        @fieldset_child_collection.push(fieldset_child)
-        return
-      elsif (fieldset_child.child_type == "DynamicFieldsets::Field") && (fieldset_child.dependencies.empty?)
-        return
-      else
-        look_for_dependents(fieldset_child.child)
-      end
-    end
-  end
-
 end

@@ -1,5 +1,7 @@
 <script type='text/javascript'>
 
+var allInputs = $(":input");
+
 /***************************************************************************
    
   field-[group_field]-child-[group_fsc] - just want the last value from the
@@ -10,10 +12,10 @@
 
 ***************************************************************************/
 
-function grab_fsc_id(function() {
-	var id_array = this.attr('id').split('-');
+function grab_fsc_id(value) {
+	var id_array = value.attr('id').split('-');
 	return id_array[id_array.length-1];
-});
+};
 
 /***************************************************************************
 
@@ -31,7 +33,7 @@ function grab_fsc_id(function() {
 
 **************************************************************************/
 
-function evaluate( function(entered_value, relationship, value) {
+function evaluate(entered_value, relationship, value) {
 	switch(relationship)
 	{
                 /* CHANGE THIS if the model changes on which relationships
@@ -51,7 +53,7 @@ function evaluate( function(entered_value, relationship, value) {
 		default:
 			return false;
 	}
-});
+};
 
 /*************************************************************************
 
@@ -67,7 +69,7 @@ function evaluate( function(entered_value, relationship, value) {
 
 *************************************************************************/
 
-function group_action( function (success_flag, action, group_field) {
+function group_action(success_flag, action, group_field) {
 
 	/* CHANGE THIS if the model change on which actions are allowed */
 
@@ -88,7 +90,7 @@ function group_action( function (success_flag, action, group_field) {
 				$('#' + group_field + ' :input').attr('disabled', true);
 		}
 	}
-});
+};
 
 /***********************************************************************
  
@@ -101,12 +103,10 @@ function group_action( function (success_flag, action, group_field) {
  
 ***********************************************************************/
 
-//TODO Figure out how to have it just watch inputs
-*.change( function() {
-	var fieldset_child_id = this.grab_fsc_id();
-	var entered_value = this.val();
+allInputs.change( function() {
+	var fieldset_child_id = grab_fsc_id($(this));
+	var entered_value = $(this).val();
 	if (fieldset_child_id in json_holder) {
-
 		for (var group in json_holder[fieldset_child_id]) {
 			var action = json_holder[fieldset_child_id][group]['action'];
 			var group_fsc_id = json_holder[fieldset_child_id][group]['fieldset_child_id'];
@@ -117,20 +117,18 @@ function group_action( function (success_flag, action, group_field) {
 			// true until short circuited into being false.`
 			var group_break_flag = true;
 			group:
-			for (var clause in json_holder[fieldset_child_id][group]) {
-
+			for (var clause in json_holder[fieldset_child_id][group]["clause"]) {
 				// As each clause ORs dependencies together, we'll assume it'll be
 				// false until short circuited into being true.
 				var clause_break_flag = false;
 				clause:
-				for (var dependency in json_holder[fieldset_child_id][group][clause])
+				for (var dependency in json_holder[fieldset_child_id][group]["clause"][clause])
 				{
-					var relationship = json_holder[fieldset_child_id][group][clause][dependency]['relationship'];
-					var value = json_holder[fieldset_child_id][group][clause][dependency]['value'];
-					
+					var relationship = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['relationship'];
+					var value = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['value'];
 					// Short circuit from looking at each dependency in the case
 					// we determine a true dependency (OR)
-					if evaluate(entered_value, relationship, value) {
+					if (evaluate(entered_value, relationship, value)) {
 						clause_break_flag = true;
 						break clause;
 					}
@@ -138,12 +136,11 @@ function group_action( function (success_flag, action, group_field) {
 
 				// Short circuit from looking at each clause in the case we determine
 				// a false dependency (AND)
-				if clause_break_flag == false {
+				if (clause_break_flag == false) {
 					group_break_flag = false;
 					break group;
 				}
 			}
-
 			// If successful, group_break_flag will pass true into group_action
 			group_action(group_break_flag, action, group_field);
 			
