@@ -1,6 +1,7 @@
 <script type='text/javascript'>
 
-var allInputs = $(":input");
+// The only inputs we care about are visible... not hidden
+var allInputs = $(":input:not(:hidden)");
 
 /***************************************************************************
    
@@ -13,6 +14,7 @@ var allInputs = $(":input");
 ***************************************************************************/
 
 function grab_fsc_id(value) {
+	console.log(value);
 	var id_array = value.attr('id').split('-');
 	return id_array[id_array.length-1];
 };
@@ -104,7 +106,6 @@ function group_action(success_flag, action, group_field) {
 ***********************************************************************/
 
 allInputs.change( function() {
-	console.log($(this));
 	var fieldset_child_id = grab_fsc_id($(this));
 	var entered_value = $(this).val();
 	if (fieldset_child_id in json_holder) {
@@ -150,14 +151,6 @@ allInputs.change( function() {
 	}
 
 })
-//.change();
-
-$(document).ready(function() {
-	console.log(json_holder);
-	for(var field in json_holder)  {
-		console.log($("#field-input-" + field));
-		$("#field-input-" + field).change();
-	}
-});
+.change();
 
 </script>
