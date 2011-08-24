@@ -59,6 +59,10 @@ module DynamicFieldsets
       order 'order_num asc'
     end
     
+    def children
+      FiledsetChild.where( child_id: self.fieldset_id ).ordered
+    end
+    
     # @return [Array] Collection of FieldsetChildren that share the same parent; ascending order.
     def siblings
       sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered

@@ -41,12 +41,12 @@ $(function() {
 <div id="result"></div>
 
 <ol id="children">
-<%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
+<%= render :partial => 'child', :locals => { :fieldset_child => @fieldset_child } %>
 </ol>
 
-<%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
+<%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id) %> | 
 <%= link_to 'Add Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
-<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> |
+<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> | 
 <%= link_to 'Return to Manager', :controller => :fieldsets, :action => :roots %>
 
 <br />

@@ -50,7 +50,7 @@ module DynamicFieldsets
 
     # Show a record and all children
     def children
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id params[:id]
+      @fieldset_child = DynamicFieldsets::FieldsetChild.find_by_id params[:id]
 
       respond_to do |format|
         format.html
@@ -74,8 +74,7 @@ module DynamicFieldsets
         end
       end
       
-      
-      # { 4 => [3,4,6], 5 => [8,9] }
+      # { 4 => [3,7,6], 5 => [8,9] }
       @order.each do |parent_id,children|
         children.each_with_index do |child_id,index|
           old_child = DynamicFieldsets::FieldsetChild.find_by_child_id child_id
