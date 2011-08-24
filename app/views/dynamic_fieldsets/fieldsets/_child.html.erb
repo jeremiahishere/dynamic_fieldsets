@@ -1,6 +1,7 @@
 <% fieldset.children.each do |child| %>
   <% if child.is_a? DynamicFieldsets::Fieldset then %>
-    <li id="child-<%= child.id %>" class="fieldset">
+    <% fieldset_child = DynamicFieldsets::FieldsetChild.where( fieldset_id: fieldset.id, child_id: child.id, child_type: "DynamicFieldsets::Fieldset" ).first %>
+    <li id="child-<%= fieldset_child.id %>" class="fieldset">
       <div>
       <span class="name"><%= child.name %></span>
       <span class="admin">
@@ -23,7 +24,8 @@
     <% end %>
     </li>
   <% elsif child.is_a? DynamicFieldsets::Field then %>
-    <li id="child-<%= child.id %>" class="field<%= ' required' if child.required? %>">
+  <% fieldset_child = DynamicFieldsets::FieldsetChild.where( fieldset_id: fieldset.id, child_id: child.id, child_type: "DynamicFieldsets::Field" ).first %>
+    <li id="child-<%= fieldset_child.id %>" class="field<%= ' required' if child.required? %>">
     <div>
       <span class="fieldtype"><%= child.field_type %>:</span>
       <span class="name"><%= child.label %></span>

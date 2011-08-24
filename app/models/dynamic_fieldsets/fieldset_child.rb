@@ -100,15 +100,17 @@ module DynamicFieldsets
       return false
     end
     
-    # scope for ascending order
-    def self.ordered
-      order 'order_num asc'
+    scope :ordered, order( 'order_num asc' )
+    
+    # @return [ActiveRecord::Relation] Collection of FieldsetChildren that are direct descendents; ascending order.
+    def children
+      FieldsetChild.where( fieldset_id: self.child_id ).ordered
     end
     
-    # @return [Array] Collection of FieldsetChildren that share the same parent; ascending order.
+    # @return [ActiveRecord::Relation] Collection of FieldsetChildren that share the same parent; ascending order.
     def siblings
       sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered
-      sib.delete self
+      sib.delete_if{ |child| child.id == self.id }
       sib
     end
     
