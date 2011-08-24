@@ -54,7 +54,7 @@ module DynamicFieldsetsHelper
     classes  = "#{field.field_type} "
     classes += ( field.required ? 'required' : 'optional' )
     
-    field_markup = ["<li class='#{classes}' id='field-input-#{field.id}'>"]
+    field_markup = ["<li class='#{classes}' id='input-field-#{field.id}-child-#{fieldset_child.id}'>"]
     
     if !field.field_type.eql?('instruction')
       field_markup.push "<label for='field-#{field.id}'>"
