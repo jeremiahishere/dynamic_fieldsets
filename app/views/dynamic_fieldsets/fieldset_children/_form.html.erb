@@ -1,5 +1,5 @@
 <%= form_for(@fieldset_child) do |f| %>
-  <% if @field.errors.any? %>
+  <% if @fieldset_child.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@field.errors.count, "error") %> prohibited this field from being saved:</h2>
 
@@ -16,11 +16,13 @@
   Put child here
 
 
-  <% @field.dependency_groups.each do |dependency_group| %>
-    <%= f.fields_for :dependency_groups, dependency_group do |dependency_group_form| %>
-      <%= render :partial => "dependency_groups", :locals => {:f => dependency_group_form} %>
+  <% if @fieldset_child.dependency_group %>
+    <%= f.fields_for :dependency_groups, @fieldset_child.dependency_group do |dependency_group_form| %>
+      <%= render :partial => "dependency_groups", :locals => {:f => dependency_group_form, :obj => @fieldset_child.dependency_group} %>
     <% end %>
+  <% else %>
+    <p><%= link_to_add_fields "Add Dependency Group", f, :dependency_groups %></p>
   <% end %>
-  <p><%= link_to_add_fields "Add Dependency Group", f, :dependency_groups %></p>
+
 <% end %>
 <%= render :partial => "/dynamic_fieldsets/shared/nested_model_javascript" %>

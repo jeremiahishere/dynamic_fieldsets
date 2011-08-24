@@ -1,1 +1,14 @@
-dependency group partial has not yet been written
+dependency group partial has not yet been completed
+
+<p class="fields">
+  <%= f.label :what? %>
+  <%= f.text_field :what_field %>
+  <%= f.hidden_field :_destroy %>
+  <%= link_to_function "remove", "remove_fields(this)" %>
+
+  <% obj.dependency_clauses.each do |dependency_clause| %>
+    <%= f.fields_for :dependency_vlauses, dependency_clause do |dependency_clause_form| %>
+      <%= render :partial => "dependency_clauses", :locals => {:f => dependency_clause_form, :obj => dependency_clause} %>
+    <% end %>
+  <% end %>
+</p>
