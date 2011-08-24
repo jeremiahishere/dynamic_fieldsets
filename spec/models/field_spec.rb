@@ -162,4 +162,10 @@ describe Field do
       Field.option_field_types.should be_a_kind_of Array
     end
   end
+
+  describe "in_use? method" do
+    it "should return true if there is a field record associated with the field"
+    it "should return true if the field is in a fieldset (through a fieldset child)"
+    it "should return false otherwise"
+  end
 end

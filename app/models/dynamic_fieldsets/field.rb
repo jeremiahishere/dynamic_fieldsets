@@ -77,6 +77,11 @@ module DynamicFieldsets
       return nil if options?
       return self.field_defaults.first
     end
+
+    # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets
+    def in_use?
+      return true;
+    end
     
   end
 end
