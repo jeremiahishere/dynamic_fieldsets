@@ -104,6 +104,7 @@ function group_action(success_flag, action, group_field) {
 ***********************************************************************/
 
 allInputs.change( function() {
+	console.log($(this));
 	var fieldset_child_id = grab_fsc_id($(this));
 	var entered_value = $(this).val();
 	if (fieldset_child_id in json_holder) {
@@ -146,6 +147,16 @@ allInputs.change( function() {
 			
 		}
 
+	}
+
+})
+//.change();
+
+$(document).ready(function() {
+	console.log(json_holder);
+	for(var field in json_holder)  {
+		console.log($("#field-input-" + field));
+		$("#field-input-" + field).change();
 	}
 });
 
