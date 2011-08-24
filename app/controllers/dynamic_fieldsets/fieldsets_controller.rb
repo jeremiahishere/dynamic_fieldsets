@@ -69,21 +69,24 @@ module DynamicFieldsets
       
       @order = {}
       parent_child_pairs.each do |key,val|
-        if @order.keys.include? val then @order[val].push key
+        if @order.keys.include? val
+        then @order[val].push key
         else @order.merge! val=>[key]
         end
       end
       
-      # { 4 => [3,7,6], 5 => [8,9] }
-      @order.each do |parent_id,children|
-        children.each_with_index do |child_id,index|
-          old_child = DynamicFieldsets::FieldsetChild.find_by_child_id child_id
-          child_type = old_child.child_type
-          old_child.destroy
-          fieldset_child = DynamicFieldsets::FieldsetChild.new
+      # e.g. { 1 => [6], 6 => [7,8] }
+      # First number is always the root Fieldset id.
+      # The rest are FieldsetChild ids.
+      @order.each do |parent_identifier,children|
+        if parent_identifier.eql? @order.first[0] # This is the first number:
+        then parent_id = parent_identifier # the root fieldset id.
+        # Otherwise, we need to retrieve the parent fieldset_id from the FieldsetChild's child_id.
+        else parent_id = DynamicFieldsets::FieldsetChild.find_by_id(parent_identifier).child_id
+        end
+        children.each_with_index do |fieldset_child_id,index|
+          fieldset_child = DynamicFieldsets::FieldsetChild.find_by_id fieldset_child_id
           fieldset_child.fieldset_id = parent_id
-          fieldset_child.child_id = child_id
-          fieldset_child.child_type = child_type
           fieldset_child.order_num = index+1
           fieldset_child.save
         end
