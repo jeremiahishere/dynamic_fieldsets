@@ -38,6 +38,8 @@ module DynamicFieldsets
     # Custom controller action to set the enabled field on the field object
     # Expects a url with an id field and a form with the value [:dynamic_fieldsets_field][:enabled]
     # On success or failure, redirects to the index page with a notice
+    #
+    # This should never fail the save unless the field was initially saved without validations
     def enable
       @field = DynamicFieldsets::Field.find(params[:id])
       @field.enabled = params[:dynamic_fieldsets_field][:enabled]
