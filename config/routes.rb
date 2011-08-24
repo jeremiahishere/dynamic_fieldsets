@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     match "/fieldsets/roots" => "fieldsets#roots"
     resources :fieldsets
     resources :fields
+    match "/fields/:id/enable" => "fields#enable", :as => "enable_field", :method => :post
     resources :fieldset_children
   end
 

@@ -56,3 +56,14 @@ Feature: Managed fields
     And I should see "Field option value"
     And I should see "Html attribute name"
     And I should see "Html attribute value"
+
+  Scenario: Enabling and disabling a field
+    Given a field exists
+    When I go to the field index page
+    Then I should see that field listed
+    When I press "Disable"
+    Then I should be on the field index page
+    And I should see "Successfully updated a new field." 
+    When I press "Enable"
+    Then I should be on the field index page
+    And I should see "Successfully updated a new field." 

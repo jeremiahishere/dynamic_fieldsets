@@ -15,6 +15,7 @@
     <td><%= field.field_type %></td>
     <td><%= link_to 'Show', dynamic_fieldsets_field_path(field) %></td>
     <td><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(field) %></td>
+    <td><%= render :partial => "disable_field_form", :locals => { :field => field } %></td>
     <td>
       <% if field.in_use? %>
         <del>Destroy</del>

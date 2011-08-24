@@ -35,6 +35,21 @@ module DynamicFieldsets
       @field = DynamicFieldsets::Field.find(params[:id])
     end
 
+    # Custom controller action to set the enabled field on the field object
+    # Expects a url with an id field and a form with the value [:dynamic_fieldsets_field][:enabled]
+    # On success or failure, redirects to the index page with a notice
+    def enable
+      @field = DynamicFieldsets::Field.find(params[:id])
+      @field.enabled = params[:dynamic_fieldsets_field][:enabled]
+      respond_to do |format|
+        if @field.save
+          format.html { redirect_to(dynamic_fieldsets_fields_path, :notice => 'Successfully updated a new field.') }
+        else
+          format.html { redirect_to(dynamic_fieldsets_fields_path, :notice => 'Did not update the field successfully.') }
+        end
+      end
+    end
+
     # POST /dynamic_fieldsets/fields
     def create
       parent_id = params[:parent]
