@@ -164,8 +164,30 @@ describe Field do
   end
 
   describe "in_use? method" do
-    it "should return true if there is a field record associated with the field"
-    it "should return true if the field is in a fieldset (through a fieldset child)"
-    it "should return false otherwise"
+    before(:each) do
+      @field = Field.new
+      @field.stub!(:id).and_return(1)
+
+    end
+    it "should return true if there is a field record associated with the field" do
+      @fieldset_child = FieldsetChild.new(:child => @field, :fieldset => nil )
+      @fieldset_child.stub!(:field_records).and_return(["random", "array" "of", "stuff"])
+      @field.stub!(:fieldset_children).and_return([@fieldset_child])
+
+      @field.in_use?.should be_true
+    end
+
+    it "should return true if the field is in a fieldset (through a fieldset child)" do
+      @fieldset = Fieldset.new
+      @fieldset.stub!(:id).and_return(2)
+      @fieldset_child = FieldsetChild.new(:child => @field, :fieldset_id => @fieldset.id)
+      @field.stub!(:fieldset_children).and_return([@fieldset_child])
+
+      @field.in_use?.should be_true
+    end
+
+    it "should return false otherwise" do
+      @field.in_use?.should be_false
+    end
   end
 end

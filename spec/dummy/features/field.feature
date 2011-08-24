@@ -34,6 +34,12 @@ Feature: Managed fields
     When I press "Destroy"
     Then I should not see that field listed
 
+  Scenario: Should not be able to destroy a field in use
+    Given a field exists
+    And the field is in use
+    When I go to the field index page
+    Then I should see "Destroy" within "del"
+
   # this test should be a javascript test and actually test the javascript at some point
   Scenario: Additional field links on new page
     Given a field exists

@@ -7,6 +7,15 @@ Given /^a field exists$/ do
     :required => true)
 end
 
+Given /^the field is in use$/ do
+  @field = DynamicFieldsets::Field.last
+  if DynamicFieldsets::Fieldset.all.empty?
+    Given %{a fieldset exists}
+  end
+  @fsc = DynamicFieldsets::FieldsetChild.create(:child => @field, :fieldset_id => DynamicFieldsets::Fieldset.last.id)
+end
+
+
 Given /^field options, defaults, and attributes exist for that field$/ do
   @field = DynamicFieldsets::Field.last
   DynamicFieldsets::FieldOption.create(:field => @field, :name => "Field option value")

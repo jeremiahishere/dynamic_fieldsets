@@ -80,7 +80,7 @@ module DynamicFieldsets
 
     # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets
     def in_use?
-      return true;
+      self.fieldset_children.count { |child| !child.fieldset_id.nil? || !child.field_records.empty? } > 0
     end
     
   end
