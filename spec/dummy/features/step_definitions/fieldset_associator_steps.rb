@@ -1,5 +1,7 @@
 Given /^an information form exists$/ do
-  @information_form = InformationForm.create(:name => "Test information form")
+  # note that we are ignoring validations for this in case the fieldset has required fields
+  @information_form = InformationForm.new(:name => "Test information form")
+  @information_form.save(:validate => false)
 end
 
 Given /^a fieldset associator exists$/ do

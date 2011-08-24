@@ -30,6 +30,101 @@ describe DynamicFieldsetsInModel do
     end
   end
 
+  describe "run_validations! method" do
+    before(:each) do
+      @information_form = InformationForm.new
+      @information_form.stub!(:run_dynamic_fieldset_validations!)
+    end
+
+    it "should call run_dynamic_fieldset_validations!" do
+      @information_form.should_receive(:run_dynamic_fieldset_validations!)
+      @information_form.run_validations!
+    end
+  end
+
+  describe "run_dynamic_fieldset_validations! method" do
+    before(:each) do
+      @field = Field.new(:name => "Test Field", :label => "Test Field", :field_type => "textfield")
+      @fieldset = Fieldset.new(:name => "first", :nkey => "first", :description => "description")
+      @fieldset.stub!(:children).and_return([@field])
+      @fsa = FieldsetAssociator.new
+      @fsa.stub!(:fieldset).and_return(@fieldset)
+      @fsa.stub!(:id).and_return(1)
+
+      @information_form = InformationForm.new
+      @information_form.stub!(:run_fieldset_child_validations!)
+      @information_form.stub!(:fieldset_associator).and_return(@fsa)
+    end
+
+    it "should iterate over dynamic_fieldset keys" do
+      @information_form.dynamic_fieldsets.should_receive(:keys).and_return([])
+      @information_form.run_dynamic_fieldset_validations!
+    end
+
+    it "should call run_fieldset_child_validations for each key" do
+      @information_form.should_receive(:run_fieldset_child_validations!)
+      @information_form.run_dynamic_fieldset_validations!
+    end
+  end
+
+  describe "run_fieldset_child_validations! method" do
+    before(:each) do
+      @field = Field.new(:name => "Test Field", :label => "Test Field", :field_type => "textfield", :required => true)
+      @field.stub!(:id).and_return(42)
+      @fieldset = Fieldset.new(:name => "first", :nkey => "first", :description => "description")
+      @fieldset.stub!(:children).and_return([@field])
+      @fsa = FieldsetAssociator.new
+      @fsa.stub!(:fieldset).and_return(@fieldset)
+      @fsa.stub!(:id).and_return(1)
+
+      @information_form = InformationForm.new
+    end
+
+    it "should recurse if the child is a field" do
+      values = { "fsa-1" => { "field-42"=>[] } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @fieldset.should_receive(:children).and_return([@field])
+      @information_form.run_fieldset_child_validations!(@fsa.id, @fieldset)
+    end
+
+    it "should add an error if there is no matching field in self.dynamic_fieldset_values" do
+      values = { "fsa-1" => { "field-4200"=>"" } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @information_form.run_fieldset_child_validations!(@fsa.id, @field)
+      @information_form.errors[:base].should include "Test Field is required and the input is missing"
+    end
+
+    it "should add an error if the field is required, the value is an array, and the value is empty" do
+      values = { "fsa-1" => { "field-42"=>[] } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @information_form.run_fieldset_child_validations!(@fsa.id, @field)
+      @information_form.errors[:base].should include "Test Field is required"
+    end
+
+    it "should add an error if the field is required, the value is not an array, and the value is an empty string" do
+      values = { "fsa-1" => { "field-42"=>"" } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @information_form.run_fieldset_child_validations!(@fsa.id, @field)
+      @information_form.errors[:base].should include "Test Field is required"
+    end
+
+    it "should add an error if the field is required, the value is not an array, and the value is a nil" do
+      values = { "fsa-1" => { "field-42"=>nil } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @information_form.run_fieldset_child_validations!(@fsa.id, @field)
+      @information_form.errors[:base].should include "Test Field is required"
+    end
+
+    it "should not add an error if the field is not required" do
+      @field.required = false
+
+      values = { "fsa-1" => { "field-42"=>"" } }
+      @information_form.stub!(:dynamic_fieldset_values).and_return(values)
+      @information_form.run_fieldset_child_validations!(@fsa.id, @field)
+      @information_form.errors.should == {}
+    end
+  end
+
   describe "method missing method" do
     before(:each) do
       @model = InformationForm.new

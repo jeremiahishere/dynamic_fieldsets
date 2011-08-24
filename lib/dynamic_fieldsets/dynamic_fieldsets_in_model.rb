@@ -39,6 +39,57 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+
+      # Overrides the ActiveModel Validations run_validations! method
+      # It additionally adds validations for the fields that are required
+      #
+      # I am not sure if this is the correct place to put this.  Seems like a reasonable one.
+      #
+      # @return [Boolean] The result of run_validations! with the extra errors added, should be true if errors.empty? 
+      def run_validations!
+        run_dynamic_fieldset_validations!
+        super
+      end
+
+      # Iterates over the fieldset associator's children and adds errors
+      def run_dynamic_fieldset_validations!
+        # for each fsa
+        self.dynamic_fieldsets.keys.each do |key|
+          fsa = self.fieldset_associator(key)
+          run_fieldset_child_validations!(fsa.id, fsa.fieldset)
+        end
+      end
+
+      # Checks if a fieldset child is required and adds an error if it's value is blank
+      # Adds errors to the sel.errors array, does not return them
+      #
+      # @param [Integer] fsa_id The id for the fieldset associator the child belongs to
+      # @param [Field or Fieldset[ child The child of the fieldset associator
+      def run_fieldset_child_validations!(fsa_id, child)
+        if child.is_a?(DynamicFieldsets::Fieldset)
+          # if a fieldset, then recurse
+          child.children.each do |grand_child|
+            run_fieldset_child_validations!(fsa_id, grand_child)
+          end
+        elsif child.is_a?(DynamicFieldsets::Field)
+          # if a child, check if the params value is set, check if it is required, check if it satisfies condition
+          fsa_tag_id = "fsa-" + fsa_id.to_s
+          field_tag_id = "field-" + child.id.to_s
+          if !self.dynamic_fieldset_values.has_key?(fsa_tag_id) || !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
+            self.errors.add(:base, child.label + " is required and the input is missing")
+          else
+            # get the value
+            value = self.dynamic_fieldset_values[fsa_tag_id][field_tag_id]
+            if child.required?
+              # empty works on array or string, so simplifying here
+              self.errors.add(:base, child.label + " is required") if value.nil? || value.empty?
+            end
+          end
+        else
+          # found a major problem, not sure how to get here
+          puts "found a child that wasn't a field or fieldset" + child.inspect
+        end
+      end
       
       # Stores the dynamic fieldset values
       def set_fieldset_values( params )

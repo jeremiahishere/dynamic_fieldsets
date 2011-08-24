@@ -40,6 +40,7 @@ Feature: Managed fieldsets
     And I should see "This fieldset has been repurposed"
 
   Scenario: Destroying a fieldset
+    Given I am pending
     Given a parent fieldset exists
     And I record the data for that fieldset
     And I am on the fieldset index page
