@@ -44,7 +44,7 @@
 
   <% @field.field_defaults.each do |field_default| %>
     <%= f.fields_for :field_defaults, field_default do |field_default_form| %>
-      <%= render :partial => "field_default_fields", :locals => {:f => field_default_form} %>
+      <%= render :partial => "field_default_fields", :locals => {:f => field_default_form, :obj => field_default} %>
     <% end %>
   <% end %>
   <p><%= link_to_add_fields "Add Default Value", f, :field_defaults %></p>
