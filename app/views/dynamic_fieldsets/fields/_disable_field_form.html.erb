@@ -1,6 +1,4 @@
 <%= form_for field, :method => :post, :url => dynamic_fieldsets_enable_field_path(field) do |f| %>
   <%= f.hidden_field :enabled, :value => !field.enabled %>
-  <div class="actions">
-    <%= f.submit field.enabled ? "Disable" : "Enable"  %>
-  </div>
+  <%= f.submit field.enabled ? "Disable" : "Enable"  %>
 <% end %>
