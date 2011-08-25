@@ -11,40 +11,24 @@
     </div>
   <% end %>
 
-  <br />
-  Put parent here
-  <br />
-  Put child here
-  <br />
+  <p>
+    <b>Field:</b>
+    <%= @fieldset_child.child.name %>
+  </p>
 
-  <% if !@fieldset_child.dependency_group.nil? %>
-    <%= f.fields_for :dependency_group, @fieldset_child.dependency_group do |dependency_group_form| %>
-      <%= render :partial => "dependency_group_fields", :locals => {:f => dependency_group_form, :obj => @fieldset_child.dependency_group} %>
-    <% end %>
-  <% else %>
-    <p><%= link_to_add_fields "Add Dependency", f, :dependency_group %></p>
+  <p>
+    <b>Dependencies:</b>
+    <br />
+  </p>
+
+  <%# only expecting a single dependency group for now %>
+  <%= f.fields_for :dependency_group, @fieldset_child.dependency_group do |dependency_group_form| %>
+    <%= render :partial => "dependency_group_fields", :locals => {:f => dependency_group_form, :obj => @fieldset_child.dependency_group} %>
   <% end %>
+  <p><%= link_to_add_fields "Add Dependency", f, :dependency_group %></p>
 
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
 <%= render :partial => "/dynamic_fieldsets/shared/nested_model_javascript" %>
-
-<script type='text/javascript'>
-$(document).ready(function()  {
-  $("a.add_dependency").click(function()  {
-    $(this).hide();
-
-    //nested event binding awesomeness
-    //has to be here to bind new elements as they add to the page
-    $("a.remove_dependency_group").click(function()  {
-      //find remove buttons that are visible
-      //if none are visible, show the dependency group add link
-      if($("a.remove_dependency_group:visible").length == 0)  {
-        $("a.add_dependency").show();
-      }
-    });
-  });
-});
-</script>

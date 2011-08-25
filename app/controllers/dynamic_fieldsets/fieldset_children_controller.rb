@@ -29,9 +29,9 @@ module DynamicFieldsets
           ### WARNING THIS ISN"T GOING TO WORK ###
           # need to pull the root fieldset here instead of the immediate parent
           # this problem probably also exists on the edit view
-          #format.html { redirect_to(dynamic_fieldsets_fieldset_children_path(@fieldset_child.parent), :notice => "Successfully updated a child")}
+          format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset_child.root_fieldset), :notice => "Successfully updated a child")}
           # temporary working version
-          format.html { redirect_to(dynamic_fieldsets_fieldsets_path, :notice => "Successfully updated a child")}
+          # format.html { redirect_to(dynamic_fieldsets_fieldsets_path, :notice => "Successfully updated a child")}
         else
           format.html { render :action => "edit" }
         end

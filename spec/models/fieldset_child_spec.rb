@@ -95,4 +95,28 @@ describe FieldsetChild do
     end
   end
 
+  describe "to_hash method" do
+    it "needs specs"
+  end
+
+  describe "root_fieldset method" do
+    before(:each) do
+      # too many issues with stubbing, getting lazy and saving
+      # could be refactored at some point
+
+      @field = Field.create({ :name => "Test field name", :label => "Test field label", :field_type => "textfield", :required => true, :enabled => true, })
+      @fieldset = Fieldset.create({:name => "Hire Form", :description => "Hire a person for a job", :nkey => "hire_form"})
+      @root_fieldset = Fieldset.create({:name => "Hire Form2", :description => "Hire a person for a job2", :nkey => "hire_form2"})
+
+      @field_child = FieldsetChild.create(:child => @child, :fieldset => @fieldset, :order_num => 1)
+      @child = FieldsetChild.create(:child => @fieldset, :fieldset => @root_fieldset, :order_num => 2)
+    end
+    it "should return a fieldset if it is not present as the child in fieldset child" do
+      @child.root_fieldset.should == @root_fieldset
+    end
+
+    it "should recurse if the fieldset is present as a child in a fieldset child" do
+      @field_child.root_fieldset.id.should == @root_fieldset.id
+    end
+  end
 end

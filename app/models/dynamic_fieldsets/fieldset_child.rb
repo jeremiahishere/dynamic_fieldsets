@@ -125,5 +125,22 @@ module DynamicFieldsets
       return { "id" => self.id, "fieldset_id" => self.fieldset_id, "child_id" => self.child_id, "child_type" => self.child_type }
     end
 
+    # Returns the root fieldset of the child
+    # Loops up the parent fieldset field until the parent is nil, then returns the child
+    #
+    # Important: This method is dependent on fieldsets not being reusable
+    #
+    # @return [Fieldset] The root fieldset of the fieldsetchild
+    def root_fieldset(fs = self.fieldset)
+      # whether the parent is a child
+      parent_as_a_child = FieldsetChild.where(:child_id => fs.id, :child_type => "DynamicFieldsets::Fieldset")
+      # my parent is nobody's child, it is the root
+      if parent_as_a_child.count == 0
+        return fs
+      else # if my parent is someone else's child, then
+        # look at her parent
+        return root_fieldset(parent_as_a_child.first.fieldset)
+      end
+    end
   end
 end
