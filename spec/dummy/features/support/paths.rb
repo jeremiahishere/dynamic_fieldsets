@@ -36,6 +36,9 @@ module NavigationHelpers
     when /^the field show page for that field$/
       "/dynamic_fieldsets/fields/" + DynamicFieldsets::Field.last.id.to_s
 
+    when /^the information form edit page$/
+      "/information_forms/" + InformationForm.last.id.to_s + "/edit"
+
     else
       begin
         page_name =~ /the (.*) page/

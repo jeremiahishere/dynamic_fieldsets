@@ -86,12 +86,14 @@ module DynamicFieldsets
       dependency_group_hash =
       {
           "action" => self.action, 
-          "fieldset_child_id" => self.fieldset_child_id 
+          "fieldset_child_id" => self.fieldset_child_id, 
+          "field_id" => self.fieldset_child.child_id,
+          "clause" => {}
       }
       for dependency_clause in self.dependency_clauses
-        dependency_group_hash[dependency_clause.id] = {}
+        dependency_group_hash["clause"][dependency_clause.id] = {}
         for dependency in dependency_clause.dependencies
-          dependency_group_hash[dependency_clause.id][dependency.id] = 
+          dependency_group_hash["clause"][dependency_clause.id][dependency.id] = 
           {
             "fieldset_child_id" => dependency.fieldset_child.id,
             "relationship" => dependency.relationship,
