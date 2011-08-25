@@ -223,8 +223,9 @@ describe DynamicFieldsetsInModel do
   describe "fieldset_associator method" do
     before(:each) do
       @model = InformationForm.new
+      @model.stub!(:id).and_return(1234)
       @model.stub!(:dynamic_fieldsets).and_return({:child_form => {:fieldset => :fingerprint_form}})
-      @fsa = DynamicFieldsets::FieldsetAssociator.new(:fieldset_model_id => 1234, :fieldset_model_type => "InformationForm", :fieldset_model_name => :child_form)
+      @fsa = DynamicFieldsets::FieldsetAssociator.new(:fieldset_model_id => @model.id, :fieldset_model_type => "InformationForm", :fieldset_model_name => :child_form)
       DynamicFieldsets::FieldsetAssociator.stub!(:find_by_fieldset_model_parameters).and_return(@fsa)
     end
 
@@ -233,12 +234,16 @@ describe DynamicFieldsetsInModel do
       @model.fieldset_associator(:child_form).should == @fsa
     end
 
-    it "should create a new fieldset associator object if one does not exist" do
+    it "should make a new fieldset associator object if one does not exist" do
       DynamicFieldsets::FieldsetAssociator.stub!(:find_by_fieldset_model_parameters).and_return([])
       DynamicFieldsets::FieldsetAssociator.stub!(:create).and_return(@fsa)
 
-      # don't know why I need this, should be handled by the create stub
-      @model.fieldset_associator(:child_form).should == @fsa
+      # new has been called on the object with specific parameters
+      # but it does not match the fsa object because it has a different object id
+      new_fsa = @model.fieldset_associator(:child_form)
+      new_fsa.fieldset_model_id.should == @model.id
+      new_fsa.fieldset_model_type.should == "InformationForm"
+      new_fsa.fieldset_model_name.should == "child_form"
     end
 
     it "should return nil if the sym param does not match a key in the dynamic_fieldsets field" do

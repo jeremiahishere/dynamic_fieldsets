@@ -9,7 +9,10 @@ describe DynamicFieldsetsHelper do
   describe ".dynamic_fieldset_renderer" do
     before(:each) do
       @fsa = mock_model(FieldsetAssociator)
+      @fsa.stub!(:id).and_return(2)
       @fsa.stub!(:fieldset).and_return mock_model(Fieldset)
+      @fsa.stub!(:fieldset_id).and_return(1)
+      @fsa.stub!(:fieldset_model_name).and_return("Turkey")
       @fsa.stub!(:field_values).and_return []
       stub!(:fieldset_renderer).and_return []
     end
