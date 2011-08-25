@@ -56,6 +56,36 @@ module DynamicFieldsets
         format.html
       end
     end
+
+    # associates a field or fieldset with the given fieldset by creating a fieldset child
+    def associate_child
+      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      @field = DynamicFieldsets::Field.find_by_id(params[:field])
+
+      @fieldset_child = DynamicFieldsets::FieldsetChild.where(:child_id => @field.id, :child_type => @field.class.name, :fieldset_id => @fieldset.id).first
+      if(@fieldset_child.nil?)
+        @fieldset_child = DynamicFieldsets::FieldsetChild.new(
+          :child_id => @field.id, 
+          :child_type => @field.class.name,
+          :fieldset_id => @fieldset.id,
+          :order_num => DynamicFieldsets::FieldsetChild.where(:fieldset_id => @fieldset.id).count + 1)
+      else
+        child_already_exists = true
+      end
+
+      respond_to do |format|
+        if @fieldset_child.save
+          if child_already_exists
+            notice_text = "Field was already associated with the fieldset"
+          else
+            notice_text = "Successfully associated a field"
+          end
+          format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset), :notice => notice_text )}
+        else
+          format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Field was not successsfully associated." )}
+        end
+      end
+    end
     
     # ...
     def reorder

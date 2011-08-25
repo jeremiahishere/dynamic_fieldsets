@@ -1,0 +1,4 @@
+<%= form_for fieldset, :method => :post, :url => dynamic_fieldsets_associate_child_to_fieldset_path(fieldset) do |f| %>
+  <%= select_tag :field, options_for_select(DynamicFieldsets::Field.all.collect { |f| [f.name, f.id] }) %>
+  <%= f.submit "Associate"  %>
+<% end %>
