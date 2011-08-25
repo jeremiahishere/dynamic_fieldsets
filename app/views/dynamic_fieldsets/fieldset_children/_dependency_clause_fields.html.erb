@@ -1,0 +1,24 @@
+<div>
+  <p class="fields">
+    <%= f.label "Clause" %>
+    <%= f.hidden_field :_destroy %>
+    <%= link_to_function "remove", {:class => "remove_dependency_group", :onclick => "remove_fields_and_parent_fields(this)"} %>
+
+    <table style='outline: 1px solid black;margin:5px;'>
+      <tr>
+        <th>Field</th>
+        <th>Relationship</th>
+        <th>Value</th>
+        <th></th>
+        <th></th>
+      </tr>
+      <% obj.dependencies.each do |dependency| %>
+        <%= f.fields_for :dependencies, dependency do |dependency_form| %>
+          <%= render :partial => "dependencies", :locals => {:f => dependency_form, :obj => dependency} %>
+        <% end %>
+      <% end %>
+      <tr><%= link_to_add_fields "Add Rule", f, :dependencies%></tr>
+    </table>
+    AND<br />
+  </p>
+</div>

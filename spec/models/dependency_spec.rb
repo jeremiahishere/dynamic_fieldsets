@@ -170,4 +170,11 @@ describe Dependency do
 
   end
 
+  describe "to_hash method" do
+    it "should have spec tests"
+  end
+
+  describe "available_fieldset_children method" do
+    it "should have spec tests if it exists"
+  end
 end

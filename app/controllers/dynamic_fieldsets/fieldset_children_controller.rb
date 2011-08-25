@@ -3,7 +3,6 @@ module DynamicFieldsets
   # Most of this is done through the fieldsets#children action
   # Dependencies are done here
   class FieldsetChildrenController < ApplicationController
-    include NestedModelHelper
     unloadable
     
     # this view doesn't exist

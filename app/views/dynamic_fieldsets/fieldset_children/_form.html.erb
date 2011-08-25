@@ -16,13 +16,31 @@
   Put child here
 
 
-  <% if @fieldset_child.dependency_group %>
-    <%= f.fields_for :dependency_groups, @fieldset_child.dependency_group do |dependency_group_form| %>
+  <% if !@fieldset_child.dependency_group.nil? %>
+    <%= f.fields_for :dependency_group, @fieldset_child.dependency_group do |dependency_group_form| %>
       <%= render :partial => "dependency_groups", :locals => {:f => dependency_group_form, :obj => @fieldset_child.dependency_group} %>
     <% end %>
   <% else %>
-    <p><%= link_to_add_fields "Add Dependency Group", f, :dependency_groups %></p>
+    <p><%= link_to_add_fields "Add Dependency", f, :dependency_group %></p>
   <% end %>
 
 <% end %>
 <%= render :partial => "/dynamic_fieldsets/shared/nested_model_javascript" %>
+
+<script type='text/javascript'>
+$(document).ready(function()  {
+  $("a.add_dependency").click(function()  {
+    $(this).hide();
+
+    //nested event binding awesomeness
+    //has to be here to bind new elements as they add to the page
+    $("a.remove_dependency_group").click(function()  {
+      //find remove buttons that are visible
+      //if none are visible, show the dependency group add link
+      if($("a.remove_dependency_group:visible").length == 0)  {
+        $("a.add_dependency").show();
+      }
+    });
+  });
+});
+</script>

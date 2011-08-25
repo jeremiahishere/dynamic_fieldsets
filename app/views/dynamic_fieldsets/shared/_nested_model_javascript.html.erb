@@ -2,6 +2,21 @@
 function remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");
   $(link).closest(".fields").hide();
+  $(link).parent().hide();
+}
+
+function remove_fields_and_parent_fields(link)  {
+  $(link).prev("input[type=hidden]").val("1");
+  $(link).closest(".fields").hide();
+  $(link).parent().parent().hide();
+}
+
+function remove_fields_from_table(link)  {
+  $(link).prev("input[type=hidden]").val("1");
+  $(link).closest(".fields").hide();
+  $(link).parent().parent().hide();
+  //also remove the next row
+  $(link).parent().parent().next().hide();
 }
 
 function add_fields(link, association, content) {

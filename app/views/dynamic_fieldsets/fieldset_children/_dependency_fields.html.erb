@@ -1,0 +1,12 @@
+<tr>
+  <td><%= f.select :fieldset_child, options_for_select(DynamicFieldsets::FieldsetChild.all.collect { |c| [c.child.name, c.id]})%></td>
+  <td><%= f.select :relationship, obj.relationship_list %></td>
+  <td><%= f.text_field :value %></td>
+  <td>
+    <%= f.hidden_field :_destroy %>
+    <%= link_to_function "remove", {:class => "remove_dependency", :onclick => "remove_fields_from_table(this)"} %>
+  </td>
+</tr>
+<tr>
+  <td>OR</td>
+</tr>
