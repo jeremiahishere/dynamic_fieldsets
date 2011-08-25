@@ -138,6 +138,9 @@ describe DependencyGroup do
 
   describe "to_hash" do
     before(:each) do
+      @field = Field.new
+      @field.stub!(:id).and_return 100
+
       @fieldset_child1 = FieldsetChild.new
       @fieldset_child1.stub!(:id).and_return 100
       @fieldset_child2 = FieldsetChild.new
@@ -164,6 +167,8 @@ describe DependencyGroup do
       @clause.stub!(:dependency_group).and_return @group
       @group.stub!(:fieldset_child).and_return @fieldset_child2
       @group.stub!(:dependency_clauses).and_return [@clause]
+      @fieldset_child2.stub!(:child).and_return @field
+      @fieldset_child2.stub!(:child_id).and_return @field.id
     end
 
     it "should return a hash" do
@@ -172,13 +177,16 @@ describe DependencyGroup do
 
     it "should have a specific return structure" do
       expected_result = {
-        "fieldset_child_id" => @group.fieldset_child_id,
         "action" => @group.action,
-        @clause.id => {
-          @dependency.id => {
-            "fieldset_child_id" => @dependency.fieldset_child_id,
-            "relationship" => @dependency.relationship,
-            "value" => @dependency.value
+        "fieldset_child_id" => @fieldset_child2.id,
+        "field_id" => @field.id,
+        "clause" => {
+          @clause.id => {
+            @dependency.id => {
+              "fieldset_child_id" => @dependency.fieldset_child_id,
+              "relationship" => @dependency.relationship,
+              "value" => @dependency.value
+            }
           }
         }
       }
@@ -202,18 +210,21 @@ describe DependencyGroup do
       @clause.stub!(:dependencies).and_return [@dependency, dependency2]
 
       expected_result = {
-          "fieldset_child_id" => @group.fieldset_child_id,
           "action" => @group.action,
-          @clause.id => {
-            @dependency.id => {
-              "fieldset_child_id" => @dependency.fieldset_child_id,
-              "relationship" => @dependency.relationship,
-              "value" => @dependency.value
-            },
-            dependency2.id => {
-              "fieldset_child_id" => dependency2.fieldset_child_id,
-              "relationship" => dependency2.relationship,
-              "value" => dependency2.value
+          "fieldset_child_id" => @group.fieldset_child_id,
+          "field_id" => @field.id,
+          "clause" => {
+            @clause.id => {
+              @dependency.id => {
+                "fieldset_child_id" => @dependency.fieldset_child_id,
+                "relationship" => @dependency.relationship,
+                "value" => @dependency.value
+              },
+              dependency2.id => {
+                "fieldset_child_id" => dependency2.fieldset_child_id,
+                "relationship" => dependency2.relationship,
+                "value" => dependency2.value
+              }
             }
           }
       }
