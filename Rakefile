@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Dynamic fieldsets for rails controllers}
   gem.description = %Q{Dynamic fieldsets for rails controllers}
   gem.email = "jeremiah@cloudspace.com"
-  gem.authors = ["Jeremiah Hemphill", "Ethan Pemble"]
+  gem.authors = ["Jeremiah Hemphill", "Ethan Pemble", "John Carter"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
