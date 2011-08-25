@@ -1,3 +1,10 @@
+== 0.0.4
+
+* A very simple version of the spec completely works
+* The backend is done including a nice system for organizaing and ordering fieldsets
+* The front end is done including dependencies and form and show helpers
+* Additional work is needed for multiple fieldsets on the same page or model, date based dependencies, resuing fieldsets, etc
+
 == 0.0.3
 
 * Removed ActionView::Helpers from the include.  There were errors when it is included twice.

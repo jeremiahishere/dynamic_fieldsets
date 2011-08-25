@@ -1,9 +1,22 @@
-= DynamicFieldsets
+= dynamic_fieldsets 
 
 User defined fieldsets for dynamic questions in forms.
 
-== Contributing to acts_as_multipart_form
+I recommend not using this until a 0.1 release.j
+
+= how to use
+
+Install the gem, run the install generator
+
+Add the mixin to your model.  There are some configuration options here.
+
+There is a view helper you need to add to your application helper and call from the form view and the show view.
+
+The backend is automatically added to your project using the rails engine system.  At some point, there will be a controller generator to generate them out so you can add permissions/pagination/whatever else you need on your controllers.
+
+== Contributing to dynamic_fieldsets 
  
+* honestly, hold off for a 0.1 release before even thinking about this
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
