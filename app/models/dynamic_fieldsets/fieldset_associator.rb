@@ -1,8 +1,9 @@
 module DynamicFieldsets
   class FieldsetAssociator < ActiveRecord::Base
     belongs_to :fieldset
+    belongs_to :fieldset_model, :polymorphic => true
     has_many :field_records
-
+    
     validates_presence_of :fieldset_id, :fieldset_model_id, :fieldset_model_type, :fieldset_model_name
     validate :unique_fieldset_model_name_per_polymorphic_fieldset_model
 

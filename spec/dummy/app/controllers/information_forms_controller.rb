@@ -42,6 +42,7 @@ class InformationFormsController < ApplicationController
   # POST /information_forms.xml
   def create
     @information_form = InformationForm.new(params[:information_form])
+    @information_form.set_fieldset_values( params )
 
     respond_to do |format|
       if @information_form.save

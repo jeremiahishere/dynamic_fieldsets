@@ -184,7 +184,9 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
-    rendered_dynamic_fieldset = "<div id='fsa-#{fsa.id}'>"
+    rendered_dynamic_fieldset = "<div id='fsa-#{fsa.id}'>\n"
+    rendered_dynamic_fieldset += "<input type='hidden' name='fsa-#{fsa.id}[fieldset_id]' value='#{fsa.fieldset_id}' />\n"
+    rendered_dynamic_fieldset += "<input type='hidden' name='fsa-#{fsa.id}[fieldset_model_name]' value='#{fsa.fieldset_model_name}' />\n"
     fieldset_renderer( fsa, fsa.fieldset, fsa.field_values, form_type ).each do |line|
       rendered_dynamic_fieldset += line + "\n"
     end

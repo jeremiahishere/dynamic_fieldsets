@@ -23,7 +23,7 @@ module DynamicFieldsets
       # @param [Hash] args A hash of arguments for the fieldsets.
       def acts_as_dynamic_fieldset(args)
         mattr_accessor :dynamic_fieldsets unless self.respond_to?(:dynamic_fieldsets)
-        self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a? Hash
+        self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a?(Hash)
 
         args.each_pair do |key, value|
           self.dynamic_fieldsets[key] = value
@@ -107,7 +107,15 @@ module DynamicFieldsets
           values.keys.each do |key|
             if key.start_with?("fsa-")
               key_id = key.gsub(/^fsa-/, "")
-              fsa = DynamicFieldsets::FieldsetAssociator.find_by_id(key_id)
+
+              if key_id.eql? ""
+              then fsa = DynamicFieldsets::FieldsetAssociator.create(
+                :fieldset_id => values[key][:fieldset_id],
+                :fieldset_model_id => self.id,
+                :fieldset_model_type => self.class.name,
+                :fieldset_model_name => values[key][:fieldset_model_name] )
+              else fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
+              end
               
               # SAVE DATES
               # 'dates' is an array of the "field-ID"s that have multiple date fields of the format field(1i), field(2i), ...
@@ -240,14 +248,14 @@ module DynamicFieldsets
       def fieldset_associator(sym)
         if match_fieldset_associator?(sym)
           fsa = DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
-            :fieldset_model_id => self.id, 
+            :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name, 
             :fieldset_model_name => sym,
             :fieldset => self.dynamic_fieldsets[sym][:fieldset]).first
           if fsa.nil?
-            fsa = DynamicFieldsets::FieldsetAssociator.create(
-            :fieldset_model_id => self.id, 
-            :fieldset_model_type => self.class.name, 
+            fsa = DynamicFieldsets::FieldsetAssociator.new(
+            :fieldset_model_id => self.id,
+            :fieldset_model_type => self.class.name,
             :fieldset_model_name => sym.to_s,
             :fieldset => DynamicFieldsets::Fieldset.find_by_nkey(self.dynamic_fieldsets[sym][:fieldset]))
           end
