@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dynamic_fieldsets}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}]
-  s.date = %q{2011-07-28}
+  s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}, %q{John Carter}]
+  s.date = %q{2011-08-25}
   s.description = %q{Dynamic fieldsets for rails controllers}
   s.email = %q{jeremiah@cloudspace.com}
   s.extra_rdoc_files = [
@@ -25,9 +25,15 @@ Gem::Specification.new do |s|
     "VERSION",
     "app/controllers/dynamic_fieldsets/fields_controller.rb",
     "app/controllers/dynamic_fieldsets/fieldset_associators_controller.rb",
+    "app/controllers/dynamic_fieldsets/fieldset_children_controller.rb",
     "app/controllers/dynamic_fieldsets/fieldsets_controller.rb",
     "app/helpers/dynamic_fieldsets/fields_helper.rb",
+    "app/helpers/dynamic_fieldsets/fieldset_children_helper.rb",
+    "app/helpers/dynamic_fieldsets/nested_model_helper.rb",
     "app/helpers/dynamic_fieldsets_helper.rb",
+    "app/models/dynamic_fieldsets/dependency.rb",
+    "app/models/dynamic_fieldsets/dependency_clause.rb",
+    "app/models/dynamic_fieldsets/dependency_group.rb",
     "app/models/dynamic_fieldsets/field.rb",
     "app/models/dynamic_fieldsets/field_default.rb",
     "app/models/dynamic_fieldsets/field_html_attribute.rb",
@@ -35,6 +41,8 @@ Gem::Specification.new do |s|
     "app/models/dynamic_fieldsets/field_record.rb",
     "app/models/dynamic_fieldsets/fieldset.rb",
     "app/models/dynamic_fieldsets/fieldset_associator.rb",
+    "app/models/dynamic_fieldsets/fieldset_child.rb",
+    "app/views/dynamic_fieldsets/fields/_disable_field_form.html.erb",
     "app/views/dynamic_fieldsets/fields/_field_default_fields.html.erb",
     "app/views/dynamic_fieldsets/fields/_field_html_attribute_fields.html.erb",
     "app/views/dynamic_fieldsets/fields/_field_option_fields.html.erb",
@@ -45,12 +53,23 @@ Gem::Specification.new do |s|
     "app/views/dynamic_fieldsets/fields/show.html.erb",
     "app/views/dynamic_fieldsets/fieldset_associators/index.html.erb",
     "app/views/dynamic_fieldsets/fieldset_associators/show.html.erb",
+    "app/views/dynamic_fieldsets/fieldset_children/_dependency_clause_fields.html.erb",
+    "app/views/dynamic_fieldsets/fieldset_children/_dependency_fields.html.erb",
+    "app/views/dynamic_fieldsets/fieldset_children/_dependency_group_fields.html.erb",
+    "app/views/dynamic_fieldsets/fieldset_children/_form.html.erb",
+    "app/views/dynamic_fieldsets/fieldset_children/edit.html.erb",
+    "app/views/dynamic_fieldsets/fieldsets/_associate_child.html.erb",
+    "app/views/dynamic_fieldsets/fieldsets/_child.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/_form.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/children.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/edit.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/index.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/new.html.erb",
+    "app/views/dynamic_fieldsets/fieldsets/reorder.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/show.html.erb",
+    "app/views/dynamic_fieldsets/shared/_javascript_watcher.html.erb",
+    "app/views/dynamic_fieldsets/shared/_nested_model_javascript.html.erb",
+    "config/.routes.rb.swp",
     "config/routes.rb",
     "dynamic_fieldsets.gemspec",
     "lib/dynamic_fieldsets.rb",
@@ -68,6 +87,7 @@ Gem::Specification.new do |s|
     "spec/dummy/app/helpers/information_forms_helper.rb",
     "spec/dummy/app/models/information_form.rb",
     "spec/dummy/app/views/information_forms/_form.html.erb",
+    "spec/dummy/app/views/information_forms/dynamic_view.html.erb",
     "spec/dummy/app/views/information_forms/edit.html.erb",
     "spec/dummy/app/views/information_forms/index.html.erb",
     "spec/dummy/app/views/information_forms/new.html.erb",
@@ -88,16 +108,20 @@ Gem::Specification.new do |s|
     "spec/dummy/config/initializers/session_store.rb",
     "spec/dummy/config/locales/en.yml",
     "spec/dummy/config/routes.rb",
-    "spec/dummy/db/migrate/20110726215814_create_dynamic_fieldsets_tables.rb",
     "spec/dummy/db/migrate/20110727210451_create_information_forms.rb",
+    "spec/dummy/db/migrate/20110809161724_create_dynamic_fieldsets_tables.rb",
     "spec/dummy/db/schema.rb",
     "spec/dummy/features/field.feature",
     "spec/dummy/features/fieldset.feature",
     "spec/dummy/features/fieldset_associator.feature",
+    "spec/dummy/features/fieldset_children.feature",
+    "spec/dummy/features/javascript_tests.feature",
     "spec/dummy/features/step_definitions/debugging_steps.rb",
     "spec/dummy/features/step_definitions/field_steps.rb",
     "spec/dummy/features/step_definitions/fieldset_associator_steps.rb",
+    "spec/dummy/features/step_definitions/fieldset_children_steps.rb",
     "spec/dummy/features/step_definitions/fieldset_steps.rb",
+    "spec/dummy/features/step_definitions/javascript_steps.rb",
     "spec/dummy/features/step_definitions/web_steps.rb",
     "spec/dummy/features/support/env.rb",
     "spec/dummy/features/support/paths.rb",
@@ -107,6 +131,9 @@ Gem::Specification.new do |s|
     "spec/dummy/public/500.html",
     "spec/dummy/public/favicon.ico",
     "spec/dummy/public/javascripts/application.js",
+    "spec/dummy/public/javascripts/jquery-1.6.2.min.js",
+    "spec/dummy/public/javascripts/jquery-ui-1.8.15.custom.min.js",
+    "spec/dummy/public/javascripts/jquery-ui-nestedSortable.js",
     "spec/dummy/public/javascripts/jquery.min.js",
     "spec/dummy/public/stylesheets/.gitkeep",
     "spec/dummy/public/stylesheets/scaffold.css",
@@ -115,24 +142,31 @@ Gem::Specification.new do |s|
     "spec/dynamic_fieldsets_in_model_spec.rb",
     "spec/dynamic_fieldsets_spec.rb",
     "spec/integration/navigation_spec.rb",
+    "spec/models/dependency_clause_spec.rb",
+    "spec/models/dependency_group_spec.rb",
+    "spec/models/dependency_spec.rb",
     "spec/models/field_default_spec.rb",
     "spec/models/field_html_attribute_spec.rb",
     "spec/models/field_option_spec.rb",
     "spec/models/field_record_spec.rb",
     "spec/models/field_spec.rb",
     "spec/models/fieldset_associator_spec.rb",
+    "spec/models/fieldset_child_spec.rb",
     "spec/models/fieldset_spec.rb",
     "spec/reports/SPEC-ActsAsMultipartForm.xml",
     "spec/reports/SPEC-MultipartForm-InProgressForm-validations.xml",
     "spec/reports/SPEC-MultipartForm-InProgressForm.xml",
     "spec/reports/SPEC-Navigation.xml",
     "spec/spec_helper.rb",
+    "spec/support/dependency_group_helper.rb",
+    "spec/support/dependency_helper.rb",
     "spec/support/field_default_helper.rb",
     "spec/support/field_helper.rb",
     "spec/support/field_html_attribute_helper.rb",
     "spec/support/field_option_helper.rb",
     "spec/support/field_record_helper.rb",
     "spec/support/fieldset_associator_helper.rb",
+    "spec/support/fieldset_child_helper.rb",
     "spec/support/fieldset_helper.rb"
   ]
   s.homepage = %q{http://github.com/jeremiahishere/dynamic_fieldsets}
@@ -158,6 +192,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.3"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<ci_reporter>, [">= 0"])
     else
       s.add_dependency(%q<rails>, ["= 3.0.7"])
@@ -173,6 +208,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
       s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<ci_reporter>, [">= 0"])
     end
   else
@@ -189,6 +225,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
     s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<ci_reporter>, [">= 0"])
   end
 end
