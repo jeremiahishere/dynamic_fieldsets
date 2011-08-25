@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     match "/fields/:id/enable" => "fields#enable", :as => "enable_field", :method => :post
 
     resources :fieldset_children
+    match "/fieldset_children/:id/remove" => "fieldset_children#remove", :as => :remove_fieldset_child, :method => :post
   end
 
 end

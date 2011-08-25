@@ -38,5 +38,20 @@ module DynamicFieldsets
         end
       end
     end
+
+    # deletes the fieldset child and redirects to its root fieldset page
+    def remove
+      @fieldset_child = DynamicFieldsets::FieldsetChild.find(params[:id])
+      root = @fieldset_child.root_fieldset
+
+      respond_to do |format|  
+        if @fieldset_child.destroy
+          notice_text = "Successfully removed the child"
+        else
+          notice_text = "Child was not able to be removed"
+        end
+        format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(root), :notice => notice_text)}
+      end
+    end
   end
 end
