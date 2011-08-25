@@ -3,28 +3,50 @@
 
 <script>
 $(function() {
-  $( "#children" ).nestedSortable({
-      forcePlaceholderSize: true,
-      disableNesting: 'field',
-      handle: 'div',
-      helper:	'clone',
-      items: 'li',
-      opacity: .6,
-      placeholder: 'placeholder',
-      revert: 250,
-      tabSize: 25,
-      toleranceElement: 'div'
+
+    $( "#enable-sorting" ).toggle( function() {
+      // Enable sorting
+      $( "#children" ).sortable('enable');
+      $( "#children" ).addClass('sort');
+      $( "#children" ).find('.admin').css('visibility','hidden');
+      $("#enable-sorting").html('Save');
+    }, function() {
+      // Disable sorting, save results
+      $( "#children" ).sortable('disable');
+      $( "#children" ).removeClass('sort');
+      $( "#children" ).find('.admin').css('visibility','visible');
+      $("#enable-sorting").html('Change Ordering');
+      $.post( "children/reorder",
+              $('#children').nestedSortable('serialize')
+            );
     });
+    
+    $( "#children" ).nestedSortable({
+        forcePlaceholderSize: true,
+        disableNesting: 'field',
+        handle: 'div',
+        helper: 'clone',
+        items: 'li',
+        opacity: .75,
+        placeholder: 'placeholder',
+        revert: 250,
+        tabSize: 25,
+        toleranceElement: 'div'
+      }).sortable('disable');
 });
 </script>
+
+<button type="button" id="enable-sorting">Change Ordering</button>
+
+<div id="result"></div>
 
 <ol id="children">
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
 </ol>
 
-<%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id)  %> | 
+<%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id) %> | 
 <%= link_to 'Add Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
-<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> |
+<%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> | 
 <%= link_to 'Return to Manager', :controller => :fieldsets, :action => :roots %>
 
 <br />
