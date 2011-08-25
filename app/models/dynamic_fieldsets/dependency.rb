@@ -14,7 +14,12 @@ module DynamicFieldsets
 
     # Validations
     validates_presence_of :fieldset_child_id
-    validates_presence_of :dependency_clause_id
+
+    # This validation should really be on
+    # It is off due to a bug (?) in the nested attributes 
+    # where the dependency clause id is not set when it creates the dependency
+    # validates_presence_of :dependency_clause_id
+    
     validates_inclusion_of :relationship, :in => RELATIONSHIP_LIST
 
     # Returns a full list of the options for relationship_list
@@ -66,11 +71,6 @@ module DynamicFieldsets
 
     def to_hash
       return { "id" => self.id, "fieldset_child_id" => self.fieldset_child_id, "value" => self.value, "relationship" => self.relationship, "dependency_clause_id" => self.dependency_clause_id }
-    end
-
-    # @return [Array] Children of the containing fieldset
-    def available_fieldset_children
-      self.dependency_clause.dependency_group.fieldset_child.fieldset.children
     end
   end
 end

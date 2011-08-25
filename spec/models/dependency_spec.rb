@@ -27,8 +27,9 @@ describe Dependency do
       @dependency.should have(1).error_on(:fieldset_child_id)
     end
 
-    it "should have a dependency_clause_id" do
-      @dependency.should have(1).error_on(:dependency_clause_id)
+    it "should not require a dependency_clause_id" do
+      #@dependency.should have(1).error_on(:dependency_clause_id)
+      @dependency.should have(0).error_on(:dependency_clause_id)
     end
 
     it "should have a relationship limited to allowable values" do
@@ -168,9 +169,5 @@ describe Dependency do
 
   describe "to_hash method" do
     it "should have spec tests"
-  end
-
-  describe "available_fieldset_children method" do
-    it "should have spec tests if it exists"
   end
 end
