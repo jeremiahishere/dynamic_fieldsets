@@ -1,7 +1,9 @@
 module DynamicFieldsets
   class DependencyGroup < ActiveRecord::Base
-    has_many :dependency_clauses
     belongs_to :fieldset_child
+
+    has_many :dependency_clauses
+    accepts_nested_attributes_for :dependency_clauses, :allow_destroy => true
 
     # List of allowable actions for the group
     # Success and failure options are returned by the get_action method

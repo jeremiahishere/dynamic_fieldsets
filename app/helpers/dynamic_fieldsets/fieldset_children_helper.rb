@@ -1,5 +1,5 @@
 module DynamicFieldsets
-  module FieldsHelper
+  module FieldsetChildrenHelper
     include NestedModelHelper
   end
 end

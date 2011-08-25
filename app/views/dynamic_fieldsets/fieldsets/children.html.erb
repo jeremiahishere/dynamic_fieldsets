@@ -44,6 +44,7 @@ $(function() {
 <%= render :partial => 'child', :locals => { :fieldset => @fieldset } %>
 </ol>
 
+<%= render :partial => "associate_child", :locals => {:fieldset => @fieldset} %>
 <%= link_to 'Add Field', new_dynamic_fieldsets_field_path(:parent => @fieldset.id) %> | 
 <%= link_to 'Add Fieldset', new_dynamic_fieldsets_fieldset_path(:parent => @fieldset.id) %> | 
 <%= link_to 'Show Parent Fieldset', dynamic_fieldsets_fieldset_path(@fieldset) %> | 

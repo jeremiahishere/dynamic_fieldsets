@@ -59,12 +59,12 @@ module DynamicFieldsets
           run_fieldset_child_validations!(fsa.id, fsa.fieldset)
         end
       end
-
+      
       # Checks if a fieldset child is required and adds an error if it's value is blank
       # Adds errors to the sel.errors array, does not return them
       #
       # @param [Integer] fsa_id The id for the fieldset associator the child belongs to
-      # @param [Field or Fieldset[ child The child of the fieldset associator
+      # @param [Field or Fieldset] child The child of the fieldset associator
       def run_fieldset_child_validations!(fsa_id, child)
         if child.is_a?(DynamicFieldsets::Fieldset)
           # if a fieldset, then recurse
@@ -93,8 +93,41 @@ module DynamicFieldsets
       
       # Stores the dynamic fieldset values
       def set_fieldset_values( params )
-        self.dynamic_fieldset_values = params.select{ |key| key.match(/^fsa-/) }
+        values = params.select{ |key| key.match(/^fsa-/) }
+        values.keys.each do |key|
+          set_date_to_mysql( values[key] )
+        end
+        self.dynamic_fieldset_values = values
       end
+      
+      # This turns your date fields into a MySQL-happy single format.  This modifies the hash.
+      # @param [Hash] post The post parameters that include date fields like date(1i), date(2i), ...
+      # @return [Hash] The modified hash containing one key-pair value in YYYY-MM-DD[ hh:mm] format.
+      def set_date_to_mysql( post )
+        # 'dates' is an array of the "field-ID"s that have multiple date fields of the format field(1i), field(2i), ...
+        # e.g. [ "field-4", "field-7" ]
+        dates = post.select{ |k| k =~ /\([0-9]i\)/ }.keys.map{ |k| k.gsub /\([0-9]i\)/, '' }.uniq
+        dates.each do |field|
+          datefield  = ''
+          datefield +=          post.delete( "#{field}(1i)" ) # year
+          datefield += '-'
+          datefield += '%02d' % post.delete( "#{field}(2i)" ) # month
+          datefield += '-'
+          datefield += '%02d' % post.delete( "#{field}(3i)" ) # day
+          if post.keys.include? "#{field}(4i)" then
+            datefield += ' '
+            datefield += '%02d' % post.delete( "#{field}(4i)" ) # hour
+            datefield += ':'
+            datefield += '%02d' % post.delete( "#{field}(5i)" ) # minute
+            datefield += ':'
+            datefield += '00' # second
+          end
+          # adding the formatted string to the hash to be saved.
+          post.merge! field => datefield
+        end
+        return post
+      end
+      
       
       # hacky system to save fieldset values
       # needs to be refactored and tested
@@ -115,30 +148,6 @@ module DynamicFieldsets
                 :fieldset_model_type => self.class.name,
                 :fieldset_model_name => values[key][:fieldset_model_name] )
               else fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
-              end
-              
-              # SAVE DATES
-              # 'dates' is an array of the "field-ID"s that have multiple date fields of the format field(1i), field(2i), ...
-              dates = values[key].select{ |k| k =~ /\([0-9]i\)/ }.keys.map{ |k| k.gsub /\([0-9]i\)/, '' }.uniq
-              
-              # deleting the date segments from the hash, while building a YYYY-MM-DD HH:MM string.
-              dates.each do |field|
-                datefield  = ''
-                datefield +=          values[key].delete( "#{field}(1i)" ) # year
-                datefield += '-'
-                datefield += '%02d' % values[key].delete( "#{field}(2i)" ) # month
-                datefield += '-'
-                datefield += '%02d' % values[key].delete( "#{field}(3i)" ) # day
-                if values[key].keys.include? "#{field}(4i)" then
-                  datefield += ' '
-                  datefield += '%02d' % values[key].delete( "#{field}(4i)" ) # hour
-                  datefield += ':'
-                  datefield += '%02d' % values[key].delete( "#{field}(5i)" ) # minute
-                  datefield += ':'
-                  datefield += '00' # second
-                end
-                # adding the formatted string to the hash to be saved.
-                values[key].merge! field => datefield
               end
                 
               values[key].keys.each do |sub_key| # EACH FIELD

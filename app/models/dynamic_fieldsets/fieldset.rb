@@ -58,6 +58,5 @@ module DynamicFieldsets
     def has_children?
       return !self.fieldset_children.empty?
     end
-
   end
 end
