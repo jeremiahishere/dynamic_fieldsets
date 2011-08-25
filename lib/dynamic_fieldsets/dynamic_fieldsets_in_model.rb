@@ -125,6 +125,7 @@ module DynamicFieldsets
           # adding the formatted string to the hash to be saved.
           post.merge! field => datefield
         end
+        return post
       end
       
       
