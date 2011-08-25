@@ -13,10 +13,30 @@ var allInputs = $(":input:not(:hidden)");
 
 ***************************************************************************/
 
-function grab_fsc_id(value) {
-	console.log(value);
-	var id_array = value.attr('id').split('-');
-	return id_array[id_array.length-1];
+function grab_fsc_id(field, field_type) {
+	switch(field_type)
+	{
+		case 'text':
+			var id_array = field.attr('id').split('-');
+			return id_array[id_array.length-1];
+		case 'radio':
+			var id_array = field.closest("div").attr("id").split('-');
+			return id_array[id_array.length-1];
+		case 'textarea':
+			var id_array = field.attr('id').split('-');
+			return id_array[id_array.length-1];
+		case 'checkbox':
+			var id_array = field.closest("div").attr("id").split('-');
+			return id_array[id_array.length-1];
+		case 'select':
+			var id_array = field.attr('id').split('-');
+			return id_array[id_array.length-1];
+		case 'multi-select':	
+			var id_array = field.attr('id').split('-');
+			return id_array[id_array.length-1];
+		default:
+			return ''
+	}
 };
 
 /***************************************************************************
@@ -49,9 +69,9 @@ function evaluate(entered_value, relationship, value) {
 		case 'not includes':
 			return jQuery.inArray(value, entered_value) == -1;
 		case 'blank':
-			return entered_value == null;
+			return entered_value == "";
 		case 'not blank':
-			return entered_value != null;
+			return entered_value != "";
 		default:
 			return false;
 	}
@@ -94,6 +114,83 @@ function group_action(success_flag, action, group_field) {
 	}
 };
 
+function grab_value(field, field_type) {
+	switch(field_type)
+	{
+		case 'text':
+			return field.attr('value').toLowerCase();
+		case 'radio':
+			if (field.val() == $(':checked').val())
+			{
+				field_val = field.attr('id').split('-').slice(2);
+				return field_val.join(" ").toLowerCase();
+			}
+		case 'textarea':
+			return field.val();
+		case 'checkbox':
+			var value_ray = [];
+			var field_ray = [];
+			var sibling_ray = field.closest('div').children().children();
+			var checked_ray = $('input:checked');
+			value_ray = getIntersect(sibling_ray, checked_ray) 
+			for (var element in value_ray) {
+				field_ray.push(value_ray[element].id.split('-').slice(2)[0]);
+			}
+			return field_ray;
+		case 'select':
+			return $('#' + field + 'option:selected').text().toLowerCase();
+		case 'multi-select':
+			var value_ray = $('#' + field.attr('id') + ' option:selected');
+			var field_ray = []
+			for (var element in value_ray)
+			{
+				var temp = value_ray[element].text;
+				if (typeof(temp) == "string") { field_ray.push(temp.toLowerCase()); }
+			}
+			return field_ray;
+		default:
+			return '';
+	}
+};
+
+function grab_type(field) {
+	if (field.attr('type') != undefined)
+	{
+		return field.attr('type')
+	}
+	else if ($('textarea#'+field.attr('id')).length > 0)
+	{
+		return "textarea";
+	}
+	else if ($('select#'+field.attr('id')).length > 0)
+	{
+		if (field.attr('multiple') == "multiple")
+		{
+			return "multi-select";
+		}
+		else {
+			return "select";
+		}
+	}
+	else
+	{
+		return "invalid";
+	}
+}
+
+function getIntersect(arr1, arr2) {
+    var temp = [];
+    for(var i = 0; i < arr1.length; i++){
+        for(var k = 0; k < arr2.length; k++){
+            if(arr1[i] == arr2[k]){
+                temp.push( arr1[i]);
+                break;
+            }
+        }
+    }
+    return temp;
+}
+
 /***********************************************************************
  
   This watches for ANY change that may take place on the page. It then
@@ -106,8 +203,10 @@ function group_action(success_flag, action, group_field) {
 ***********************************************************************/
 
 allInputs.change( function() {
-	var fieldset_child_id = grab_fsc_id($(this));
-	var entered_value = $(this).val();
+	var field = $(this);
+	var field_type = grab_type(field);
+	var fieldset_child_id = grab_fsc_id(field, field_type);
+	var entered_value = grab_value(field, field_type)
 	if (fieldset_child_id in json_holder) {
 		for (var group in json_holder[fieldset_child_id]) {
 			var action = json_holder[fieldset_child_id][group]['action'];
@@ -127,7 +226,7 @@ allInputs.change( function() {
 				for (var dependency in json_holder[fieldset_child_id][group]["clause"][clause])
 				{
 					var relationship = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['relationship'];
-					var value = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['value'];
+					var value = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['value'].toLowerCase();
 					// Short circuit from looking at each dependency in the case
 					// we determine a true dependency (OR)
 					if (evaluate(entered_value, relationship, value)) {
