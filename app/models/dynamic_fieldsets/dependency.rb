@@ -14,7 +14,6 @@ module DynamicFieldsets
 
     # Validations
     validates_presence_of :fieldset_child_id
-    validates_presence_of :value
     validates_presence_of :dependency_clause_id
     validates_inclusion_of :relationship, :in => RELATIONSHIP_LIST
 

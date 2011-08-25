@@ -4,7 +4,9 @@ module DynamicFieldsets
   # @author Jeremiah Hemphill
   class DependencyClause < ActiveRecord::Base
     belongs_to :dependency_group  
+
     has_many :dependencies
+    accepts_nested_attributes_for :dependencies, :allow_destroy => true
 
     validates_presence_of :dependency_group_id
 

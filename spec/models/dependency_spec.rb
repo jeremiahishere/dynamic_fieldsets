@@ -27,10 +27,6 @@ describe Dependency do
       @dependency.should have(1).error_on(:fieldset_child_id)
     end
 
-    it "should have a value" do
-      @dependency.should have(1).error_on(:value)
-    end
-
     it "should have a dependency_clause_id" do
       @dependency.should have(1).error_on(:dependency_clause_id)
     end

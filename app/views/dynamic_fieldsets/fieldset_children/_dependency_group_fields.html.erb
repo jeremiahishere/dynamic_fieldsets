@@ -1,14 +1,16 @@
-<p class="fields">
-  <%= f.hidden_field :_destroy %>
-  <%= link_to_function "remove", {:class => "remove_dependency_group", :onclick => "remove_fields(this)"} %>
-  <%= f.select :action, obj.action_list %> this field when:
+<div>
+  <p class="fields">
+    <%= f.hidden_field :_destroy %>
+    <%= link_to_function "remove", {:class => "remove_dependency_group", :onclick => "remove_fields_and_parent_fields(this)"} %>
+    <%= f.select :action, obj.action_list %> this field when:
 
-  <div style='outline: 1px solid black;'>
-    <% obj.dependency_clauses.each do |dependency_clause| %>
-      <%= f.fields_for :dependency_clauses, dependency_clause do |dependency_clause_form| %>
-        <%= render :partial => "dependency_clause_fields", :locals => {:f => dependency_clause_form, :obj => dependency_clause} %>
+    <div style='outline: 1px solid black;'>
+      <% obj.dependency_clauses.each do |dependency_clause| %>
+        <%= f.fields_for :dependency_clauses, dependency_clause do |dependency_clause_form| %>
+          <%= render :partial => "dependency_clause_fields", :locals => {:f => dependency_clause_form, :obj => dependency_clause} %>
+        <% end %>
       <% end %>
-    <% end %>
-    <p><%= link_to_add_fields "Add Clause", f, :dependency_clauses %></p>
-  </div>
-</p>
+      <p><%= link_to_add_fields "Add Clause", f, :dependency_clauses %></p>
+    </div>
+  </p>
+</div>
