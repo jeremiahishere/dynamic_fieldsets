@@ -18,6 +18,9 @@ module DynamicFieldsets
     has_many :field_html_attributes
     accepts_nested_attributes_for :field_html_attributes, :allow_destroy => true
 
+    #has_many :dependency_groups
+    #accepts_nested_attributes_for :dependency_groups, :allow_destroy => true
+
     # Validations
     validates_presence_of :name
     validates_presence_of :label

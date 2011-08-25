@@ -31,7 +31,8 @@
       <span class="name"><%= child.label %></span>
       <span class="admin">
         <span class="show"><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></span>
-        <span class="edit"><%= link_to 'Edit', edit_dynamic_fieldsets_field_path(child) %></span>
+        <span class="edit"><%= link_to "Edit Dependency", edit_dynamic_fieldsets_fieldset_child_path(child) %></span>
+        <span class="edit"><%= link_to 'Edit Field', edit_dynamic_fieldsets_field_path(child) %></span>
         <span class="destroy"><%= button_to 'Destroy!', dynamic_fieldsets_field_path(child), :confirm => 'Are you sure?', :method => :delete %></span>
       </span>
     </div>
