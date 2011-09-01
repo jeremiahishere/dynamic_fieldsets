@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}, %q{John Carter}]
-  s.date = %q{2011-08-25}
+  s.date = %q{2011-09-01}
   s.description = %q{Dynamic fieldsets for rails controllers}
   s.email = %q{jeremiah@cloudspace.com}
   s.extra_rdoc_files = [
@@ -180,8 +180,8 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rails>, ["= 3.0.7"])
-      s.add_runtime_dependency(%q<capybara>, [">= 0.4.0"])
-      s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0.4.0"])
+      s.add_development_dependency(%q<sqlite3>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<rspec-rails>, ["~> 2.6.1"])
