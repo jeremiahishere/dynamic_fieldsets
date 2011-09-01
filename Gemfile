@@ -1,10 +1,10 @@
 source "http://rubygems.org"
 
 gem "rails", "3.0.7"
-gem "capybara", ">= 0.4.0"
-gem "sqlite3"
 
 group :development do
+  gem "capybara", ">= 0.4.0"
+  gem "sqlite3"
   gem 'ruby-debug19'
   gem "rspec", "~> 2.6.0"
   gem "rspec-rails", "~>2.6.1"

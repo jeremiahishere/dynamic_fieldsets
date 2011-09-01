@@ -1,3 +1,7 @@
+== 0.0.5
+
+* Moved sqlite and capybara to development
+
 == 0.0.4
 
 * A very simple version of the spec completely works
