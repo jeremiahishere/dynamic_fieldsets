@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ActsAsMultipartForm" tests="1" time="0.04001929" failures="0" errors="0" skipped="0">
-  <testcase name="ActsAsMultipartForm should be valid" time="0.039701244">
-  </testcase>
-  <system-out>
-  </system-out>
-  <system-err>
-  </system-err>
-</testsuite>
