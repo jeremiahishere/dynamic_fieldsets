@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dynamic_fieldsets}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}, %q{John Carter}]
-  s.date = %q{2011-09-01}
+  s.date = %q{2011-11-09}
   s.description = %q{Dynamic fieldsets for rails controllers}
   s.email = %q{jeremiah@cloudspace.com}
   s.extra_rdoc_files = [
@@ -153,10 +153,6 @@ Gem::Specification.new do |s|
     "spec/models/fieldset_associator_spec.rb",
     "spec/models/fieldset_child_spec.rb",
     "spec/models/fieldset_spec.rb",
-    "spec/reports/SPEC-ActsAsMultipartForm.xml",
-    "spec/reports/SPEC-MultipartForm-InProgressForm-validations.xml",
-    "spec/reports/SPEC-MultipartForm-InProgressForm.xml",
-    "spec/reports/SPEC-Navigation.xml",
     "spec/spec_helper.rb",
     "spec/support/dependency_group_helper.rb",
     "spec/support/dependency_helper.rb",
