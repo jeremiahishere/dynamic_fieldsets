@@ -1,3 +1,8 @@
+== 0.0.6
+
+* Moved the javascript includes into the view so this is usable out of the box.
+* Updated the readme to include instructions for installing the javascript libraries
+
 == 0.0.5
 
 * Moved sqlite and capybara to development

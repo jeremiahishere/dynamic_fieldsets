@@ -2,11 +2,13 @@
 
 User defined fieldsets for dynamic questions in forms.
 
-I recommend not using this until a 0.1 release.j
+I recommend not using this until a 0.1 release.
 
 = how to use
 
-Install the gem, run the install generator
+Install the gem, run the install generator.  
+
+Download jquery-ui-1.8.15.custom.min.js and jquery-ui-nestedSortable.js and add to your project's javascripts folder to enable reordering on the fieldset children page.  There are working copies in spec/dummy/public/javascripts.
 
 Add the mixin to your model.  There are some configuration options here.
 
