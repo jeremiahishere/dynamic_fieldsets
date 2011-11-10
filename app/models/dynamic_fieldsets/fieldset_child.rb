@@ -3,6 +3,7 @@ module DynamicFieldsets
   # FieldsetChild
   # @author Jeremiah Hemphill, John "hex" Carter
   class FieldsetChild < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_fieldset_children"
 
     # Constants
 

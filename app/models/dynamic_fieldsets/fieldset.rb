@@ -3,6 +3,8 @@ module DynamicFieldsets
   #
   # @author Jeremiah Hemphill, Ethan Pemble
   class Fieldset < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_fieldsets"
+
     # Relations
     has_many :fieldset_associators
 

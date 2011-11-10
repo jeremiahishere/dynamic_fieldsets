@@ -3,6 +3,7 @@ module DynamicFieldsets
   #
   # @author Jeremiah Hemphill
   class DependencyClause < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_dependency_clauses"
     belongs_to :dependency_group  
 
     has_many :dependencies

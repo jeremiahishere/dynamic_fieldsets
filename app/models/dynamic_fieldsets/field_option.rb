@@ -5,6 +5,7 @@ module DynamicFieldsets
   #
   # @authors Scott Sampson, Jeremiah Hemphill, Ethan Pemble
   class FieldOption < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_field_options"
     #relations
     belongs_to :field
     
