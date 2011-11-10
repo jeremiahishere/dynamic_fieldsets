@@ -5,6 +5,7 @@ module DynamicFieldsets
   #
   # @authors Scott Sampson, Jeremiah Hemphill, Ethan Pemble
   class FieldDefault < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_field_defaults"
     #relations
     belongs_to :field
     

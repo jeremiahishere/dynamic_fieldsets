@@ -1,5 +1,6 @@
 module DynamicFieldsets
   class DependencyGroup < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_dependency_groups"
     belongs_to :fieldset_child
 
     has_many :dependency_clauses

@@ -3,6 +3,7 @@ module DynamicFieldsets
   #
   # @author Jeremiah Hemphill, Ethan Pemble
   class Field < ActiveRecord::Base
+    set_table_name "dynamic_fieldsets_fields"
     # Relations
     
     # parents
