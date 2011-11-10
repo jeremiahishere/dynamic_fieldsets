@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dynamic_fieldsets}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}, %q{John Carter}]
-  s.date = %q{2011-11-09}
+  s.date = %q{2011-11-10}
   s.description = %q{Dynamic fieldsets for rails controllers}
   s.email = %q{jeremiah@cloudspace.com}
   s.extra_rdoc_files = [
