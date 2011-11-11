@@ -76,6 +76,22 @@ module DynamicFieldsets
       return output
     end
 
+    # Record whose field matches the name and associator matches the current associator
+    #
+    # This will be used to get answers to questions with hard coded names
+    #
+    # @return [Array] the matching records
+    def field_records_by_field_name(name)
+      records = self.field_records.select { |record| record.fieldset_child.child.name == name }
+      return records
+      
+      # this version uses less queries but feels less elegant
+      # field = DynamicFieldsets::Field.find_by_name(name)
+      # child = DynamicFieldsets::FieldsetChild.where(:child => field , :fieldset => self.fieldset).first
+      # record = DynamicFieldsets::FieldRecord.where(:child => child, :associator => self)
+      # return records
+    end
+
 
     # OMG COMMENT
     #

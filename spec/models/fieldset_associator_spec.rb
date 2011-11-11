@@ -128,6 +128,32 @@ describe FieldsetAssociator do
     end
   end
 
+  # these tests seem silly when they don't hit the database
+  describe "field_records_by_field_name method" do
+    before(:each) do
+      @fieldset = Fieldset.new
+      @field = Field.new(:name => "test_field")
+      @child = FieldsetChild.new(:fieldset => @fieldset, :child => @field)
+
+      @fsa = FieldsetAssociator.new(:fieldset => @fieldset)
+      @record = FieldRecord.new(:fieldset_child => @child)
+
+      @fsa.stub!(:field_records).and_return([@record])
+    end
+
+    it "should search the children with the field and fieldset" do
+      Field.stub!(:find_by_name).and_return(@field)
+      FieldsetChild.should_receive(:where).with({:child => @field, :fieldset => @fieldset})
+      @fsa.fieldset_child_by_field_name("test_field")
+    end
+
+    it "should return a fieldset child if the data is correct" do
+      Field.stub!(:find_by_name).and_return(@field)
+      FieldsetChild.should_receive(:where).with({:child => @field, :fieldset => @fieldset}).and_return(@child)
+      @fsa.fieldset_child_by_field_name("test_field").should == @child
+    end
+  end
+
   describe "dependency_child_hash and look_for_dependents" do
     before(:each) do
       @fsa = FieldsetAssociator.new
