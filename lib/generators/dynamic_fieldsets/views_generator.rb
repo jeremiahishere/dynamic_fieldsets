@@ -16,7 +16,6 @@ DESC
 
       desc''
       def copy_or_fetch#:nodoc:
-        puts "hello"
         view_directory :fields
         view_directory :fieldset_associators
         view_directory :fieldset_children
@@ -26,27 +25,16 @@ DESC
 
       private
 
+      # copy an indivindual directory to the target project
+      # @param [Symbol] name Name of the directory
+      # @param [String] _target_path Location of the directory
       def view_directory(name, _target_path = nil)
         directory name.to_s, _target_path || "#{target_path}/#{name}"
       end
 
+      # base path to put the copied views into
       def target_path
         "app/views/dynamic_fieldsets"
-      end
-
-      def copy_default_views
-        puts "world"
-        controllers = ["fields", "fieldset_associators", "fieldset_children", "fieldsets", "shared"]
-        controllers.each do |c|
-          copy_views(c)
-        end
-      end
-
-      def copy_views(controller)
-        filename_pattern = File.join(File.expand_path('../../../../app/views/dynamic_fieldsets/', __FILE__), "/#{controller}/*.html.erb")
-        Dir.glob(filename_pattern).map { |f| File.basename f}.each do |f|
-          copy_file f, "app/views/dynamic_fieldsets/#{controller}/#{f}"
-        end
       end
     end
   end

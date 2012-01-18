@@ -21,6 +21,7 @@ DESC
 
       private
 
+      # copies all controllers in the source_root to app/controllers/dynamic_fieldsets
       def copy_all_controllers
         filename_pattern = File.join self.class.source_root, "*.rb"
         Dir.glob(filename_pattern).map { |f| File.basename f}.each do |f|
