@@ -10,9 +10,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110809161724) do
+ActiveRecord::Schema.define(:version => 20111111154935) do
 
-  create_table "dependencies", :force => true do |t|
+  create_table "dynamic_fieldsets_dependencies", :force => true do |t|
     t.integer  "fieldset_child_id"
     t.string   "value"
     t.string   "relationship"
@@ -21,27 +21,27 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "dependency_clauses", :force => true do |t|
+  create_table "dynamic_fieldsets_dependency_clauses", :force => true do |t|
     t.integer  "dependency_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "dependency_groups", :force => true do |t|
+  create_table "dynamic_fieldsets_dependency_groups", :force => true do |t|
     t.string   "action"
     t.integer  "fieldset_child_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "field_defaults", :force => true do |t|
+  create_table "dynamic_fieldsets_field_defaults", :force => true do |t|
     t.integer  "field_id"
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "field_html_attributes", :force => true do |t|
+  create_table "dynamic_fieldsets_field_html_attributes", :force => true do |t|
     t.integer  "field_id"
     t.string   "attribute_name"
     t.string   "value"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "field_options", :force => true do |t|
+  create_table "dynamic_fieldsets_field_options", :force => true do |t|
     t.integer  "field_id"
     t.string   "name"
     t.boolean  "enabled",    :default => true
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "field_records", :force => true do |t|
+  create_table "dynamic_fieldsets_field_records", :force => true do |t|
     t.integer  "fieldset_associator_id"
     t.integer  "fieldset_child_id"
     t.text     "value"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "fields", :force => true do |t|
+  create_table "dynamic_fieldsets_fields", :force => true do |t|
     t.string   "name"
     t.string   "label"
     t.string   "field_type"
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "fieldset_associators", :force => true do |t|
+  create_table "dynamic_fieldsets_fieldset_associators", :force => true do |t|
     t.integer  "fieldset_id"
     t.integer  "fieldset_model_id"
     t.string   "fieldset_model_type"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "fieldset_children", :force => true do |t|
+  create_table "dynamic_fieldsets_fieldset_children", :force => true do |t|
     t.integer  "fieldset_id"
     t.integer  "child_id"
     t.string   "child_type"
@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  create_table "fieldsets", :force => true do |t|
+  create_table "dynamic_fieldsets_fieldsets", :force => true do |t|
     t.string   "nkey",        :null => false
     t.string   "name"
     t.text     "description"
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(:version => 20110809161724) do
     t.datetime "updated_at"
   end
 
-  add_index "fieldsets", ["nkey"], :name => "index_fieldsets_on_nkey", :unique => true
+  add_index "dynamic_fieldsets_fieldsets", ["nkey"], :name => "index_dynamic_fieldsets_fieldsets_on_nkey", :unique => true
 
   create_table "information_forms", :force => true do |t|
     t.string   "name"
