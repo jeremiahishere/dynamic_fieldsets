@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dynamic_fieldsets}
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jeremiah Hemphill}, %q{Ethan Pemble}, %q{John Carter}]
-  s.date = %q{2012-01-18}
+  s.date = %q{2012-01-19}
   s.description = %q{Dynamic fieldsets for rails controllers}
   s.email = %q{jeremiah@cloudspace.com}
   s.extra_rdoc_files = [
@@ -111,7 +111,7 @@ Gem::Specification.new do |s|
     "spec/dummy/config/locales/en.yml",
     "spec/dummy/config/routes.rb",
     "spec/dummy/db/migrate/20110727210451_create_information_forms.rb",
-    "spec/dummy/db/migrate/20110809161724_create_dynamic_fieldsets_tables.rb",
+    "spec/dummy/db/migrate/20111111154935_create_dynamic_fieldsets_tables.rb",
     "spec/dummy/db/schema.rb",
     "spec/dummy/features/field.feature",
     "spec/dummy/features/fieldset.feature",
