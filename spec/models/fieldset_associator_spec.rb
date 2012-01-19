@@ -141,16 +141,12 @@ describe FieldsetAssociator do
       @fsa.stub!(:field_records).and_return([@record])
     end
 
-    it "should search the children with the field and fieldset" do
-      Field.stub!(:find_by_name).and_return(@field)
-      FieldsetChild.should_receive(:where).with({:child => @field, :fieldset => @fieldset})
-      @fsa.fieldset_child_by_field_name("test_field")
+    it "should return a field record if it matches the input" do
+      @fsa.field_records_by_field_name("test_field").should include @record
     end
 
-    it "should return a fieldset child if the data is correct" do
-      Field.stub!(:find_by_name).and_return(@field)
-      FieldsetChild.should_receive(:where).with({:child => @field, :fieldset => @fieldset}).and_return(@child)
-      @fsa.fieldset_child_by_field_name("test_field").should == @child
+    it "should not return field records that do not match the input" do
+      @fsa.field_records_by_field_name("a_different_field").should_not include @record
     end
   end
 

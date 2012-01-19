@@ -87,8 +87,8 @@ module DynamicFieldsets
       
       # this version uses less queries but feels less elegant
       # field = DynamicFieldsets::Field.find_by_name(name)
-      # child = DynamicFieldsets::FieldsetChild.where(:child => field , :fieldset => self.fieldset).first
-      # record = DynamicFieldsets::FieldRecord.where(:child => child, :associator => self)
+      # child = DynamicFieldsets::FieldsetChild.where(:child => field, :fieldset => self.fieldset).first
+      # records = DynamicFieldsets::FieldRecord.where(:child => child, :associator => self)
       # return records
     end
 
