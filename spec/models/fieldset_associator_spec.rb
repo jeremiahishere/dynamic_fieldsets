@@ -66,6 +66,11 @@ describe FieldsetAssociator do
       FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes)
     end
 
+    it "should throw an error if the fieldset does not exist" do
+      Fieldset.stub!(:find_by_nkey).and_return(nil)
+      lambda { FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes) }.should raise_error
+    end
+
     it "should return the correct fieldset associator" do
       Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
       # this is a fun hack because of all the fsas being made during tests

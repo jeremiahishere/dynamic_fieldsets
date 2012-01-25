@@ -1,3 +1,7 @@
+== 0.0.13
+
+* Added an error to the FieldsetAssociator.find_by_fieldset_model_parameters to give better information if the fieldset is missing
+
 == 0.0.12
 
 * Fixed stray typo and failing test
