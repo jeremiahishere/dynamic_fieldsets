@@ -61,7 +61,8 @@ module DynamicFieldsets
           fsa = self.fieldset_associator(key)
           fsa_tag_id = "fsa-" + fsa.id.to_s
 
-          if !self.dynamic_fieldset_values.nil? && self.dynamic_fieldset_values.has_key?(fsa_tag_id)
+          # check if the values are set, if it matches the current fsa, and if it matches the current fieldset
+          if !self.dynamic_fieldset_values.nil? && self.dynamic_fieldset_values.has_key?(fsa_tag_id) && self.dynamic_fieldset_values[fsa_tag_id][:fieldset_model_name] == key
             run_fieldset_child_validations!(fsa.id, fsa.fieldset)
           end
         end
