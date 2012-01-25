@@ -16,6 +16,10 @@ module DynamicFieldsetsHelper
 
 
   # Builds HTML for the provided field for a show page.
+  #
+  # The code to get the names for fields using field options (select, multiple select, checkbox, and radio)
+  # is not optimized to minimize hitting the database
+  #
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
   # @param [FieldsetChild] fieldset_child The FieldsetChild to render
   # @param [Array] values Saved values for the field
@@ -29,12 +33,14 @@ module DynamicFieldsetsHelper
     if values
       if field.field_type == "multiple_select" || field.field_type == "checkbox"
         values.each do |value|
-          lines.push value.to_s + "<br />"
+          lines.push field.options.select { |opt| opt.id = value }.first.name + "<br />"
         end
       elsif field.field_type == "select" || field.field_type == "radio"
-        lines.push values.to_s
+        lines.push field.options.select { |opt| opt.id = values }.first.name
+        # this might be easier on the db
+        # lines.push DynamicFieldsets::FieldOption.find(values).name
       else
-        lines.push values
+        lines.push values + "wow3"
       end
     else
       lines.push "No answer given"

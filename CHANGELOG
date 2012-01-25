@@ -1,3 +1,8 @@
+== 0.0.11
+
+* Fixed an issue where a model using multiple dynamic fieldsets would never pass validations
+* Improved the show renderer helper to display field option names instead of ids for fields that use field options
+
 == 0.0.10
 
 * Fixed an issue where models using Dynamic Fieldsets could not be created without the fieldset information
