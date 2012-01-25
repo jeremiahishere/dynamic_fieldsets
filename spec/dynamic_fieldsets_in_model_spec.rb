@@ -62,7 +62,7 @@ describe DynamicFieldsetsInModel do
     end
 
     it "should call run_fieldset_child_validations for each key" do
-      @information_form.stub!(:dynamic_fieldset_values).and_return({"fsa-1" => {}})
+      @information_form.stub!(:dynamic_fieldset_values).and_return({"fsa-1" => { :fieldset_model_name => :child_form }})
       @information_form.should_receive(:run_fieldset_child_validations!)
       @information_form.run_dynamic_fieldset_validations!
     end
