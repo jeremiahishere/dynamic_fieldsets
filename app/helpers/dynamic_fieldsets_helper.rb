@@ -117,9 +117,9 @@ module DynamicFieldsetsHelper
       tag = "<textarea"
       attrs.each{ |att,val| tag += " #{att}=\"#{val}\"" }
       tag += ">"
+      tag += populate( field, values )
+      tag += "</textarea>"
       field_markup.push tag
-      field_markup.push populate( field, values )
-      field_markup.push "</textarea>"
       
     when :date
       date_options = { start_year: Time.now.year - 70 }

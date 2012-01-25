@@ -52,16 +52,23 @@ module DynamicFieldsets
       end
 
       # Iterates over the fieldset associator's children and adds errors
+      #
+      # Will not validate fieldsets that are missing from the dynamic_fieldsets_values hash
+      # This means that if the data is not provided by the controller, no checks will be run
       def run_dynamic_fieldset_validations!
         # for each fsa
         self.dynamic_fieldsets.keys.each do |key|
           fsa = self.fieldset_associator(key)
-          run_fieldset_child_validations!(fsa.id, fsa.fieldset)
+          fsa_tag_id = "fsa-" + fsa.id.to_s
+
+          if !self.dynamic_fieldset_values.nil? && self.dynamic_fieldset_values.has_key?(fsa_tag_id)
+            run_fieldset_child_validations!(fsa.id, fsa.fieldset)
+          end
         end
       end
       
       # Checks if a fieldset child is required and adds an error if it's value is blank
-      # Adds errors to the sel.errors array, does not return them
+      # Adds errors to the self.errors array, does not return them
       #
       # @param [Integer] fsa_id The id for the fieldset associator the child belongs to
       # @param [Field or Fieldset] child The child of the fieldset associator
@@ -75,8 +82,8 @@ module DynamicFieldsets
           # if a child, check if the params value is set, check if it is required, check if it satisfies condition
           fsa_tag_id = "fsa-" + fsa_id.to_s
           field_tag_id = "field-" + child.id.to_s
-          if !self.dynamic_fieldset_values.has_key?(fsa_tag_id) || !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
-            self.errors.add(:base, child.label + " is required and the input is missing")
+          if !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
+            self.errors.add(:base, child.label + " is missing from the form data")
           else
             # get the value
             value = self.dynamic_fieldset_values[fsa_tag_id][field_tag_id]
@@ -91,7 +98,9 @@ module DynamicFieldsets
         end
       end
       
-      # Stores the dynamic fieldset values
+      # Stores data from the controller into the dynamic_fieldset_values instance variable
+      #
+      # @param [Hash] params The parameters from the controller that include fsa tags
       def set_fieldset_values( params )
         values = params.select{ |key| key.match(/^fsa-/) }
         values.keys.each do |key|
@@ -101,6 +110,11 @@ module DynamicFieldsets
       end
       
       # This turns your date fields into a MySQL-happy single format.  This modifies the hash.
+      #
+      # This method may cause bugs for servers not using UTC time because of the way rails deals with
+      # time conversions.  If the query receives a string instead of a time object, time zone information
+      # may be saved incorrectly. (1-25-2012)
+      #
       # @param [Hash] post The post parameters that include date fields like date(1i), date(2i), ...
       # @return [Hash] The modified hash containing one key-pair value in YYYY-MM-DD[ hh:mm] format.
       def set_date_to_mysql( post )

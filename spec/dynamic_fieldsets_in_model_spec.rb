@@ -62,6 +62,7 @@ describe DynamicFieldsetsInModel do
     end
 
     it "should call run_fieldset_child_validations for each key" do
+      @information_form.stub!(:dynamic_fieldset_values).and_return({"fsa-1" => {}})
       @information_form.should_receive(:run_fieldset_child_validations!)
       @information_form.run_dynamic_fieldset_validations!
     end
@@ -91,7 +92,7 @@ describe DynamicFieldsetsInModel do
       values = { "fsa-1" => { "field-4200"=>"" } }
       @information_form.stub!(:dynamic_fieldset_values).and_return(values)
       @information_form.run_fieldset_child_validations!(@fsa.id, @field)
-      @information_form.errors[:base].should include "Test Field is required and the input is missing"
+      @information_form.errors[:base].should include "Test Field is missing from the form data"
     end
 
     it "should add an error if the field is required, the value is an array, and the value is empty" do
