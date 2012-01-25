@@ -29,10 +29,10 @@ module DynamicFieldsetsHelper
     if values
       if field.field_type == "multiple_select" || field.field_type == "checkbox"
         values.each do |value|
-          lines.push value.to_s + "<br />"
+          lines.push FieldOption.find(value).name + "<br />"
         end
       elsif field.field_type == "select" || field.field_type == "radio"
-        lines.push values.to_s
+        lines.push FieldOption.find(values).name
       else
         lines.push values
       end
