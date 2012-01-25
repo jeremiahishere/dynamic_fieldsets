@@ -1,3 +1,8 @@
+== 0.0.10
+
+* Fixed an issue where models using Dynamic Fieldsets could not be created without the fieldset information
+* Removed a line break from the default textarea introduced by the html processing in the hlper
+
 == 0.0.9
 
 * Added field_records_by_field_name method to find the answers to questions by name

@@ -53,7 +53,8 @@ module DynamicFieldsets
 
       # Iterates over the fieldset associator's children and adds errors
       #
-      # Will not validate fieldsets that are missing from the parameters
+      # Will not validate fieldsets that are missing from the dynamic_fieldsets_values hash
+      # This means that if the data is not provided by the controller, no checks will be run
       def run_dynamic_fieldset_validations!
         # for each fsa
         self.dynamic_fieldsets.keys.each do |key|
@@ -67,7 +68,7 @@ module DynamicFieldsets
       end
       
       # Checks if a fieldset child is required and adds an error if it's value is blank
-      # Adds errors to the sel.errors array, does not return them
+      # Adds errors to the self.errors array, does not return them
       #
       # @param [Integer] fsa_id The id for the fieldset associator the child belongs to
       # @param [Field or Fieldset] child The child of the fieldset associator
@@ -97,7 +98,9 @@ module DynamicFieldsets
         end
       end
       
-      # Stores the dynamic fieldset values
+      # Stores data from the controller into the dynamic_fieldset_values instance variable
+      #
+      # @param [Hash] params The parameters from the controller that include fsa tags
       def set_fieldset_values( params )
         values = params.select{ |key| key.match(/^fsa-/) }
         values.keys.each do |key|
@@ -107,6 +110,11 @@ module DynamicFieldsets
       end
       
       # This turns your date fields into a MySQL-happy single format.  This modifies the hash.
+      #
+      # This method may cause bugs for servers not using UTC time because of the way rails deals with
+      # time conversions.  If the query receives a string instead of a time object, time zone information
+      # may be saved incorrectly. (1-25-2012)
+      #
       # @param [Hash] post The post parameters that include date fields like date(1i), date(2i), ...
       # @return [Hash] The modified hash containing one key-pair value in YYYY-MM-DD[ hh:mm] format.
       def set_date_to_mysql( post )
