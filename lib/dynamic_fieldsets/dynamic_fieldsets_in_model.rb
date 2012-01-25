@@ -52,11 +52,17 @@ module DynamicFieldsets
       end
 
       # Iterates over the fieldset associator's children and adds errors
+      #
+      # Will not validate fieldsets that are missing from the parameters
       def run_dynamic_fieldset_validations!
         # for each fsa
         self.dynamic_fieldsets.keys.each do |key|
           fsa = self.fieldset_associator(key)
-          run_fieldset_child_validations!(fsa.id, fsa.fieldset)
+          fsa_tag_id = "fsa-" + fsa.id.to_s
+
+          if !self.dynamic_fieldset_values.nil? && self.dynamic_fieldset_values.has_key?(fsa_tag_id)
+            run_fieldset_child_validations!(fsa.id, fsa.fieldset)
+          end
         end
       end
       
@@ -75,8 +81,8 @@ module DynamicFieldsets
           # if a child, check if the params value is set, check if it is required, check if it satisfies condition
           fsa_tag_id = "fsa-" + fsa_id.to_s
           field_tag_id = "field-" + child.id.to_s
-          if !self.dynamic_fieldset_values.has_key?(fsa_tag_id) || !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
-            self.errors.add(:base, child.label + " is required and the input is missing")
+          if !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
+            self.errors.add(:base, child.label + " is missing from the form data")
           else
             # get the value
             value = self.dynamic_fieldset_values[fsa_tag_id][field_tag_id]
