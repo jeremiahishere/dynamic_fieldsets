@@ -40,7 +40,7 @@ module DynamicFieldsetsHelper
         # this might be easier on the db
         # lines.push DynamicFieldsets::FieldOption.find(values).name
       else
-        lines.push values + "wow3"
+        lines.push values
       end
     else
       lines.push "No answer given"
