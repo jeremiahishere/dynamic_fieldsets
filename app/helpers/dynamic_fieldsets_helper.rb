@@ -33,10 +33,10 @@ module DynamicFieldsetsHelper
     if values
       if field.field_type == "multiple_select" || field.field_type == "checkbox"
         values.each do |value|
-          lines.push field.options.select { |opt| opt.id = value }.first.name + "<br />"
+          lines.push field.options.select { |opt| opt.id == value }.first.name + "<br />"
         end
       elsif field.field_type == "select" || field.field_type == "radio"
-        lines.push field.options.select { |opt| opt.id = values }.first.name
+        lines.push field.options.select { |opt| opt.id == values }.first.name
         # this might be easier on the db
         # lines.push DynamicFieldsets::FieldOption.find(values).name
       else
