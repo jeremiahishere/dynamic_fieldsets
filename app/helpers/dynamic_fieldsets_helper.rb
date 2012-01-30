@@ -27,9 +27,9 @@ module DynamicFieldsetsHelper
   def field_show_renderer(fsa, fieldset_child, values = [])
     field = fieldset_child.child
     lines = []
-    lines.push "<div class='dynamic_fieldsets_field'>"
-    lines.push "<div class='dynamic_fieldsets_field_label'>#{field.label}</div>"
-    lines.push "<div class='dynamic_fieldsets_field_value'>"
+    lines.push "<div class='dynamic_fieldsets field'>"
+    lines.push "<span class='label'>#{field.label}</div>"
+    lines.push "<span class='value'>"
     if values
       if field.field_type == "multiple_select" || field.field_type == "checkbox"
         values.each do |value|
@@ -43,8 +43,9 @@ module DynamicFieldsetsHelper
         lines.push values
       end
     else
-      lines.push "No answer given"
+      lines.push "<em class='empty'>No answer given</em>"
     end
+    lines.push "</span>"
     lines.push "</div>"
     return lines
   end
