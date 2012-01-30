@@ -28,7 +28,7 @@ module DynamicFieldsetsHelper
     field = fieldset_child.child
     lines = []
     lines.push "<div class='dynamic_fieldsets field'>"
-    lines.push "<span class='label'>#{field.label}</div>"
+    lines.push "<span class='label'>#{field.label}</span>"
     lines.push "<span class='value'>"
     if values
       if field.field_type == "multiple_select" || field.field_type == "checkbox"
