@@ -1,6 +1,7 @@
 == 0.0.13
 
 * Added an error to the FieldsetAssociator.find_by_fieldset_model_parameters to give better information if the fieldset is missing
+* Fixed a problem with field_show_renderer and added markup/classes to it.
 
 == 0.0.12
 
