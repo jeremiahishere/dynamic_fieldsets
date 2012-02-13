@@ -355,16 +355,16 @@ describe DynamicFieldsetsHelper do
       result.should be_a_kind_of Array
     end
 
-    it "should include the class dynamic_fieldsets_field" do
-      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /dynamic_fieldsets_field/
+    it "should include the class field" do
+      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /field/
     end
 
-    it "should include the class dynamic_fieldsets_field_label" do
-      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /dynamic_fieldsets_field_label/
+    it "should include the class label" do
+      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /label/
     end
 
-    it "should include the class dynamic_fieldsets_field_value" do
-      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /dynamic_fieldsets_field_value/
+    it "should include the class value" do
+      field_show_renderer(@fsa, @fieldset_child, @values).join.should match /value/
     end
 
     it "should return 'No answer given' if the field has no answer for the current fieldset associator" do
