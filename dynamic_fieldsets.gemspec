@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "dynamic_fieldsets"
-  s.version = "0.0.15"
+  s.version = "0.0.16"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremiah Hemphill", "Ethan Pemble", "John Carter"]
-  s.date = "2012-01-30"
+  s.date = "2012-02-13"
   s.description = "Dynamic fieldsets for rails controllers"
   s.email = "jeremiah@cloudspace.com"
   s.extra_rdoc_files = [
@@ -111,7 +111,7 @@ Gem::Specification.new do |s|
     "spec/dummy/config/locales/en.yml",
     "spec/dummy/config/routes.rb",
     "spec/dummy/db/migrate/20110727210451_create_information_forms.rb",
-    "spec/dummy/db/migrate/20111111154935_create_dynamic_fieldsets_tables.rb",
+    "spec/dummy/db/migrate/20120213211033_create_dynamic_fieldsets_tables.rb",
     "spec/dummy/db/schema.rb",
     "spec/dummy/features/field.feature",
     "spec/dummy/features/fieldset.feature",
@@ -177,7 +177,7 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rails>, ["= 3.0.7"])
+      s.add_runtime_dependency(%q<rails>, [">= 3.0.7"])
       s.add_development_dependency(%q<capybara>, [">= 0.4.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
@@ -193,7 +193,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<ci_reporter>, [">= 0"])
     else
-      s.add_dependency(%q<rails>, ["= 3.0.7"])
+      s.add_dependency(%q<rails>, [">= 3.0.7"])
       s.add_dependency(%q<capybara>, [">= 0.4.0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<ruby-debug19>, [">= 0"])
@@ -210,7 +210,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ci_reporter>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rails>, ["= 3.0.7"])
+    s.add_dependency(%q<rails>, [">= 3.0.7"])
     s.add_dependency(%q<capybara>, [">= 0.4.0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<ruby-debug19>, [">= 0"])
