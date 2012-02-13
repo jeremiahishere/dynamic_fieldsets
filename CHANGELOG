@@ -1,3 +1,11 @@
+== 0.0.15
+
+* Fixed a bug when displaying field options in a view.
+
+== 0.0.14
+
+* Fixed a bug with a closing span tag in field_show_renderer.
+
 == 0.0.13
 
 * Added an error to the FieldsetAssociator.find_by_fieldset_model_parameters to give better information if the fieldset is missing
