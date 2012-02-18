@@ -61,18 +61,24 @@ module DynamicFieldsetsHelper
     classes  = "#{field.type} "
     classes += ( field.required ? 'required' : 'optional' )
     
-    field_markup = ["<li class='#{classes}' id='input-field-#{field.id}-child-#{fieldset_child.id}'>"]
-    
-    if !field.type.eql?('instruction')
-      field_markup.push "<label for='field-#{field.id}'>"
-      field_markup.push "#{field.label}: "
-      field_markup.push "<abbr title='required'>*</abbr>" if field.required?
-      field_markup.push "</label>"
+    field_markup = []
+    if field.use_default_header_and_footer_partials?
+      field_markup.push render_to_string(:partial => "/dynamic_fieldsets/form_partials/input_header", :locals => {
+          :classes => classes,
+          :field => field,
+          :fieldset_child => fieldset_child
+        })
     end
+      
+    attrs = field.html_attribute_hash
     
-    attrs = { :id => "field-#{field.id}-child-#{fieldset_child.id}" }
-    field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
-    
+    attributes = {
+      :fsa => fsa,
+      :fieldset_child => fieldset_child,
+      :value => values,
+      :values => values,
+    }
+    field_markup.push render(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
     case field.type.to_sym
     when :select
       selected = populate(field,values).to_i # should return the ID of the saved or default option
@@ -147,7 +153,10 @@ module DynamicFieldsetsHelper
       
     end # case field.type
     
-    field_markup.push "</li>"
+    if field.use_default_header_and_footer_partials?
+      field_markup.push render_to_string(:partial => "/dynamic_fieldsets/form_partials/input_footer")
+    end
+
     return field_markup
   end
   
@@ -222,6 +231,9 @@ module DynamicFieldsetsHelper
     end
   end
 
+  # sti version
+  # this has been replaced by value_or_default_for_form
+  #  
   # Method that returns the javascript in string format to be pushed on with the rest of the
   # generated form
   #
