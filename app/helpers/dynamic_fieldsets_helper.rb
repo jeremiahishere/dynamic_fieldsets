@@ -75,22 +75,15 @@ module DynamicFieldsetsHelper
     attributes = {
       :fsa => fsa,
       :fieldset_child => fieldset_child,
-      :value => values,
-      :values => values,
     }
+    if values.is_a?(Array)
+      attributes[:values] = values
+    else
+      attributes[:value] = values
+    end
+
     field_markup.push render(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
     case field.type.to_sym
-    when :select
-      selected = populate(field,values).to_i # should return the ID of the saved or default option
-      field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
-      
-    when :multiple_select
-      attrs.merge! multiple: true
-      opts = populate( field, values )
-      opts = [opts] if !opts.is_a? Array
-      selected = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
-      field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
-      
     when :radio
       field_markup.push "<div id='field-#{field.id}-child-#{fieldset_child.id}'>"
       field.options.each do |option|
