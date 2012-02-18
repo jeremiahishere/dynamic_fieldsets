@@ -13,8 +13,8 @@ var allInputs = $(":input:not(:hidden)");
 
 ***************************************************************************/
 
-function grab_fsc_id(field, field_type) {
-	switch(field_type)
+function grab_fsc_id(field, type) {
+	switch(type)
 	{
 		case 'text':
 			var id_array = field.attr('id').split('-');
@@ -114,8 +114,8 @@ function group_action(success_flag, action, group_field) {
 	}
 };
 
-function grab_value(field, field_type) {
-	switch(field_type)
+function grab_value(field, type) {
+	switch(type)
 	{
 		case 'text':
 			return field.attr('value').toLowerCase();
@@ -204,9 +204,9 @@ function getIntersect(arr1, arr2) {
 
 allInputs.change( function() {
 	var field = $(this);
-	var field_type = grab_type(field);
-	var fieldset_child_id = grab_fsc_id(field, field_type);
-	var entered_value = grab_value(field, field_type)
+	var type = grab_type(field);
+	var fieldset_child_id = grab_fsc_id(field, type);
+	var entered_value = grab_value(field, type)
 	if (fieldset_child_id in json_holder) {
 		for (var group in json_holder[fieldset_child_id]) {
 			var action = json_holder[fieldset_child_id][group]['action'];

@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(:version => 20120213211033) do
   create_table "dynamic_fieldsets_fields", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.string   "field_type"
+    t.string   "type"
     t.boolean  "required",   :default => false
     t.boolean  "enabled",    :default => true
     t.datetime "created_at"

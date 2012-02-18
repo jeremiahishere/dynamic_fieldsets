@@ -19,7 +19,7 @@ def create_child_field(parent, order_num = 1)
   child_field = DynamicFieldsets::Field.create(
     :name => "Child Field",
     :label => "Child Field",
-    :field_type => "textfield",
+    :type => "textfield",
     :enabled => true,
     :required => true)
   DynamicFieldsets::FieldsetChild.create(:fieldset => parent, :child => child_field, :order_num => order_num)
@@ -55,7 +55,7 @@ end
 Then /^I should see the child field information$/ do
   @child_field = DynamicFieldsets::Field.last
   page.should have_content(@child_field.name)
-  page.should have_content(@child_field.field_type)
+  page.should have_content(@child_field.type)
 end
 
 Then /^I should see the child fieldset information$/ do

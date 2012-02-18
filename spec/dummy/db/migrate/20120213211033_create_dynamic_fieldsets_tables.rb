@@ -35,7 +35,7 @@ class CreateDynamicFieldsetsTables < ActiveRecord::Migration
     create_table :dynamic_fieldsets_fields do |t|
       t.string :name
       t.string :label, :required => true
-      t.string :field_type, :required => true
+      t.string :type, :required => true
       t.boolean :required, :default => false
       t.boolean :enabled, :default => true
 

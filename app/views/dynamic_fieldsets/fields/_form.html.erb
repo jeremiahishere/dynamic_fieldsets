@@ -23,8 +23,8 @@
   </div>
 
   <div class="field">
-    <%= f.label :field_type %>: 
-    <%= f.select :field_type, options_for_select(DynamicFieldsets::Field.field_types, @field.field_type), :include_blank => "Choose One" %>
+    <%= f.label :type %>: 
+    <%= f.select :type, options_for_select(DynamicFieldsets::Field.types, @field.type), :include_blank => "Choose One" %>
   </div>
   <% @field.field_options.each do |field_option| %>
     <%= f.fields_for :field_options, field_option do |field_option_form| %>

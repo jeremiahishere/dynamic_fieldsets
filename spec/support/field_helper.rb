@@ -6,7 +6,7 @@ module FieldHelper
     {
       :name => "Test field name",
       :label => "Test field label",
-      :field_type => "textfield",
+      :type => "textfield",
       :required => true,
       :enabled => true,
     }

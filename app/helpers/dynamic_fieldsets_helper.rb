@@ -31,11 +31,11 @@ module DynamicFieldsetsHelper
     lines.push "<span class='label'>#{field.label}</span>"
     lines.push "<span class='value'>"
     if values
-      if field.field_type == "multiple_select" || field.field_type == "checkbox"
+      if field.type == "multiple_select" || field.type == "checkbox"
         values.each do |value|
           lines.push field.options.select { |opt| opt.id == value }.first.name + "<br />"
         end
-      elsif field.field_type == "select" || field.field_type == "radio"
+      elsif field.type == "select" || field.type == "radio"
         lines.push field.options.select { |opt| opt.id == values }.first.name
         # this might be easier on the db
         # lines.push DynamicFieldsets::FieldOption.find(values).name
@@ -58,12 +58,12 @@ module DynamicFieldsetsHelper
   # @return [Array] The HTML elements for the field
   def field_form_renderer(fsa, fieldset_child, values = [])
     field = fieldset_child.child
-    classes  = "#{field.field_type} "
+    classes  = "#{field.type} "
     classes += ( field.required ? 'required' : 'optional' )
     
     field_markup = ["<li class='#{classes}' id='input-field-#{field.id}-child-#{fieldset_child.id}'>"]
     
-    if !field.field_type.eql?('instruction')
+    if !field.type.eql?('instruction')
       field_markup.push "<label for='field-#{field.id}'>"
       field_markup.push "#{field.label}: "
       field_markup.push "<abbr title='required'>*</abbr>" if field.required?
@@ -73,7 +73,7 @@ module DynamicFieldsetsHelper
     attrs = { :id => "field-#{field.id}-child-#{fieldset_child.id}" }
     field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
     
-    case field.field_type.to_sym
+    case field.type.to_sym
     when :select
       selected = populate(field,values).to_i # should return the ID of the saved or default option
       field_markup.push select_tag "fsa-#{fsa.id}[field-#{fieldset_child.id}]", options_from_collection_for_select( field.options, :id, :name, selected ), attrs
@@ -145,7 +145,7 @@ module DynamicFieldsetsHelper
     when :instruction
       field_markup.push "<p>#{field.label}</p>"
       
-    end # case field.field_type
+    end # case field.type
     
     field_markup.push "</li>"
     return field_markup

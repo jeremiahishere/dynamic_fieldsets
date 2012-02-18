@@ -104,7 +104,7 @@ describe FieldsetChild do
       # too many issues with stubbing, getting lazy and saving
       # could be refactored at some point
 
-      @field = Field.create({ :name => "Test field name", :label => "Test field label", :field_type => "textfield", :required => true, :enabled => true, })
+      @field = Field.create({ :name => "Test field name", :label => "Test field label", :type => "textfield", :required => true, :enabled => true, })
       @fieldset = Fieldset.create({:name => "Hire Form", :description => "Hire a person for a job", :nkey => "hire_form"})
       @root_fieldset = Fieldset.create({:name => "Hire Form2", :description => "Hire a person for a job2", :nkey => "hire_form2"})
 

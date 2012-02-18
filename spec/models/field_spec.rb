@@ -38,18 +38,24 @@ describe Field do
       @field.should have(1).error_on(:label)
     end
 
-    it "should require field_type" do
-      @field.should have(2).error_on(:field_type)
+    # removing this validation until the sti code is inplace
+    # changed the field name from field_type to type so rails is trying to find models
+    it "should require type" do
+      pending
+      @field.should have(2).error_on(:type)
+    end
+
+    # removing this validation until the sti code is inplace
+    # changed the field name from field_type to type so rails is trying to find models
+    it "should require type within the allowable types" do
+      pending
+      @field.type = "unsupported_type"
+      @field.should have(1).error_on(:type)
     end
 
     it "should require type within the allowable types" do
-      @field.field_type = "unsupported_type"
-      @field.should have(1).error_on(:field_type)
-    end
-
-    it "should require type within the allowable types" do
-      @field.field_type = "select"
-      @field.should have(0).error_on(:field_type)
+      @field.type = "select"
+      @field.should have(0).error_on(:type)
     end
 
 
@@ -64,7 +70,7 @@ describe Field do
     end
 
     it "should require options if the type is one that requires options" do
-      @field.field_type = "select"
+      @field.type = "select"
       @field.should have(1).error_on(:field_options)
     end
   end
@@ -75,12 +81,12 @@ describe Field do
     end
 
     it "should return true if the field type requires options" do
-      @field.field_type = "select"
+      @field.type = "select"
       @field.options?.should be_true
     end
 
     it "should return false if the field does not have options" do
-      @field.field_type = "textfield"
+      @field.type = "textfield"
       @field.options?.should be_false
     end
   end
@@ -151,15 +157,15 @@ describe Field do
     end
   end
 
-  describe "field_types method" do
+  describe "types method" do
     it "should return an array" do
       Field.field_types.should be_a_kind_of Array
     end
   end
 
-  describe "option_field_types method" do
+  describe "option_types method" do
     it "should return an array" do
-      Field.option_field_types.should be_a_kind_of Array
+      Field.option_types.should be_a_kind_of Array
     end
   end
 

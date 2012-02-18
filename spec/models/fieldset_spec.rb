@@ -118,19 +118,19 @@ describe Fieldset do
       @field1 = Field.new(
         :name => "Test field name",
         :label => "Test field label",
-        :field_type => "textfield",
+        :type => "textfield",
         :required => true,
         :enabled => true)
-      @field1.save
+      @field1.save!
       @cf1 = FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
       
       @field2 = Field.new(
         :name => "Test field name",
         :label => "Test field label",
-        :field_type => "textfield",
+        :type => "textfield",
         :required => true,
         :enabled => false)
-      @field2.save
+      @field2.save!
       @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset, :order_num => 3)
       
       @root_fieldset_children = [@cfs, @cf1, @cf2]

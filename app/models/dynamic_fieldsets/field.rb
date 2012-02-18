@@ -25,16 +25,20 @@ module DynamicFieldsets
     # Validations
     validates_presence_of :name
     validates_presence_of :label
-    validates_presence_of :field_type
+    # removing this validation until the sti code is inplace
+    # changed the field name from field_type to type so rails is trying to find models
+    # validates_presence_of :type
     validates_inclusion_of :enabled, :in => [true, false]
     validates_inclusion_of :required, :in => [true, false]
-    validate :has_field_options, :field_type_in_field_types
+    validate :has_field_options, :type_in_types
 
     # validates inclusion of wasn't working so I made it a custom validation
     # refactor later when I figure out how rails works
-    def field_type_in_field_types
-      if !Field.field_types.include?(self.field_type)
-        self.errors.add(:field_type, "The field type must be one of the available field types.")
+    def type_in_types
+      if !Field.field_types.include?(self.type)
+        # removing this validation until the sti code is inplace
+        # changed the field name from field_type to type so rails is trying to find models
+        # self.errors.add(:type, "The field type must be one of the available field types.")
       end
     end
     
@@ -51,13 +55,13 @@ module DynamicFieldsets
     end
 
     # @returns [Array] An array of field types that use options
-    def self.option_field_types
+    def self.option_types
       ["select", "multiple_select", "checkbox", "radio"]
     end
     
     # @return [Boolean] True if the field is of type 'select', 'multiple_select', 'radio', or 'checkbox'
     def options?
-      Field.option_field_types.include? self.field_type
+      Field.option_types.include? self.type
     end
     
     # @return [FieldOptions] Returns all field options that are enabled

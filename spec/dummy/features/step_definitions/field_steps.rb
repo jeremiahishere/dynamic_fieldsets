@@ -2,7 +2,7 @@ Given /^a field exists$/ do
   @field = DynamicFieldsets::Field.create(
     :name => "Test field",
     :label => "Test field",
-    :field_type => "textfield",
+    :type => "textfield",
     :enabled => true,
     :required => true)
 end
@@ -26,14 +26,14 @@ end
 Then /^I should see that field listed$/ do
   @field = DynamicFieldsets::Field.last
   page.should have_content(@field.name)
-  page.should have_content(@field.field_type)
+  page.should have_content(@field.type)
 end
 
 Then /^I should see the data for that field$/ do
   @field = DynamicFieldsets::Field.last
   page.should have_content(@field.name)
   page.should have_content(@field.label)
-  page.should have_content(@field.field_type)
+  page.should have_content(@field.type)
   page.should have_content(@field.enabled)
   page.should have_content(@field.required)
 
@@ -63,5 +63,5 @@ end
 
 Then /^I should not see that field listed$/ do
   page.should_not have_content(@field.name)
-  page.should_not have_content(@field.field_type)
+  page.should_not have_content(@field.type)
 end

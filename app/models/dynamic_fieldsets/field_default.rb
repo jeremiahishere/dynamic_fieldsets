@@ -21,7 +21,7 @@ module DynamicFieldsets
     #
     # http://www.youtube.com/watch?v=BeP6CpUnfc0 
     def convert_option_name_to_id
-      if Field.option_field_types.include?(self.field.field_type)
+      if Field.option_types.include?(self.field.type)
         option = FieldOption.find_by_name(self.value)
         self.value = option.id unless option.nil?
       end
@@ -29,7 +29,7 @@ module DynamicFieldsets
 
     # @return [String] Either the value or the name of the field option reference by the value
     def pretty_value
-      if !self.field.nil? && Field.option_field_types.include?(self.field.field_type)
+      if !self.field.nil? && Field.option_types.include?(self.field.type)
         option = FieldOption.find_by_id(self.value)
         if !option.nil?
           return option.name

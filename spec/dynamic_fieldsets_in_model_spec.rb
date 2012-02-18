@@ -44,7 +44,7 @@ describe DynamicFieldsetsInModel do
 
   describe "run_dynamic_fieldset_validations! method" do
     before(:each) do
-      @field = Field.new(:name => "Test Field", :label => "Test Field", :field_type => "textfield")
+      @field = Field.new(:name => "Test Field", :label => "Test Field", :type => "textfield")
       @fieldset = Fieldset.new(:name => "first", :nkey => "first", :description => "description")
       @fieldset.stub!(:children).and_return([@field])
       @fsa = FieldsetAssociator.new
@@ -70,7 +70,7 @@ describe DynamicFieldsetsInModel do
 
   describe "run_fieldset_child_validations! method" do
     before(:each) do
-      @field = Field.new(:name => "Test Field", :label => "Test Field", :field_type => "textfield", :required => true)
+      @field = Field.new(:name => "Test Field", :label => "Test Field", :type => "textfield", :required => true)
       @field.stub!(:id).and_return(42)
       @fieldset = Fieldset.new(:name => "first", :nkey => "first", :description => "description")
       @fieldset.stub!(:children).and_return([@field])
