@@ -14,6 +14,10 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+      
+      def uses_field_options?
+        true
+      end
 
       # validation for field options
       def has_field_options

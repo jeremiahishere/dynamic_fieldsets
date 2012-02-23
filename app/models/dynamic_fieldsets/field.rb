@@ -90,5 +90,9 @@ module DynamicFieldsets
     def in_use?
       self.fieldset_children.count { |child| !child.fieldset_id.nil? || !child.field_records.empty? } > 0
     end
+
+    def uses_field_options?
+      false
+    end
   end
 end
