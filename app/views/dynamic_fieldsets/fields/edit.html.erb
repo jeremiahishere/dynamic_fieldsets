@@ -1,6 +1,9 @@
 <h1>Editing field</h1>
 
-<%= render 'form' %>
+<%= form_for(@field, :as => :dynamic_fieldsets_field, :url => dynamic_fieldsets_field_path, :method => :put) do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>
 
-<%= link_to 'Show', @field %> |
+
+<%= link_to 'Show', dynamic_fieldsets_field_path(@field) %> |
 <%= link_to 'Back', dynamic_fieldsets_fields_path %>

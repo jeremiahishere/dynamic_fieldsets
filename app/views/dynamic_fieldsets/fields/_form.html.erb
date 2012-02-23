@@ -1,63 +1,61 @@
-<%= form_for(@field) do |f| %>
-  <% if @field.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@field.errors.count, "error") %> prohibited this field from being saved:</h2>
+<% if @field.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@field.errors.count, "error") %> prohibited this field from being saved:</h2>
 
-      <ul>
-      <% @field.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-  
-  <%= hidden_field_tag :parent, params[:parent] %>
-
-  <div class="field">
-    <%= f.label :name %>: (internal)<br/>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :label %>: (displayed on the form)<br/>
-    <%= f.text_field :label %>
-  </div>
-
-  <div class="field">
-    <%= f.label :type %>: 
-    <%= f.select :type, options_for_select(DynamicFieldsets::Field.descendant_collection, @field.type), :include_blank => "Choose One" %>
-  </div>
-  <% @field.field_options.each do |field_option| %>
-    <%= f.fields_for :field_options, field_option do |field_option_form| %>
-      <%= render :partial => "field_option_fields", :locals => {:f => field_option_form} %>
+    <ul>
+    <% @field.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
     <% end %>
-  <% end %>
-  <p><%= link_to_add_fields "Add Field Option", f, :field_options %></p>
-
-  <div class="field">
-    <%= f.label :required %>
-    <%= f.check_box :required %>
-  </div>
-  <div class="field">
-    <%= f.label :enabled %>
-    <%= f.check_box :enabled %>
-  </div>
-
-  <% @field.field_defaults.each do |field_default| %>
-    <%= f.fields_for :field_defaults, field_default do |field_default_form| %>
-      <%= render :partial => "field_default_fields", :locals => {:f => field_default_form, :obj => field_default} %>
-    <% end %>
-  <% end %>
-  <p><%= link_to_add_fields "Add Default Value", f, :field_defaults %></p>
-
-  <% @field.field_html_attributes.each do |field_html_attribute| %>
-    <%= f.fields_for :field_html_attributes, field_html_attribute do |field_html_attribute_form| %>
-      <%= render :partial => "field_html_attribute_fields", :locals => {:f => field_html_attribute_form} %>
-    <% end %>
-  <% end %>
-  <p><%= link_to_add_fields "Add Html Attribute", f, :field_html_attributes %></p>
-
-  <div class="actions">
-    <%= f.submit %>
+    </ul>
   </div>
 <% end %>
+
+<%= hidden_field_tag :parent, params[:parent] %>
+
+<div class="field">
+  <%= f.label :name %>: (internal)<br/>
+  <%= f.text_field :name %>
+</div>
+<div class="field">
+  <%= f.label :label %>: (displayed on the form)<br/>
+  <%= f.text_field :label %>
+</div>
+
+<div class="field">
+  <%= f.label :type %>: 
+  <%= f.select :type, options_for_select(DynamicFieldsets::Field.descendant_collection, @field.type), :include_blank => "Choose One" %>
+</div>
+<% @field.field_options.each do |field_option| %>
+  <%= f.fields_for :field_options, field_option do |field_option_form| %>
+    <%= render :partial => "field_option_fields", :locals => {:f => field_option_form} %>
+  <% end %>
+<% end %>
+<p><%= link_to_add_fields "Add Field Option", f, :field_options %></p>
+
+<div class="field">
+  <%= f.label :required %>
+  <%= f.check_box :required %>
+</div>
+<div class="field">
+  <%= f.label :enabled %>
+  <%= f.check_box :enabled %>
+</div>
+
+<% @field.field_defaults.each do |field_default| %>
+  <%= f.fields_for :field_defaults, field_default do |field_default_form| %>
+    <%= render :partial => "field_default_fields", :locals => {:f => field_default_form, :obj => field_default} %>
+  <% end %>
+<% end %>
+<p><%= link_to_add_fields "Add Default Value", f, :field_defaults %></p>
+
+<% @field.field_html_attributes.each do |field_html_attribute| %>
+  <%= f.fields_for :field_html_attributes, field_html_attribute do |field_html_attribute_form| %>
+    <%= render :partial => "field_html_attribute_fields", :locals => {:f => field_html_attribute_form} %>
+  <% end %>
+<% end %>
+<p><%= link_to_add_fields "Add Html Attribute", f, :field_html_attributes %></p>
+
+<div class="actions">
+  <%= f.submit %>
+</div>
 <%= render :partial => "/dynamic_fieldsets/shared/nested_model_javascript" %>

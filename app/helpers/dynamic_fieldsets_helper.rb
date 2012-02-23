@@ -7,6 +7,7 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_renderer(fsa, fieldset_child, values = [], form_type)
+    puts "calling field renderer"
     if form_type == "form"
       return field_form_renderer(fsa, fieldset_child, values)
     else
@@ -57,13 +58,14 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_form_renderer(fsa, fieldset_child, values = [])
+    puts "calling field form renderer"
     field = fieldset_child.child
     classes  = "#{field.type} "
     classes += ( field.required ? 'required' : 'optional' )
     
     field_markup = []
     if field.use_default_header_and_footer_partials?
-      field_markup.push render_to_string(:partial => "/dynamic_fieldsets/form_partials/input_header", :locals => {
+      field_markup.push render(:partial => "/dynamic_fieldsets/form_partials/input_header", :locals => {
           :classes => classes,
           :field => field,
           :fieldset_child => fieldset_child
@@ -82,10 +84,10 @@ module DynamicFieldsetsHelper
       attributes[:value] = values
     end
 
-    field_markup.push render_to_string(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
+    field_markup.push render(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
     
     if field.use_default_header_and_footer_partials?
-      field_markup.push render_to_string(:partial => "/dynamic_fieldsets/form_partials/input_footer")
+      field_markup.push render(:partial => "/dynamic_fieldsets/form_partials/input_footer")
     end
 
     return field_markup
@@ -97,15 +99,16 @@ module DynamicFieldsetsHelper
   # @param [Hash] values Stored values for the fieldset
   # @return [Array] The HTML elements for the fieldset
   def fieldset_renderer(fsa, fieldset, values, form_type)
+    puts "calling fieldset renderer"
     lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
     lines.push "<h3 class='name'>#{fieldset.name}</h3>"
     lines.push "<ol>"
     fieldset.children.each do |child|
-      if child.is_a? DynamicFieldsets::Field then
-        fieldset_child = DynamicFieldsets::FieldsetChild.where( :child_id => child.id, :fieldset_id => fieldset.id, :child_type => child.class.name ).first
-        lines += field_renderer( fsa, fieldset_child, values[fieldset_child.id], form_type )
-      else # child.is_a? Fieldset
+      if child.is_a? DynamicFieldsets::Fieldset
         lines += fieldset_renderer( fsa, child, values, form_type )
+      else # one of many possible types of child
+        fieldset_child = DynamicFieldsets::FieldsetChild.where( :child_id => child.id, :fieldset_id => fieldset.id, :child_type => "DynamicFieldsets::Field" ).first
+        lines += field_renderer( fsa, fieldset_child, values[fieldset_child.id], form_type )
       end
     end
     lines.push "</ol>"
@@ -132,6 +135,7 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
+    puts "dynamic_fieldset_renderer"
     rendered_dynamic_fieldset = "<div id='fsa-#{fsa.id}'>\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='fsa-#{fsa.id}[fieldset_id]' value='#{fsa.fieldset_id}' />\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='fsa-#{fsa.id}[fieldset_model_name]' value='#{fsa.fieldset_model_name}' />\n"

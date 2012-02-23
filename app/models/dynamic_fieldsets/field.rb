@@ -50,7 +50,7 @@ module DynamicFieldsets
 
     # @return [String] Name of partial to render for the form
     def form_partial
-      "/dynamic_fieldsets/form_partials/" + self.class.gsub("DynamicFieldsets::", "").underscore
+      "/dynamic_fieldsets/form_partials/" + self.class.to_s.gsub("DynamicFieldsets::", "").underscore
     end
 
     # @return [Hash] Data needed for the form partial
@@ -73,8 +73,8 @@ module DynamicFieldsets
 
     # @return [Hash] A hash of html attribute key: value pairs
     def html_attribute_hash
-      attrs = { :id => "field-#{field.id}-child-#{fieldset_child.id}" }
-      field.field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field.field_html_attributes.empty?
+      attrs = {}
+      field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field_html_attributes.empty?
       return attrs
     end
 

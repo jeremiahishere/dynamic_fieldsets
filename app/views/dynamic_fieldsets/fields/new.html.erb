@@ -1,6 +1,8 @@
 <h1>New field</h1>
 
-<%= render 'form' %>
+<%= form_for(@field, :as => :dynamic_fieldsets_field, :url => dynamic_fieldsets_field_path, :method  => :post) do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>
 
 <% if params[:parent].nil? %>
   <%= link_to 'Back', dynamic_fieldsets_fields_path %>
