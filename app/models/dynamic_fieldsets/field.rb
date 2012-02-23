@@ -94,5 +94,14 @@ module DynamicFieldsets
     def uses_field_options?
       false
     end
+
+    # this collects defaults so that we can use them for fields
+    # note that this should be overriden when the field uses field options
+    # in that case, it should return field option ids instead of field option names
+    # 
+    # I'm sorry
+    def collect_default_values
+      field_defaults.collect { |d| d[:value] }
+    end
   end
 end

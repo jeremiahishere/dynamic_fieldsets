@@ -23,7 +23,7 @@ module DynamicFieldsets
           if field_defaults.length == 0
             return ""
           else
-            return field_defaults.first.value
+            return collect_default_values.first
           end
         else
           return value
