@@ -28,29 +28,20 @@ module DynamicFieldsetsHelper
   def field_show_renderer(fsa, fieldset_child, values = [])
     field = fieldset_child.child
     lines = []
-    lines.push "<div class='dynamic_fieldsets field'>"
-    lines.push "<span class='label'>#{field.label}</span>"
-    lines.push "<span class='value'>"
-    if values
-      if field.type == "multiple_select" || field.type == "checkbox"
-        values.each do |value|
-          lines.push field.options.select { |opt| opt.id == value }.first.name + "<br />"
-        end
-      elsif field.type == "select" || field.type == "radio"
-        lines.push field.options.select { |opt| opt.id == values }.first.name
-        # this might be easier on the db
-        # lines.push DynamicFieldsets::FieldOption.find(values).name
-      else
-        lines.push values
-      end
-    else
-      lines.push "<em class='empty'>No answer given</em>"
+
+    if field.use_show_header_partial?
+      lines.push render(:partial => field.show_header_partial )
     end
-    lines.push "</span>"
-    lines.push "</div>"
+
+    args = {}
+    lines.push render(:partial => field.show_partial, :locals => field.show_partial_locals(args) )
+
+    if field.use_show_footer_partial?
+      lines.push render(:partial => field.show_footer_partial )
+    end
+
     return lines
   end
-
 
   # Builds HTML for the provided field for a form.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator

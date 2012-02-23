@@ -14,7 +14,7 @@ module DynamicFieldsets
 
       # @return [String] Default multiple answer partial filename
       def show_partial
-        "/dynamic_fieldsets/show_partials/show_multiple_answer"
+        "/dynamic_fieldsets/show_partials/show_multiple_answers"
       end
 
       # @param [Array] values A list of values for the field already saved to the database

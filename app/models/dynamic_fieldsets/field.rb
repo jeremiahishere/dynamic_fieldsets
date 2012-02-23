@@ -90,6 +90,13 @@ module DynamicFieldsets
       return output
     end
 
+    # @return [Hash] A hash of html attribute key: value pairs
+    def html_attribute_hash
+      attrs = {}
+      field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field_html_attributes.empty?
+      return attrs
+    end
+
     # This method must be overriden
     #
     # @return [String] Name of partial to render for the show page
@@ -97,11 +104,38 @@ module DynamicFieldsets
       "/dynamic_fieldsets/show_partials/show_incomplete"
     end
 
-    # @return [Hash] A hash of html attribute key: value pairs
-    def html_attribute_hash
-      attrs = {}
-      field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field_html_attributes.empty?
-      return attrs
+    # This method must be overriden if show_header_partial returns true
+    #
+    # @return [String] Name of the input header for the show
+    def show_header_partial
+      "/dynamic_fieldsets/show_partials/show_incomplete_header"
+    end
+
+    # @return [Boolean] By default, do not use the header partial
+    def use_show_header_partial?
+      false
+    end
+
+    # This method must be overriden if show_footer_partial returns true
+    #
+    # @return [String] Name of the input footer for the show
+    def show_footer_partial
+      "/dynamic_fieldsets/show_partials/show_incomplete_footer"
+    end
+
+    # @return [Boolean] By default, do not use the footer partial
+    def use_show_footer_partial?
+      false
+    end
+
+    # @return [Hash] Information needed for the show partial, don't know what I need yet
+    def show_partial_locals(args)
+      # these should be incredibly temporary
+      {
+        :value => "value",
+        :values => ["values"],
+        :label => "label"
+      }
     end
 
     # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets
