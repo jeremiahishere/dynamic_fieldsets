@@ -1,12 +1,12 @@
 module DynamicFieldsets
-  module FieldWithMultipleAnswers
+  module FieldWithOneAnswer
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
-      def acts_as_field_with_one_answer(args)
-        include DynamicFieldsets::FieldWithMultipleAnswers::InstanceMethods
+      def acts_as_field_with_one_answer(args = {})
+        include DynamicFieldsets::FieldWithOneAnswer::InstanceMethods
       end
     end
 

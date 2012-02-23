@@ -7,7 +7,7 @@ module DynamicFieldsets
     end
 
     module ClassMethods
-      def acts_as_field_with_field_options(args)
+      def acts_as_field_with_field_options(args = {})
         validate :has_field_options
         include DynamicFieldsets::FieldWithFieldOptions::InstanceMethods
       end
