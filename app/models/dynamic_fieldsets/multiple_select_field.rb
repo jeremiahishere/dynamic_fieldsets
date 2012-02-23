@@ -12,7 +12,7 @@ module DynamicFieldsets
 
     # @return [Hash] data for the form partial
     def form_partial_locals(args)
-      super.merge({
+      super.merge!({
         :selected_ids => values_or_defaults_for_form(args[:values]).map(&:to_i),
         :collection => self.options
       })

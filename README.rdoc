@@ -23,12 +23,20 @@ The backend is automatically added to your project using the rails engine system
 * move the date parser from the helper to the date/datetime field models
 * make sure field options types on the show page are ok
 
-= Things that are done for now
+= Fields that are done
 
 * instruction
 * text field
 * text area
 * select field
+* multiple_select
+
+= Fields that are not done
+
+* checkbox
+* date
+* datetime
+* radio
 
 == Contributing to dynamic_fieldsets 
  

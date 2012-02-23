@@ -6,7 +6,7 @@ module DynamicFieldsets
 
     module ClassMethods
       def acts_as_field_with_multiple_answers(args = {})
-        include DynamicFieldsets::FieldWithOneAnswer::InstanceMethods
+        include DynamicFieldsets::FieldWithMultipleAnswers::InstanceMethods
       end
     end
 
