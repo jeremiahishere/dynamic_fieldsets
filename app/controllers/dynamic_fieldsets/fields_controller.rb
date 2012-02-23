@@ -55,9 +55,10 @@ module DynamicFieldsets
     # POST /dynamic_fieldsets/fields
     def create
       parent_id = params[:parent]
-      @field = DynamicFieldsets::Field.new(params[:dynamic_fieldsets_field])
+      @field = params[:dynamic_fieldsets_field][:type].constantize.new(params[:dynamic_fieldsets_field])
 
       respond_to do |format|
+        
         if @field.save
           if !parent_id.empty?
             parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
@@ -66,7 +67,7 @@ module DynamicFieldsets
             #relation.child = @field
             #relation.save
           end
-          format.html { redirect_to(@field, :notice => 'Successfully created a new field.') }
+          format.html { redirect_to(dynamic_fieldsets_field_path(@field), :notice => 'Successfully created a new field.') }
         else
           format.html { render :action => "new" }
         end
@@ -75,11 +76,11 @@ module DynamicFieldsets
 
     # PUT /dynamic_fieldsets/fields/1
     def update
-      @field = DynamicFieldsets::Field.find(params[:id])
+      @field = params[:dynamic_fieldsets_field][:type].constantize.find(params[:id])
 
       respond_to do |format|
         if @field.update_attributes(params[:dynamic_fieldsets_field])
-          format.html { redirect_to(@field, :notice => 'Successfully updated a field.') }
+          format.html { redirect_to(dynamic_fieldsets_field_path(@field), :notice => 'Successfully updated a field.') }
         else
           format.html { render :action => "edit" }
         end

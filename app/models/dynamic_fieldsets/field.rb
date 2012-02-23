@@ -29,6 +29,19 @@ module DynamicFieldsets
     validates_presence_of :type
     validates_inclusion_of :enabled, :in => [true, false]
     validates_inclusion_of :required, :in => [true, false]
+
+    def self.descendants
+      if ::Rails.application.config.cache_classes
+        super
+      else
+        # this needs to be moved to a config somewhere
+        [DynamicFieldsets::CheckboxField, DynamicFieldsets::DateField, DynamicFieldsets::DatetimeField, DynamicFieldsets::InstructionField, DynamicFieldsets::MultipleSelectField, DynamicFieldsets::RadioField, DynamicFieldsets::SelectField, DynamicFieldsets::TextField, DynamicFieldsets::TextareaField]
+      end
+    end
+    
+    def self.descendant_collection
+      descendants.collect { |d| [d.to_s.gsub("DynamicFieldsets::", "").underscore.humanize, d.to_s ] }
+    end
     
     # @return [Boolean] False if field_default.value is empty
     def has_defaults?
