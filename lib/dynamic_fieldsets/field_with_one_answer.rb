@@ -20,10 +20,10 @@ module DynamicFieldsets
       # @return [String] A field option saved in the db, or the default if value is blank
       def value_or_default_for_form(value)
         if value.nil?
-          if field.field_Defaults.length == 0
+          if field_defaults.length == 0
             return ""
           else
-            return field.field_defaults.first.value
+            return field_defaults.first.value
           end
         else
           return value

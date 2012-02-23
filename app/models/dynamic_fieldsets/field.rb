@@ -56,6 +56,8 @@ module DynamicFieldsets
     # @return [Hash] Data needed for the form partial
     def form_partial_locals(args)
       {
+        :fsa => args[:fsa],
+        :fieldset_child => args[:fieldset_child],
         :name => "fsa-#{args[:fsa].id}[field-#{args[:fieldset_child].id}]",
         :attrs => self.html_attribute_hash
       }

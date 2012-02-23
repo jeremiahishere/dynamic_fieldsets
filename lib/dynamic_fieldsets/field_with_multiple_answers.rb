@@ -16,10 +16,10 @@ module DynamicFieldsets
       # @return [Array] An array of field option values saved in the db, or the defaults if none are in the db
       def values_or_defaults_for_form(values)
         if values.empty?
-          if field.field_Defaults.length == 0
+          if field_defaults.length == 0
             return []
           else
-            return field.field_defaults.collect { |d| d[:value] }
+            return field_defaults.collect { |d| d[:value] }
           end
         else
           return values
