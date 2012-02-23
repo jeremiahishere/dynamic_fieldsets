@@ -59,11 +59,11 @@ module DynamicFieldsets
         :fsa => args[:fsa],
         :fieldset_child => args[:fieldset_child],
         :attrs => self.html_attribute_hash,
-        # for use in helpers like text_field
+        # for use in helpers like text_field and date_select
         :object => "fsa-#{args[:fsa].id}",
         :method => "field-#{args[:fieldset_child].id}",
       }
-      # name for use in helpers like select_tag
+      # name for use in helpers like select_tag, check_box_tag, or anything ending with _tag
       # this is more of a convenience method
       output[:name] = "#{output[:object]}[#{output[:method]}]"
       output[:id] = "#{output[:object]}_#{output[:method]}"

@@ -28,21 +28,6 @@ The backend is automatically added to your project using the rails engine system
   * including the actual question name
 * field output on show page does not work for multiple answers
 
-= Fields that are done
-
-* instruction
-* text field
-* text area
-* select field
-* multiple_select
-* checkbox
-* radio
-
-= Fields that are not done
-
-* date
-* datetime
-
 == Contributing to dynamic_fieldsets 
  
 * honestly, hold off for a 0.1 release before even thinking about this
