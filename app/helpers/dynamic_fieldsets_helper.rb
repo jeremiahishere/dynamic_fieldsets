@@ -82,69 +82,7 @@ module DynamicFieldsetsHelper
       attributes[:value] = values
     end
 
-    field_markup.push render(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
-    case field.type.to_sym
-    when :radio
-      field_markup.push "<div id='field-#{field.id}-child-#{fieldset_child.id}'>"
-      field.options.each do |option|
-        attrs[:id] = "field-#{field.id}-#{option.name.parameterize}"
-        these_attrs = attrs
-        these_attrs = attrs.merge checked: true if populate(field,values).to_i.eql? option.id
-        field_markup.push "<label for='#{these_attrs[:id]}'>"
-        field_markup.push radio_button "fsa-#{fsa.id}", "field-#{fieldset_child.id}", option.id, these_attrs
-        field_markup.push "#{option.name}"
-        field_markup.push "</label>"
-      end
-      field_markup.push "</div>"
-      
-    when :checkbox
-      field_markup.push "<div id='field-#{field.id}-child-#{fieldset_child.id}'>"
-      attrs[:name] = "fsa-#{fsa.id}[field-#{fieldset_child.id}][]"
-      opts = populate( field, values )
-      checked = []
-      checked = opts.map( &:to_i ) if !opts.empty? # array of option IDs, saved > default
-      field.options.each do |option|
-        attrs[:id] = "field-#{field.id}-#{option.name.underscore}"
-        field_markup.push "<label for='#{attrs[:id]}'>"
-        field_markup.push check_box_tag "#{attrs[:name]}", "#{option.id}", checked.include?(option.id), attrs
-        field_markup.push "#{option.name}"
-        field_markup.push "</label>"
-      end
-      field_markup.push "</div>"
-      
-    when :textfield
-      attrs.merge!( {:value => populate( field, values )} )
-      field_markup.push text_field "fsa-#{fsa.id}", "field-#{fieldset_child.id}", attrs
-      
-    when :textarea
-      attrs.merge! cols: '40' if !attrs.include? :cols
-      attrs.merge! rows: '6' if !attrs.include? :rows
-      attrs.merge! name: "fsa-#{fsa.id}[field-#{fieldset_child.id}]"
-      tag = "<textarea"
-      attrs.each{ |att,val| tag += " #{att}=\"#{val}\"" }
-      tag += ">"
-      tag += populate( field, values )
-      tag += "</textarea>"
-      field_markup.push tag
-      
-    when :date
-      date_options = { start_year: Time.now.year - 70 }
-      setdate = populate( field, values ) # date string if saved or default
-      date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
-      # attrs.reject!{ |k| k.eql? :id }
-      field_markup.push date_select "fsa-#{fsa.id}", "field-#{fieldset_child.id}", date_options, attrs
-      
-    when :datetime
-      date_options = { start_year: Time.now.year - 70 }
-      setdate = populate( field, values ) # datetime string if saved or default
-      date_options.merge! default: Time.parse( setdate ) if !setdate.empty?
-      # attrs.reject!{ |k| k.eql? :id }
-      field_markup.push datetime_select "fsa-#{fsa.id}", "field-#{fieldset_child.id}", date_options, attrs
-      
-    when :instruction
-      field_markup.push "<p>#{field.label}</p>"
-      
-    end # case field.type
+    field_markup.push render_to_string(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
     
     if field.use_default_header_and_footer_partials?
       field_markup.push render_to_string(:partial => "/dynamic_fieldsets/form_partials/input_footer")

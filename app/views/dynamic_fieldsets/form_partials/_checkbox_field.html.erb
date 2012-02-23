@@ -1,0 +1,5 @@
+<div id='<% id %>'>
+  <% field.options.each do |option| %>
+    <% check_box_tag(name, option.id, checked.include?(option.id), attrs[output.id]) %>  
+  <% end %>
+</div>

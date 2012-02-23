@@ -1,7 +1,7 @@
 <div id='<% name %>'>
   <% field.options.each do |option| %>
     <label for='<% attrs[output.id][:id] %>'>
-      radio_button("fsa-#{fsa.id}", "field-#{fieldset_child.id}", option.id, attrs[output.id])
+      <% radio_button("fsa-#{fsa.id}", "field-#{fieldset_child.id}", option.id, attrs[output.id]) %>
     </label>
   <% end %>
 </div>

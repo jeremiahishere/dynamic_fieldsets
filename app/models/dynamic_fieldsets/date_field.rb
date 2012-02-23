@@ -1,10 +1,13 @@
 module DynamicFieldsets
   class DateField < Field
     acts_as_field_with_one_answer
-    
-    # test to make sure sti is working
-    def date_specific_method
-      puts "in the datefield class"
+
+    def form_partial_locals(args)
+      output = super
+      output[:date_options] = { 
+        :start_year => Time.now.year - 70,
+        :default => Time.parse(value_or_default_for_form(args[:value])) }
+      output[:attrs][:
     end
   end
 end
