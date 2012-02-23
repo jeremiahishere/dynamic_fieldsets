@@ -55,12 +55,18 @@ module DynamicFieldsets
 
     # @return [Hash] Data needed for the form partial
     def form_partial_locals(args)
-      {
+      output = {
         :fsa => args[:fsa],
         :fieldset_child => args[:fieldset_child],
-        :name => "fsa-#{args[:fsa].id}[field-#{args[:fieldset_child].id}]",
-        :attrs => self.html_attribute_hash
+        :attrs => self.html_attribute_hash,
+        # for use in helpers like text_field
+        :object => "fsa-#{args[:fsa].id}",
+        :method => "field-#{args[:fieldset_child].id}",
       }
+      # name for use in helpers like select_tag
+      # this is more of a convenience method
+      output[:name] = "#{output[:object]}[#{output[:method]}]"
+      return output
     end
 
     # @return [String] Name of partial to render for the show page

@@ -12,17 +12,18 @@ module DynamicFieldsets
       6
     end
 
-    def html_attributes_hash
+    def html_attribute_hash
       output = {
         :cols => default_cols,
         :rows => default_rows,
       }
-      output.merge(super)
+      output.merge!(super)
       return output
     end
 
     def form_partial_locals(args)
       output = super
+      output[:content] = value_or_default_for_form(args[:value])
       output[:attrs][:name] = output[:name]
       return output
     end

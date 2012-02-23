@@ -19,6 +19,13 @@ The backend is automatically added to your project using the rails engine system
 = Things to do
 
 * Move the array in the DynamicFieldsets::Field.descendants to a config file somewhere
+* rewrite the show page helper to use partials, setup a default partial, and give options to change the partial
+
+= Things that are done for now
+
+* instruction
+* text field
+* text area
 
 == Contributing to dynamic_fieldsets 
  
