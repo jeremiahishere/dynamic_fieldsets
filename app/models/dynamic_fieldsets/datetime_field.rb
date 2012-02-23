@@ -6,7 +6,7 @@ module DynamicFieldsets
   # The value of the input is stored as a string so costly Time.parse calls are used to parse the string
   # This may have to be changed in the future
   class DatetimeField < Field
-    acts_as_field_with_one_answer
+    acts_as_field_with_single_answer
 
     # Returns the current value if set, then the default value if set, then the current time as a Time object
     #

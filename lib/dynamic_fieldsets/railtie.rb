@@ -12,8 +12,8 @@ module DynamicFieldsets
       ActiveRecord::Base.send :include, DynamicFieldsets::FieldWithFieldOptions
       require 'dynamic_fieldsets/field_with_multiple_answers'
       ActiveRecord::Base.send :include, DynamicFieldsets::FieldWithMultipleAnswers
-      require 'dynamic_fieldsets/field_with_one_answer'
-      ActiveRecord::Base.send :include, DynamicFieldsets::FieldWithOneAnswer
+      require 'dynamic_fieldsets/field_with_single_answer'
+      ActiveRecord::Base.send :include, DynamicFieldsets::FieldWithSingleAnswer
     end
   end
 end

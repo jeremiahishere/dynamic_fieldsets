@@ -90,9 +90,11 @@ module DynamicFieldsets
       return output
     end
 
+    # This method must be overriden
+    #
     # @return [String] Name of partial to render for the show page
     def show_partial
-      "/dynamic_fieldsets/show_partials/" + self.class.gsub("DynamicFieldsets::", "").underscore
+      "/dynamic_fieldsets/show_partials/show_incomplete"
     end
 
     # @return [Hash] A hash of html attribute key: value pairs

@@ -6,6 +6,9 @@ module DynamicFieldsets
   class InstructionField < Field
     # no answers possible, need an include for this?
 
+    def show_partial
+      "/dynamic_fieldsets/show_partials/show_instruction"
+    end
     # @return [Boolean] False because this field does not have the standard question: answer styling
     def use_form_header_partial?
       false

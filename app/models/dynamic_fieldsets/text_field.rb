@@ -1,7 +1,7 @@
 module DynamicFieldsets
   # Text field input
   class TextField < Field
-    acts_as_field_with_one_answer
+    acts_as_field_with_single_answer
 
     # @return [Hash] data for the form partial
     def form_partial_locals(args)

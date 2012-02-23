@@ -1,0 +1,13 @@
+<div class='dynamic_fieldsets field'>
+  <span class='label'><%= label %></label>
+  <% if values.nil? || values.empty? %>
+    <em class='empty'>No answer given</em>
+  <% else %>
+    <ul>
+      <% values.each do |value| %>
+        <span class='value'><%= value %></span>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+

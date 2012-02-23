@@ -1,16 +1,22 @@
 module DynamicFieldsets
-  module FieldWithOneAnswer
+  module FieldWithSingleAnswer
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
-      def acts_as_field_with_one_answer(args = {})
-        include DynamicFieldsets::FieldWithOneAnswer::InstanceMethods
+      def acts_as_field_with_single_answer(args = {})
+        include DynamicFieldsets::FieldWithSingleAnswer::InstanceMethods
       end
     end
 
     module InstanceMethods
+
+      # @return [String] Default single answer partial filename
+      def show_partial
+        "/dynamic_fieldsets/show_partials/show_single_answer"
+      end
+
       # @return [String] Alias for field_defaults.first
       def default
         return self.field_defaults.first

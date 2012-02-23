@@ -1,0 +1,8 @@
+<div class='dynamic_fieldsets field'>
+  <span class='label'><%= label %></label>
+  <% if value.nil? || value.empty? %>
+    <em class='empty'>No answer given</em>
+  <% else %>
+    <span class='value'><%= value %></span>
+  <% end %>
+</div>

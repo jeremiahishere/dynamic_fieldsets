@@ -4,7 +4,7 @@ module DynamicFieldsets
   # Note that this one is a little different than normal because the textarea does not store it's data
   # in a value attribute
   class TextareaField < Field
-    acts_as_field_with_one_answer
+    acts_as_field_with_single_answer
 
     # @return [Integer] Default number of columns for the textarea
     def default_cols

@@ -12,6 +12,11 @@ module DynamicFieldsets
 
     module InstanceMethods
 
+      # @return [String] Default multiple answer partial filename
+      def show_partial
+        "/dynamic_fieldsets/show_partials/show_multiple_answer"
+      end
+
       # @param [Array] values A list of values for the field already saved to the database
       # @return [Array] An array of field option values saved in the db, or the defaults if none are in the db
       def values_or_defaults_for_form(values)

@@ -2,7 +2,7 @@ module DynamicFieldsets
   # Radio buttons input
   class RadioField < Field
     acts_as_field_with_field_options
-    acts_as_field_with_one_answer
+    acts_as_field_with_single_answer
 
     # Note that the radio buttons need special data per field option
     # output[:options] contains information for each of the field options for the radio field
