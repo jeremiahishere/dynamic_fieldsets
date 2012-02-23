@@ -1,5 +1,7 @@
-<div id='<% id %>'>
-  <% field.options.each do |option| %>
-    <% check_box_tag(name, option.id, checked.include?(option.id), attrs[output.id]) %>  
+<div id='<%= id %>' name='<%= name %>'>
+  <% options.each do |option| %>
+    <%= check_box_tag(option[:name], option[:value], option[:checked], option[:html_attributes]) %>  
+    <%= option[:label] %>
+    <br />
   <% end %>
 </div>

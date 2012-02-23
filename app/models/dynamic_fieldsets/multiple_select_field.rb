@@ -17,6 +17,21 @@ module DynamicFieldsets
         :collection => self.options
       })
     end
+
+    # this returns field option ids based on the field default values
+    # due to funness with field options
+    #
+    # there is a good chance this is only needed due to a bug in multiple select's save default method
+    def collect_default_values
+      output = []
+      field_defaults.each do |default|
+        # find a field option with the same name as the default
+        # add it's id to the output
+        output << field_options.select { |option| option.name == default.value }.first.id
+      end
+      return output
+    end
+      
   end
 end
 

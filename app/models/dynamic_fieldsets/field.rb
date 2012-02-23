@@ -66,6 +66,7 @@ module DynamicFieldsets
       # name for use in helpers like select_tag
       # this is more of a convenience method
       output[:name] = "#{output[:object]}[#{output[:method]}]"
+      output[:id] = "#{output[:object]}_#{output[:method]}"
       return output
     end
 
