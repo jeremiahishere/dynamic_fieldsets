@@ -1,8 +1,16 @@
 module DynamicFieldsets
+  # Creates checkbox tags on a form
+  #
+  # Includes support for predefined field options and multiple selected answers
   class CheckboxField < Field
     acts_as_field_with_field_options
     acts_as_field_with_multiple_answers
 
+    # Note that the checkbox needs individual data for each of the included options
+    # This means that some things, such as the name are duplicated for each field option
+    # 
+    #
+    # @return [Hash] Data needed for the checkbox form partial
     def form_partial_locals(args)
       output = super
       output[:options] = []

@@ -1,4 +1,9 @@
 module DynamicFieldsets
+  # A select field that handles multiple selections
+  #
+  # Even though it just uses a select tag helper with multiple: true, the backend is quite different
+  # from the select field.  It uses the multiple_answers mixin and all of the value and default
+  # methods return arrays instead of strings.
   class MultipleSelectField < Field
     acts_as_field_with_field_options
     acts_as_field_with_multiple_answers
@@ -22,6 +27,7 @@ module DynamicFieldsets
     # due to funness with field options
     #
     # there is a good chance this is only needed due to a bug in multiple select's save default method
+    # @return [Array] An array of field option ids that correspond to the field defaults
     def collect_default_values
       output = []
       field_defaults.each do |default|
@@ -31,7 +37,6 @@ module DynamicFieldsets
       end
       return output
     end
-      
   end
 end
 

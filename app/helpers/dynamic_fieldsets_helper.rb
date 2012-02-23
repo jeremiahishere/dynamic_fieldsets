@@ -64,8 +64,8 @@ module DynamicFieldsetsHelper
     classes += ( field.required ? 'required' : 'optional' )
     
     field_markup = []
-    if field.use_default_header_and_footer_partials?
-      field_markup.push render(:partial => "/dynamic_fieldsets/form_partials/input_header", :locals => {
+    if field.use_form_header_partial?
+      field_markup.push render(:partial => field.form_header_partial, :locals => {
           :classes => classes,
           :field => field,
           :fieldset_child => fieldset_child
@@ -77,17 +77,14 @@ module DynamicFieldsetsHelper
     attributes = {
       :fsa => fsa,
       :fieldset_child => fieldset_child,
+      :values => values,
+      :value => values
     }
-    if values.is_a?(Array)
-      attributes[:values] = values
-    else
-      attributes[:value] = values
-    end
 
     field_markup.push render(:partial => field.form_partial, :locals => field.form_partial_locals(attributes))
     
-    if field.use_default_header_and_footer_partials?
-      field_markup.push render(:partial => "/dynamic_fieldsets/form_partials/input_footer")
+    if field.use_form_footer_partial?
+      field_markup.push render(:partial => field.form_footer_partial)
     end
 
     return field_markup

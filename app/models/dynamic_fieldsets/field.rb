@@ -53,6 +53,26 @@ module DynamicFieldsets
       "/dynamic_fieldsets/form_partials/" + self.class.to_s.gsub("DynamicFieldsets::", "").underscore
     end
 
+    # @return [String] Name of the input header for the form
+    def form_header_partial
+      "/dynamic_fieldsets/form_partials/input_header"
+    end
+
+    # @return [Boolean] By default, use the header partial
+    def use_form_header_partial?
+      true
+    end
+
+    # @return [String] Name of the input footer for the form
+    def form_footer_partial
+      "/dynamic_fieldsets/form_partials/input_footer"
+    end
+
+    # @return [Boolean] By default, use the footer partial
+    def use_form_footer_partial?
+      true
+    end
+
     # @return [Hash] Data needed for the form partial
     def form_partial_locals(args)
       output = {
@@ -75,11 +95,6 @@ module DynamicFieldsets
       "/dynamic_fieldsets/show_partials/" + self.class.gsub("DynamicFieldsets::", "").underscore
     end
 
-    # @return [Boolean] Whether to use the included header and footer partials or nothing, leaving you on your with form html
-    def use_default_header_and_footer_partials?
-      return true
-    end
-
     # @return [Hash] A hash of html attribute key: value pairs
     def html_attribute_hash
       attrs = {}
@@ -92,6 +107,10 @@ module DynamicFieldsets
       self.fieldset_children.count { |child| !child.fieldset_id.nil? || !child.field_records.empty? } > 0
     end
 
+    # Fields such as selects, checkboxes, and radios use predefined field options for their values
+    # By default, a field does not use field options
+    #
+    # @return [Boolean] Whether the field uses field options, defaults to false
     def uses_field_options?
       false
     end

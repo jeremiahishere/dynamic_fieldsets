@@ -1,4 +1,5 @@
 module DynamicFieldsets
+  # Select input with one selection possible
   class SelectField < Field
     acts_as_field_with_field_options
     acts_as_field_with_one_answer
