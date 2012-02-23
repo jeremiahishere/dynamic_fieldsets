@@ -5,18 +5,17 @@ module DynamicFieldsets
 
     # not sure that this actually works
     def form_partial_locals(args)
-      output = {}
-      field.options.each do |option|
-        output[option.id] = {}
-        output[option.id][:id] = "field-#{self.id}-#{option.name.parameterize}"
-        output[option.id][:checked] = value_or_default_for_form(args[:value].to_i.eql?(option.id))
-        output[option.id].merge!(html_attribute_hash)
+      output = super
+      output[:options] = []
+      field_options.each do |option|
+        output[:options] << {
+          :name => "fsa-#{args[:fsa].id}[field-#{args[:fieldset_child].id}][]",
+          :value => option.id.to_s,
+          :checked => value_or_default_for_form(args[:values]).eql?(option.id.to_s),
+          :html_attributes => html_attribute_hash,
+          :label => option.name,
+        }
       end
-
-      output.merge!(super)
-      output.merge!({
-        :field => self
-      })
       return output
     end
   end

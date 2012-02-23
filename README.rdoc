@@ -36,12 +36,12 @@ The backend is automatically added to your project using the rails engine system
 * select field
 * multiple_select
 * checkbox
+* radio
 
 = Fields that are not done
 
 * date
 * datetime
-* radio
 
 == Contributing to dynamic_fieldsets 
  

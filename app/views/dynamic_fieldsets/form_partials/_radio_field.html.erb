@@ -1,7 +1,8 @@
 <div id='<% name %>'>
-  <% field.options.each do |option| %>
-    <label for='<% attrs[output.id][:id] %>'>
-      <% radio_button("fsa-#{fsa.id}", "field-#{fieldset_child.id}", option.id, attrs[output.id]) %>
+  <% options.each do |option| %>
+    <label for='<% option[:name] %>'>
+      <%= radio_button_tag(option[:name], option[:value], option[:checked], option[:html_attributes]) %>  
+      <%= option[:label] %>
     </label>
   <% end %>
 </div>
