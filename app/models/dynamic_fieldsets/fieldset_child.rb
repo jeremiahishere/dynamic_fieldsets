@@ -145,5 +145,21 @@ module DynamicFieldsets
         return root_fieldset(parent_as_a_child.first.fieldset)
       end
     end
+
+    # returns all the field record values for a single fieldset child
+    #
+    # @param [DynamicFieldsets::FieldsetAssociator] The parent fsa
+    # @return [Hash] A hash of field record values using the fieldset child id as they key
+    def get_value_using_fsa(fsa)
+      output = {}
+      if child.class == DynamicFieldsets::Fieldset
+        return child.get_child_values_using_fsa(fsa)
+      elsif child.class.superclass == DynamicFieldsets::Field
+        return child.get_values_using_fsa_and_fsc(fsa, self) 
+      else
+        # I am not sure if we need to use child.superclass equals Field due to the sti
+        puts "there is a problem with fieldset_child.get_value_using_fsa possibly due to the single table inheritance."
+      end
+    end
   end
 end

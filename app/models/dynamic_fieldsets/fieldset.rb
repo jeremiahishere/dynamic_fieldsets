@@ -60,5 +60,20 @@ module DynamicFieldsets
     def has_children?
       return !self.fieldset_children.empty?
     end
+
+    # returns field record values for every field in the fsa
+    #
+    # note that this adds a hierarchy to the values
+    # not sure if this will require a rewrite somewhere else
+    #
+    # @param [DynamicFieldsets::FieldsetAssociator] The parent fsa
+    # @return [Hash] A hash of field record values using the fieldset child id as they key
+    def get_values_using_fsa(fsa)
+      output = {}
+      fieldset_children.each do |child|
+        output[child.id] = child.get_value_using_fsa(fsa)
+      end      
+      return output
+    end
   end
 end

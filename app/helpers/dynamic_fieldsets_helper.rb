@@ -33,7 +33,10 @@ module DynamicFieldsetsHelper
       lines.push render(:partial => field.show_header_partial )
     end
 
-    args = {}
+    args = {
+      :value => values,
+      :values => values
+    }
     lines.push render(:partial => field.show_partial, :locals => field.show_partial_locals(args) )
 
     if field.use_show_footer_partial?
@@ -133,25 +136,6 @@ module DynamicFieldsetsHelper
     rendered_dynamic_fieldset += "</div>"
 
     return rendered_dynamic_fieldset.html_safe
-  end
-  
-  # Gives precedence to saved values; returns default values if empty
-  # @param [Field] field Field to populate
-  # @param [String] value Possibly saved values
-  # @return The saved or default value(s)
-  # I know this is messy; this is what happens when we are past deadline.
-  def populate(field, value)
-    if value.nil? || (value.is_a?(Array) && value.empty?)
-      if field.field_defaults.length == 0
-        return ""
-      elsif field.field_defaults.length > 1
-        return field.field_defaults.collect{ |d| d[:value] }
-      else
-        return field.field_defaults.first.value
-      end
-    else
-      return value
-    end
   end
 
   # sti version

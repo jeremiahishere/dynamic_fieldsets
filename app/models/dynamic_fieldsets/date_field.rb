@@ -16,7 +16,8 @@ module DynamicFieldsets
       if default_date.empty?
         return Date.today
       else
-        return Date.parse(default_date)
+        # not sure why Date.parse doesn't work here
+        return Time.parse(default_date)
       end
     end
 

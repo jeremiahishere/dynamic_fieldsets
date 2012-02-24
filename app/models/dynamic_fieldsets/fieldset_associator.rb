@@ -41,43 +41,13 @@ module DynamicFieldsets
     end
 
     # Returns a hash of field record values
-    # Fun nonintuitive stuff here
     #
-    # The hash keys are field ids
-    # The hash values are field_record values or field_records ids depending on the field type
-    # The hash values are usually strings but sometimes arrays
-    # If a field that expects a single value has multiple values, it will
-    # choose one to use arbitrarily
-    #
-    # multiple_select: [option_ids,]
-    # checkbox: [option_ids,]
-    # select: option_id
-    # radio: option_id
-    # textfield: "value"
-    # textarea: "value"
-    # date: "value"
-    # datetime: "value"
-    # instruction: "value"
+    # This version returns a tree structure for nested fieldsets
+    # Could lead to all sorts of problems
     #
     # @return [Hash] A hash of field record values associated with field ids
     def field_values
-      output = {}
-      self.field_records.each do |record|
-        type = record.fieldset_child.child.type
-        child_id = record.fieldset_child.id
-        if type == "checkbox" || type == "multiple_select"
-          output[child_id] = [] unless output[child_id].is_a? Array
-          # note record.id array
-          output[child_id].push record.value.to_i
-        elsif type == "radio" || type == "select"
-          # note record.id
-          output[child_id] = record.value.to_i
-        else
-          # note record.value
-          output[child_id] = record.value
-        end
-      end
-      return output
+      fieldset.get_values_using_fsa(self)
     end
 
     # Record whose field matches the name and associator matches the current associator

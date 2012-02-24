@@ -12,6 +12,15 @@ module DynamicFieldsets
 
     module InstanceMethods
 
+      # Gets the first field record matching the parameters
+      #
+      # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator
+      # @param [DynamicFieldsets::FieldsetChild] fsc The fieldset child
+      # @return [String] The first field record
+      def get_values_using_fsa_and_fsc(fsa, fsc)
+        collect_field_records_by_fsa_and_fsc(fsa, fsc).first
+      end
+
       # @return [String] Default single answer partial filename
       def show_partial
         "/dynamic_fieldsets/show_partials/show_single_answer"

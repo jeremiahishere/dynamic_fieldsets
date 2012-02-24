@@ -128,13 +128,17 @@ module DynamicFieldsets
       false
     end
 
+    # Note that this method is really weird
+    # You would think that the value displayed should be figured out here
+    # but instead, it is figured out first, then passed in, in the arguments hash
+    #
     # @return [Hash] Information needed for the show partial, don't know what I need yet
     def show_partial_locals(args)
       # these should be incredibly temporary
       {
-        :value => "value",
-        :values => ["values"],
-        :label => "label"
+        :value => args[:value],
+        :values => args[:values],
+        :label => self.label,
       }
     end
 
@@ -152,12 +156,31 @@ module DynamicFieldsets
     end
 
     # this collects defaults so that we can use them for fields
-    # note that this should be overriden when the field uses field options
+    # note that this should be overridden when the field uses field options
     # in that case, it should return field option ids instead of field option names
     # 
     # I'm sorry
     def collect_default_values
       field_defaults.collect { |d| d[:value] }
+    end
+
+    # This method should be overridden by the field subclasses
+    #
+    # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator
+    # @param [DynamicFieldsets::FieldsetChild] fsc The fieldset child
+    # @return [Nil] An empty result
+    def get_values_using_fsa_and_fsc(fsa, fsc)
+      return nil
+    end
+
+    # Collects the field records for the field so they can be used on the front end
+    #
+    # This works for fields that do not use field options
+    #
+    # @return [Array] An array of field record values
+    def collect_field_records_by_fsa_and_fsc(fsa, fsc)
+      # I think this needs to be returning some sort of hash
+      DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fsc.id).collect(&:value)
     end
   end
 end
