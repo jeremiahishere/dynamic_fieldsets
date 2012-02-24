@@ -161,6 +161,9 @@ module DynamicFieldsets
       end
 
       # save all of the fields and fieldsets in the values hash for this fieldset associator
+      #
+      # @param [String] The key that includes the fieldset associator's id
+      # @param [Hash] fsa_values An array of input information from the form
       def save_fsa(key, fsa_values)
         key_id = key.gsub(/^#{DynamicFieldsets.config.form_fieldset_associator_prefix}/, "")
 
@@ -172,54 +175,7 @@ module DynamicFieldsets
           :fieldset_model_name => fsa_values[:fieldset_model_name] )
         else fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
         end
-          
-        fsa_values.keys.each do |fieldset_child_key| # EACH FIELD
-          if fieldset_child_key.start_with?(DynamicFieldsets.config.form_field_prefix)
-            fieldset_child_id = fieldset_child_key.gsub(/^#{DynamicFieldsets.config.form_field_prefix}/, "")
-            
-            this_value = fsa_values[fieldset_child_key]
-            if this_value.is_a? Array
-            then # multiple values
-              save_multiple_records(fsa, fieldset_child_id, this_value)
-            else # single value
-              save_single_record(fsa, fieldset_child_id, this_value)
-            end
-          end
-        end
-      end
-
-      # save a field with multiple field records
-      def save_multiple_records(fsa, fieldset_child_id, this_value)
-        field_records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child_id)
-        
-        this_value.each do |value|
-          if field_records.select{ |record| record.value.eql? value }.empty? # record does not exist?
-            #ADD
-            DynamicFieldsets::FieldRecord.create( :fieldset_associator_id => fsa.id,
-                                                  :fieldset_child_id => fieldset_child_id,
-                                                  :value => value)
-          end
-        end
-        field_records.each do |record|
-          if !this_value.include? record.value then
-            #DELETE
-            record.destroy
-          else
-            #KEEP
-          end
-        end
-      end
-
-      # save a field with a single field record
-      def save_single_record(fsa, fieldset_child_id, this_value)
-        # retrieve record
-        field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child_id).first
-        if field_record.nil? # create record
-          field_record = DynamicFieldsets::FieldRecord.create(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child_id, :value => this_value)
-        else # update record
-          field_record.value = this_value
-          field_record.save
-        end
+        fsa.update_field_records_with_form_information(fsa_values)
       end
 
       # Matches methods that match named_fieldset and named_fieldset_fieldset

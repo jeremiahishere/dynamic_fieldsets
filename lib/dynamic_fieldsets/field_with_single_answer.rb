@@ -12,6 +12,29 @@ module DynamicFieldsets
 
     module InstanceMethods
 
+      # Updates the field records for the field based on the given values
+      #
+      # Saves or updates a single field record
+      #
+      # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator the value is attached to
+      # @param [DynamicFieldsets::FieldsetChild] fieldset_child The fieldset child for the value
+      # @param [Array or String] value The new values inputted by the user from the form
+      def update_field_records(fsa, fieldset_child, value)
+        # retrieve record
+        field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child.id).first
+        if field_record.nil? 
+          # create record
+          DynamicFieldsets::FieldRecord.create!(
+            :fieldset_associator_id => fsa.id, 
+            :fieldset_child_id => fieldset_child.id, 
+            :value => this_value)
+        else 
+          # update record
+          field_record.value = this_value
+          field_record.save
+        end
+      end
+
       # Gets the first field record matching the parameters
       #
       # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator

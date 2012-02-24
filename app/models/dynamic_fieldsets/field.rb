@@ -181,5 +181,16 @@ module DynamicFieldsets
       # I think this needs to be returning some sort of hash
       DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fsc.id).collect(&:value)
     end
+
+    # Updates the field records for the field based on the given values
+    #
+    # This must be overridden if it is used
+    #
+    # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator the value is attached to
+    # @param [DynamicFieldsets::FieldsetChild] fieldset_child The fieldset child for the value
+    # @param [Array or String] value The new values inputted by the user from the form
+    def update_field_records(fsa, fieldset_child, value)
+      throw "Field.update_field_options must be overridden to save data from the form."
+    end
   end
 end

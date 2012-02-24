@@ -50,6 +50,20 @@ module DynamicFieldsets
       fieldset.get_values_using_fsa(self)
     end
 
+    # Updates field options based on information from the form
+    #
+    # The form values should only be values for the current fsa
+    #
+    # @param [Hash] form_values Information from the form
+    def update_field_records_with_form_information(form_values)
+      form_values.each_pair do |fieldset_child_key, value|
+        if fieldset_child_key.start_with?(DynamicFieldsets.config.form_field_prefix)
+          fieldset_child = fieldset_child_key.gsub(/^#{DynamicFieldsets.config.form_field_prefix}/, "")
+          fieldset_child.field.update_field_records(self, fieldset_child, value)
+        end
+      end
+    end
+
     # Record whose field matches the name and associator matches the current associator
     #
     # This will be used to get answers to questions with hard coded names

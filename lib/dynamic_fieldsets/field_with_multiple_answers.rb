@@ -11,6 +11,33 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+      # Updates the field records for the field based on the given values
+      #
+      # Manages multiple records
+      #
+      # @param [DynamicFieldsets::FieldsetAssociator] fsa The associator the value is attached to
+      # @param [DynamicFieldsets::FieldsetChild] fieldset_child The fieldset child for the value
+      # @param [Array or String] value The new values inputted by the user from the form
+      def update_field_records(fsa, fieldset_child, values)
+        field_records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child.id)
+        
+        # create new records if the values are not in the db
+        values.each do |value|
+          if field_records.select{ |record| record.value.eql? value }.empty?
+            DynamicFieldsets::FieldRecord.create!( :fieldset_associator_id => fsa.id,
+              :fieldset_child_id => fieldset_child.id,
+              :value => value)
+          end
+        end
+      
+        # remove records in the db that are not in the input values
+        # note that if a record is updated, it is treated as a creation and deletion instead of a single update
+        field_records.each do |record|
+          if !this_value.include? record.value then
+            record.destroy
+          end
+        end
+      end
 
       # Gets the first field record matching the parameters
       #
