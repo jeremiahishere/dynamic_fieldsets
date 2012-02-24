@@ -19,12 +19,11 @@ The backend is automatically added to your project using the rails engine system
 = Things to do
 
 * Move the array in the DynamicFieldsets::Field.descendants to a config file somewhere
-* rewrite the show page helper to use partials, setup a default partial, and give options to change the partial
 * move the date parser from the helper to the date/datetime field models
-* make sure field options types on the show page are ok
 * collect default values needs a major change because I am not sure how field defaults are saved for different classes
   * it is possible the only weird one is multiple select
 * need to convert the values for field option types on the show page from ids to names
+  * make sure field options types on the show page are ok
 
 == Contributing to dynamic_fieldsets 
  
