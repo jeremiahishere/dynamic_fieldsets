@@ -15,7 +15,7 @@ module DynamicFieldsets
 
       desc <<DESC
 Description:
-  Copies over migrations and config for the multipart form system.
+  Copies over migrations and config for the dynamic fieldsets system.
 DESC
 
       # Implement the required interface for Rails::Generators::Migration.
@@ -30,9 +30,9 @@ DESC
       end
 
       # Creates the config file
-      # Commented out until the config actually has information
+      # Mostly commented out until the config actually has information
       def copy_config_file
-        #copy_file "config.rb", "config/initializers/acts_as_multipart_form.rb"
+        copy_file "config.rb", "config/initializers/dynamic_fieldsets.rb"
       end
 
       # Creates the migration

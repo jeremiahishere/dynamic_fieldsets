@@ -212,7 +212,7 @@ allInputs.change( function() {
 			var action = json_holder[fieldset_child_id][group]['action'];
 			var group_fsc_id = json_holder[fieldset_child_id][group]['fieldset_child_id'];
 			var group_field_id = json_holder[fieldset_child_id][group]['field_id'];
-			var group_field = 'field-' + group_field_id + '-child-' + group_fsc_id;
+			var group_field = '<%= DynamicFieldsets.config.form_field_prefix %>' + group_field_id + '-child-' + group_fsc_id;
 
 			// As each dependency clause is AND'd together, we'll assume it'll be
 			// true until short circuited into being false.`

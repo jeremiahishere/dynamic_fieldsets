@@ -18,7 +18,6 @@ The backend is automatically added to your project using the rails engine system
 
 = Things to do
 
-* Move the array in the DynamicFieldsets::Field.descendants to a config file somewhere
 * move the date parser from the helper to the date/datetime field models
 * collect default values needs a major change because I am not sure how field defaults are saved for different classes
   * it is possible the only weird one is multiple select

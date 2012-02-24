@@ -1,6 +1,5 @@
 require 'rails'
 
-# no configuration yet
 require 'dynamic_fieldsets/config'
 
 module DynamicFieldsets

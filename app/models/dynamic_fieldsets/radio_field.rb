@@ -13,7 +13,7 @@ module DynamicFieldsets
       output[:options] = []
       field_options.each do |option|
         output[:options] << {
-          :name => "fsa-#{args[:fsa].id}[field-#{args[:fieldset_child].id}][]",
+          :name => "#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{args[:fsa].id}[#{DynamicFieldsets.config.form_field_prefix}#{args[:fieldset_child].id}][]",
           :value => option.id.to_s,
           :checked => value_or_default_for_form(args[:values]).eql?(option.id.to_s),
           :html_attributes => html_attribute_hash,

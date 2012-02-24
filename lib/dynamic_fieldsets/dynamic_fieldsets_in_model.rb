@@ -59,7 +59,7 @@ module DynamicFieldsets
         # for each fsa
         self.dynamic_fieldsets.keys.each do |key|
           fsa = self.fieldset_associator(key)
-          fsa_tag_id = "fsa-" + fsa.id.to_s
+          fsa_tag_id = DynamicFieldsets.config.form_fieldset_associator_prefix + fsa.id.to_s
 
           # check if the values are set, if it matches the current fsa, and if it matches the current fieldset
           if !self.dynamic_fieldset_values.nil? && self.dynamic_fieldset_values.has_key?(fsa_tag_id) && self.dynamic_fieldset_values[fsa_tag_id][:fieldset_model_name] == key
@@ -81,8 +81,8 @@ module DynamicFieldsets
           end
         elsif child.is_a?(DynamicFieldsets::Field)
           # if a child, check if the params value is set, check if it is required, check if it satisfies condition
-          fsa_tag_id = "fsa-" + fsa_id.to_s
-          field_tag_id = "field-" + child.id.to_s
+          fsa_tag_id = DynamicFieldsets.config.form_fieldset_associator_prefix + fsa_id.to_s
+          field_tag_id = DynamicFieldsets.config.form_field_prefix + child.id.to_s
           if !self.dynamic_fieldset_values[fsa_tag_id].has_key?(field_tag_id)
             self.errors.add(:base, child.label + " is missing from the form data")
           else
@@ -103,7 +103,7 @@ module DynamicFieldsets
       #
       # @param [Hash] params The parameters from the controller that include fsa tags
       def set_fieldset_values( params )
-        values = params.select{ |key| key.match(/^fsa-/) }
+        values = params.select{ |key| key.match(/^#{DynamicFieldsets.config.form_fieldset_associator_prefix}/) }
         values.keys.each do |key|
           set_date_to_mysql( values[key] )
         end
@@ -152,7 +152,7 @@ module DynamicFieldsets
         values = self.dynamic_fieldset_values
         if !values.nil?
           values.keys.each do |key|
-            if key.start_with?("fsa-")
+            if key.start_with?(DynamicFieldsets.config.form_fieldset_associator_prefix)
               save_fsa(key, values[key])
             end
           end
@@ -162,7 +162,7 @@ module DynamicFieldsets
 
       # save all of the fields and fieldsets in the values hash for this fieldset associator
       def save_fsa(key, fsa_values)
-        key_id = key.gsub(/^fsa-/, "")
+        key_id = key.gsub(/^#{DynamicFieldsets.config.form_fieldset_associator_prefix}/, "")
 
         if key_id.eql? ""
         then fsa = DynamicFieldsets::FieldsetAssociator.create(
@@ -174,8 +174,8 @@ module DynamicFieldsets
         end
           
         fsa_values.keys.each do |fieldset_child_key| # EACH FIELD
-          if fieldset_child_key.start_with?("field-")
-            fieldset_child_id = fieldset_child_key.gsub(/^field-/, "")
+          if fieldset_child_key.start_with?(DynamicFieldsets.config.form_field_prefix)
+            fieldset_child_id = fieldset_child_key.gsub(/^#{DynamicFieldsets.config.form_field_prefix}/, "")
             
             this_value = fsa_values[fieldset_child_key]
             if this_value.is_a? Array

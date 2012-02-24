@@ -16,7 +16,7 @@ module DynamicFieldsets
       output[:options] = []
       field_options.each do |option|
         output[:options] << {
-          :name => "fsa-#{args[:fsa].id}[field-#{args[:fieldset_child].id}][]",
+          :name => "#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{args[:fsa].id}[#{DynamicFieldsets.config.form_field_prefix}#{args[:fieldset_child].id}][]",
           :value => option.id.to_s,
           :checked => values_or_defaults_for_form(args[:values]).include?(option.id.to_s),
           :label => option.name,
