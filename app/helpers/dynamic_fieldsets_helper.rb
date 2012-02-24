@@ -54,7 +54,8 @@ module DynamicFieldsetsHelper
   def field_form_renderer(fsa, fieldset_child, values = [])
     puts "calling field form renderer"
     field = fieldset_child.child
-    classes  = "#{field.type} "
+    # maybe turn this into an instance method
+    classes  = "#{field.type.gsub("DynamicFieldsets::", "").underscore.downcase} "
     classes += ( field.required ? 'required' : 'optional' )
     
     field_markup = []

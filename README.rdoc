@@ -24,9 +24,7 @@ The backend is automatically added to your project using the rails engine system
 * make sure field options types on the show page are ok
 * collect default values needs a major change because I am not sure how field defaults are saved for different classes
   * it is possible the only weird one is multiple select
-* the ids in the form header partial are not being loaded correctly
-  * including the actual question name
-* field output on show page does not work for multiple answers
+* need to convert the values for field option types on the show page from ids to names
 
 == Contributing to dynamic_fieldsets 
  

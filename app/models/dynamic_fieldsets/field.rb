@@ -42,7 +42,7 @@ module DynamicFieldsets
     def self.descendant_collection
       descendants.collect { |d| [d.to_s.gsub("DynamicFieldsets::", "").underscore.humanize, d.to_s ] }
     end
-    
+
     # @return [Boolean] False if field_default.value is empty
     def has_defaults?
       return self.field_defaults.length > 0
