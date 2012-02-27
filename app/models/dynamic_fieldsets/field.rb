@@ -141,6 +141,11 @@ module DynamicFieldsets
       }
     end
 
+    # given a value hash for a field, return the part that needs to be shown on the show page
+    def get_value_for_show(value)
+      value[:value]
+    end
+
     # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets
     def in_use?
       self.fieldset_children.count { |child| !child.fieldset_id.nil? || !child.field_records.empty? } > 0

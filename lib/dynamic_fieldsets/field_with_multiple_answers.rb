@@ -11,6 +11,13 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+
+      def show_partial_locals(args)
+        output = super(args)
+        output[:values] = args[:values].collect { |value| get_value_for_show(value) }
+        return output
+      end
+
       # Updates the field records for the field based on the given values
       #
       # Manages multiple records
@@ -20,13 +27,12 @@ module DynamicFieldsets
       # @param [Array or String] value The new values inputted by the user from the form
       def update_field_records(fsa, fieldset_child, values)
         # make sure values is an array in case the input from the form is bad
-        throw "Form value type mismatch error: The value from the form must be Array for #{self.inspect}." unless value.is_a?(Array)
+        throw "Form value type mismatch error: The value from the form must be Array for #{self.inspect}." unless values.is_a?(Array)
         
         # create new records if the values are not in the db
         values.each do |value|
-          if fieldset_child.field_records.select{ |record| record.value.eql? value }.empty?
-            DynamicFieldsets::FieldRecord.create!( 
-              :fieldset_associator_id => fsa.id,
+          if fieldset_child.field_records.select{ |record| record.value == value }.empty?
+            DynamicFieldsets::FieldRecord.create!( :fieldset_associator_id => fsa.id,
               :fieldset_child_id => fieldset_child.id,
               :value => value)
           end
@@ -55,6 +61,10 @@ module DynamicFieldsets
         "/dynamic_fieldsets/show_partials/show_multiple_answers"
       end
 
+      # Returns a list of values for the form
+      #
+      # Only returns the :value part of the input
+      #
       # @param [Array] values A list of values for the field already saved to the database
       # @return [Array] An array of field option values saved in the db, or the defaults if none are in the db
       def values_or_defaults_for_form(values)
@@ -65,7 +75,7 @@ module DynamicFieldsets
             return collect_default_values
           end
         else
-          return values
+          return values.collect { |v| v[:value] }
         end  
       end
 

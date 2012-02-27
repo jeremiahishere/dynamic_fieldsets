@@ -14,6 +14,28 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+      
+      # Collects the field records for the field so they can be used on the front end
+      # These are only the currently saved values in the database, don't worry 
+      # about defaults here
+      #
+      # Converts the ids into field option names for :name part of the return hash
+      #
+      # @return [Array] An array of field record values
+      def collect_field_records_by_fsa_and_fsc(fsa, fsc)
+        records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fsc.id)
+        return records.collect do |r| 
+          { 
+            :value => r.value, 
+            :name => DynamicFieldsets::FieldOption.find(r.value.to_i).name
+          }
+        end
+      end
+
+      # given a value hash for a field, return the part that needs to be shown on the show page
+      def get_value_for_show(value)
+        value[:name]
+      end
 
       def uses_field_options?
         true

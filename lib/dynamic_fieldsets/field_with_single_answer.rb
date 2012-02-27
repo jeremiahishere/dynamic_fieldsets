@@ -12,6 +12,12 @@ module DynamicFieldsets
 
     module InstanceMethods
 
+      def show_partial_locals(args)
+        output = super(args)
+        output[:value] = get_value_for_show(args[:value])
+        return output
+      end
+
       # Updates the field records for the field based on the given values
       #
       # Saves or updates a single field record
@@ -57,17 +63,19 @@ module DynamicFieldsets
         return self.field_defaults.first
       end
 
+      # Returns a list of values for the form
+      #
       # @param [String] value A value for the field already saved to the database
       # @return [String] A field option saved in the db, or the default if value is blank
       def value_or_default_for_form(value)
-        if value.nil?
+        if value.nil? || value[:value].nil?
           if field_defaults.length == 0
             return ""
           else
             return collect_default_values.first
           end
         else
-          return value
+          value[:value]
         end  
       end
     end
