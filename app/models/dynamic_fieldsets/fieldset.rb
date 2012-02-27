@@ -43,6 +43,10 @@ module DynamicFieldsets
     
     # The collected descendents of a fieldset.
     # This group is sorted by order number on the fieldsetchild model 
+    # 
+    # IMPORTANT NOTE: At first glance, this looks like it should return a collection of fieldset children.  It does not.
+    # This is a relic from the original design, and there is code working around the issue in several different places.
+    #
     # @return [Array] Ordered collection of descendent fields and fieldsets.
     def children
       collected_children = []

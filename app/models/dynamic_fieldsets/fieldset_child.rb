@@ -153,7 +153,7 @@ module DynamicFieldsets
     def get_value_using_fsa(fsa)
       output = {}
       if child.class == DynamicFieldsets::Fieldset
-        return child.get_child_values_using_fsa(fsa)
+        return child.get_values_using_fsa(fsa)
       elsif child.class.superclass == DynamicFieldsets::Field
         return child.get_values_using_fsa_and_fsc(fsa, self) 
       else

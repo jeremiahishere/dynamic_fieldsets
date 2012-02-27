@@ -92,6 +92,9 @@ module DynamicFieldsetsHelper
     lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
     lines.push "<h3 class='name'>#{fieldset.name}</h3>"
     lines.push "<ol>"
+
+    # this returns field/fieldset objects rather than fieldset children
+    # that is why this code looks like it is accessing odd objects
     fieldset.children.each do |child|
       if child.is_a? DynamicFieldsets::Fieldset
         lines += fieldset_renderer( fsa, child, values, form_type )
@@ -100,6 +103,7 @@ module DynamicFieldsetsHelper
         lines += field_renderer( fsa, fieldset_child, values[fieldset_child.id], form_type )
       end
     end
+
     lines.push "</ol>"
     lines.push "</div>"
 

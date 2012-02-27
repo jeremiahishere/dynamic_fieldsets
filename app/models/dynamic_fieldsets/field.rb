@@ -173,13 +173,16 @@ module DynamicFieldsets
     end
 
     # Collects the field records for the field so they can be used on the front end
+    # These are only the currently saved values in the database, don't worry 
+    # about defaults here
     #
     # This works for fields that do not use field options
     #
     # @return [Array] An array of field record values
     def collect_field_records_by_fsa_and_fsc(fsa, fsc)
-      # I think this needs to be returning some sort of hash
-      DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fsc.id).collect(&:value)
+      # I think this needs to return some sort of hash
+      records = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fsc.id)
+      return records.collect { |r| { :value => r.value } }
     end
 
     # Updates the field records for the field based on the given values
