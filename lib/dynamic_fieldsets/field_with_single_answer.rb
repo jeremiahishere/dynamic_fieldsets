@@ -21,7 +21,8 @@ module DynamicFieldsets
       # @param [Array or String] value The new values inputted by the user from the form
       def update_field_records(fsa, fieldset_child, value)
         # make sure the value is a string in case the input from the form is bad
-        value = value.first if value.is_a?(Array)
+        throw "Form value type mismatch error: The value from the form must be String for #{self.inspect}." unless value.is_a?(String)
+
         # retrieve record
         field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child.id).first
         if field_record.nil? 

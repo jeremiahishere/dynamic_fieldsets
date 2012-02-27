@@ -23,7 +23,6 @@ The backend is automatically added to your project using the rails engine system
   * it is possible the only weird one is multiple select
 * need to convert the values for field option types on the show page from ids to names
   * make sure field options types on the show page are ok
-* ids and name for radio fields are a bit off
 
 == Contributing to dynamic_fieldsets 
  

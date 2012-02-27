@@ -20,7 +20,7 @@ module DynamicFieldsets
       # @param [Array or String] value The new values inputted by the user from the form
       def update_field_records(fsa, fieldset_child, values)
         # make sure values is an array in case the input from the form is bad
-        values = [ values ] if !values.is_a?(Array)
+        throw "Form value type mismatch error: The value from the form must be Array for #{self.inspect}." unless value.is_a?(Array)
         
         # create new records if the values are not in the db
         values.each do |value|
