@@ -100,12 +100,13 @@ module DynamicFieldsets
       end
       
       # Stores data from the controller into the dynamic_fieldset_values instance variable
+      # Also combines the date and time fields into a single field
       #
       # @param [Hash] params The parameters from the controller that include fsa tags
       def set_fieldset_values( params )
         values = params.select{ |key| key.match(/^#{DynamicFieldsets.config.form_fieldset_associator_prefix}/) }
         values.keys.each do |key|
-          set_date_to_mysql( values[key] )
+          values[key] = set_date_to_mysql( values[key] )
         end
         self.dynamic_fieldset_values = values
       end
@@ -115,6 +116,12 @@ module DynamicFieldsets
       # This method may cause bugs for servers not using UTC time because of the way rails deals with
       # time conversions.  If the query receives a string instead of a time object, time zone information
       # may be saved incorrectly. (1-25-2012)
+      #
+      # At some point this should be moved to the date_field and datetime_field models.  Right now, it needs
+      # to stay here because we are taking the values from the form and iterating over the keys.  This
+      # will not work because the date information is stored int 3-5 keys.  We need to change the form
+      # data parser to get a list of expected field and iterate over them, looking for the values in the 
+      # form post.  That is a big change that we don't have time for now. (JH 2-27-2012)
       #
       # @param [Hash] post The post parameters that include date fields like date(1i), date(2i), ...
       # @return [Hash] The modified hash containing one key-pair value in YYYY-MM-DD[ hh:mm] format.

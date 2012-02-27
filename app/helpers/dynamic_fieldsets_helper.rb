@@ -139,9 +139,6 @@ module DynamicFieldsetsHelper
     return rendered_dynamic_fieldset.html_safe
   end
 
-  # sti version
-  # this has been replaced by value_or_default_for_form
-  #  
   # Method that returns the javascript in string format to be pushed on with the rest of the
   # generated form
   #

@@ -16,13 +16,29 @@ There is a view helper you need to add to your application helper and call from 
 
 The backend is automatically added to your project using the rails engine system.  At some point, there will be a controller generator to generate them out so you can add permissions/pagination/whatever else you need on your controllers.
 
-= Things to do
+= Things to test
 
-* move the date parser from the helper to the date/datetime field models
-* collect default values needs a major change because I am not sure how field defaults are saved for different classes
-  * it is possible the only weird one is multiple select
-* need to convert the values for field option types on the show page from ids to names
-  * make sure field options types on the show page are ok
+* helper
+* model mixin
+* field option mixin
+* single answer mixin
+* multiple answer mixin
+* fsa model
+* fieldset child model
+* field model
+* field submodels:
+  * checkbox
+  * date
+  * datetime
+  * instruction
+  * multiple select
+  * radio
+  * select
+  * text
+  * textarea
+* config?
+* integration tests?
+* rewrite readme
 
 == Contributing to dynamic_fieldsets 
  
