@@ -3,7 +3,7 @@ module DynamicFieldsets
   #
   # @author Jeremiah Hemphill, Ethan Pemble
   class Field < ActiveRecord::Base
-    set_table_name "dynamic_fieldsets_fields"
+    self.table_name = "dynamic_fieldsets_fields"
 
     # Associations
     
@@ -30,6 +30,14 @@ module DynamicFieldsets
     validates_inclusion_of :enabled, :in => [true, false]
     validates_inclusion_of :required, :in => [true, false]
 
+
+    # Scopes and Static Methods
+
+    # Either calls the defaul descendants method or pulls the data from the config
+    # Deals with weird single table inheritance issues with cache classes off
+    # Causes errors only in development mode
+    #
+    # @return [Array<String>] An array of descendant class names
     def self.descendants
       if ::Rails.application.config.cache_classes
         super
@@ -38,14 +46,12 @@ module DynamicFieldsets
       end
     end
     
+    # @return [Array<String>] Humanized collection of descendants
     def self.descendant_collection
       descendants.collect { |d| [d.to_s.gsub("DynamicFieldsets::", "").underscore.humanize, d.to_s ] }
     end
-
-    # @return [Boolean] False if field_default.value is empty
-    def has_defaults?
-      return self.field_defaults.length > 0
-    end
+    
+    # Form partial Methods
 
     # @return [String] Name of partial to render for the form
     def form_partial
@@ -95,6 +101,8 @@ module DynamicFieldsets
       field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field_html_attributes.empty?
       return attrs
     end
+     
+    # Show partial Methods
 
     # This method must be overriden
     #
@@ -144,6 +152,13 @@ module DynamicFieldsets
     # given a value hash for a field, return the part that needs to be shown on the show page
     def get_value_for_show(value)
       value[:value]
+    end
+
+    # Other Methods
+
+    # @return [Boolean] False if field_default.value is empty
+    def has_defaults?
+      return self.field_defaults.length > 0
     end
 
     # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets

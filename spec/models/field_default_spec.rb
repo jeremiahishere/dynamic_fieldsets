@@ -1,17 +1,16 @@
 require 'spec_helper'
-include DynamicFieldsets
   
-describe FieldDefault do
+describe DynamicFieldsets::FieldDefault do
   include FieldDefaultHelper
 
   it "should respond to field" do
-    field_default = FieldDefault.new
+    field_default = DynamicFieldsets::FieldDefault.new
     field_default.should respond_to :field
   end
   
   describe "validations" do
     before(:each) do
-      @field_default = FieldDefault.new
+      @field_default = DynamicFieldsets::FieldDefault.new
     end
 
     it "should be valid" do
@@ -28,12 +27,12 @@ describe FieldDefault do
   # instead of testing the method directly
   describe "convert_option_name_to_id method" do
     before(:each) do
-      @field = Field.new(:type => "select")
+      @field = DynamicFieldsets::Field.new(:type => "select")
       @field.stub!(:id).and_return(1)
-      @field_option = FieldOption.new(:name => "test value")
+      @field_option = DynamicFieldsets::FieldOption.new(:name => "test value")
       @field_option.stub!(:id).and_return(2)
-      FieldOption.stub!(:find_by_name).and_return(@field_option)
-      @default = FieldDefault.new(:field => @field, :value => "test value")
+      DynamicFieldsets::FieldOption.stub!(:find_by_name).and_return(@field_option)
+      @default = DynamicFieldsets::FieldDefault.new(:field => @field, :value => "test value")
     end
 
     # removing this validation until the sti code is inplace
@@ -53,12 +52,12 @@ describe FieldDefault do
 
   describe "pretty_value method" do
     before(:each) do
-      @field = Field.new(:type => "select")
+      @field = DynamicFieldsets::Field.new(:type => "select")
       @field.stub!(:id).and_return(1)
-      @field_option = FieldOption.new(:name => "test value")
+      @field_option = DynamicFieldsets::FieldOption.new(:name => "test value")
       @field_option.stub!(:id).and_return(2)
-      FieldOption.stub!(:find_by_name).and_return(@field_option)
-      @default = FieldDefault.new(:field => @field, :value => "test value")
+      DynamicFieldsets::FieldOption.stub!(:find_by_name).and_return(@field_option)
+      @default = DynamicFieldsets::FieldDefault.new(:field => @field, :value => "test value")
     end
 
     # removing this validation until the sti code is inplace

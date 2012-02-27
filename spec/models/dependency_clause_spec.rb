@@ -1,18 +1,17 @@
 require 'spec_helper'
-include DynamicFieldsets
 
-describe DependencyClause do
+describe DynamicFieldsets::DependencyClause do
   it "should respond to dependency_group" do
-    DependencyClause.new.should respond_to :dependency_group
+    DynamicFieldsets::DependencyClause.new.should respond_to :dependency_group
   end
   
   it "should respond to dependencies" do
-    DependencyClause.new.should respond_to :dependencies
+    DynamicFieldsets::DependencyClause.new.should respond_to :dependencies
   end
 
   describe "validations" do
     before(:each) do
-      @clause = DependencyClause.new
+      @clause = DynamicFieldsets::DependencyClause.new
     end
 
     it "should be valid" do
@@ -27,9 +26,9 @@ describe DependencyClause do
 
   describe "evaluate" do
     before(:each) do
-      @clause = DependencyClause.new
-      @dependency1 = Dependency.new
-      @dependency2 = Dependency.new
+      @clause = DynamicFieldsets::DependencyClause.new
+      @dependency1 = DynamicFieldsets::Dependency.new
+      @dependency2 = DynamicFieldsets::Dependency.new
       @clause.stub!(:dependencies).and_return([@dependency1, @dependency2])
       @evaluate_args = {}
     end

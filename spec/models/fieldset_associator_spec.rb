@@ -1,20 +1,19 @@
 require 'spec_helper'
-include DynamicFieldsets
 
-describe FieldsetAssociator do
+describe DynamicFieldsets::FieldsetAssociator do
   include FieldsetAssociatorHelper
   
   it "should respond to fieldset" do
-    FieldsetAssociator.new.should respond_to :fieldset
+    DynamicFieldsets::FieldsetAssociator.new.should respond_to :fieldset
   end
 
   it "should respond to field_records" do
-    FieldsetAssociator.new.should respond_to :field_records
+    DynamicFieldsets::FieldsetAssociator.new.should respond_to :field_records
   end
 
   describe "validations" do
     before(:each) do
-      @fsa = FieldsetAssociator.new
+      @fsa = DynamicFieldsets::FieldsetAssociator.new
     end
 
     it "should be valid" do
@@ -41,46 +40,47 @@ describe FieldsetAssociator do
     it "should error require a unique field model, field model name pair" do
       @fsa.attributes = valid_attributes
       @fsa.save
-      fsa2 = FieldsetAssociator.new
+      fsa2 = DynamicFieldsets::FieldsetAssociator.new
       fsa2.should have(1).error_on(:fieldset_model_name)
     end
   end
 
   describe "find_by_fieldset_model_parameters" do
     before(:each) do
-      @fieldset = mock_model(Fieldset)
+      @fieldset = mock_model(DynamicFieldsets::Fieldset)
       @fieldset.stub!(:nkey).and_return(":hire_form")
       @fieldset.stub!(:id).and_return(1)
-      @fsa = FieldsetAssociator.create(valid_attributes)
+      @fsa = DynamicFieldsets::FieldsetAssociator.create(valid_attributes)
 
       @fieldset_model_attributes = valid_attributes
       @fieldset_model_attributes[:fieldset] = :hire_form
     end
   
     it "should respond to find_by_fieldset_model_parameters" do
-      FieldsetAssociator.should respond_to :find_by_fieldset_model_parameters
+      DynamicFieldsets::FieldsetAssociator.should respond_to :find_by_fieldset_model_parameters
     end
 
-    it "should call Fieldset find_by_nkey" do
-      Fieldset.should_receive(:find_by_nkey).and_return(@fieldset)
-      FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes)
+    it "should call DynamicFieldsets::Fieldset find_by_nkey" do
+      DynamicFieldsets::Fieldset.should_receive(:find_by_nkey).and_return(@fieldset)
+      DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes)
     end
 
     it "should throw an error if the fieldset does not exist" do
-      Fieldset.stub!(:find_by_nkey).and_return(nil)
-      lambda { FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes) }.should raise_error
+      DynamicFieldsets::Fieldset.stub!(:find_by_nkey).and_return(nil)
+      lambda { DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes) }.should raise_error
     end
 
     it "should return the correct fieldset associator" do
-      Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
+      DynamicFieldsets::Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
       # this is a fun hack because of all the fsas being made during tests
-      FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
+      DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
     end
   end
 
   describe "field_values method" do
     before(:each) do
-      @fsa = FieldsetAssociator.new
+      pending "this method was completely rewritten.  Most of the functionality was moved to other models."
+      @fsa = DynamicFieldsets::FieldsetAssociator.new
 
       @field = mock_model DynamicFieldsets::Field
       @fieldset_child = mock_model DynamicFieldsets::FieldsetChild
@@ -136,12 +136,12 @@ describe FieldsetAssociator do
   # these tests seem silly when they don't hit the database
   describe "field_records_by_field_name method" do
     before(:each) do
-      @fieldset = Fieldset.new
-      @field = Field.new(:name => "test_field")
-      @child = FieldsetChild.new(:fieldset => @fieldset, :child => @field)
+      @fieldset = DynamicFieldsets::Fieldset.new
+      @field = DynamicFieldsets::Field.new(:name => "test_field")
+      @child = DynamicFieldsets::FieldsetChild.new(:fieldset => @fieldset, :child => @field)
 
-      @fsa = FieldsetAssociator.new(:fieldset => @fieldset)
-      @record = FieldRecord.new(:fieldset_child => @child)
+      @fsa = DynamicFieldsets::FieldsetAssociator.new(:fieldset => @fieldset)
+      @record = DynamicFieldsets::FieldRecord.new(:fieldset_child => @child)
 
       @fsa.stub!(:field_records).and_return([@record])
     end
@@ -157,22 +157,22 @@ describe FieldsetAssociator do
 
   describe "dependency_child_hash and look_for_dependents" do
     before(:each) do
-      @fsa = FieldsetAssociator.new
+      @fsa = DynamicFieldsets::FieldsetAssociator.new
 
-      @fieldset1 = Fieldset.new
+      @fieldset1 = DynamicFieldsets::Fieldset.new
       @fieldset1.stub!(:id).and_return(100)
-      @fieldset2 = Fieldset.new
+      @fieldset2 = DynamicFieldsets::Fieldset.new
       @fieldset2.stub!(:id).and_return(200)
 
-      @field1 = Field.new
+      @field1 = DynamicFieldsets::Field.new
       @field1.stub!(:id).and_return(100)
-      @field2 = Field.new
+      @field2 = DynamicFieldsets::Field.new
       @field2.stub!(:id).and_return(200)
 
       @fsa.stub!(:fieldset_id).and_return(100)
       @fsa.stub!(:fieldset).and_return(@fieldset1)
 
-      @fsc1 = FieldsetChild.new
+      @fsc1 = DynamicFieldsets::FieldsetChild.new
       @fsc1.stub!(:id).and_return(100)
       @fsc1.stub!(:fieldset_id).and_return(@fieldset1.id)
       @fsc1.stub!(:child_id).and_return(@fieldset2.id)
@@ -180,14 +180,14 @@ describe FieldsetAssociator do
       @fsc1.stub!(:child).and_return(@fieldset2)
       @fieldset1.stub!(:fieldset_children).and_return([@fsc1])
 
-      @fsc2 = FieldsetChild.new
+      @fsc2 = DynamicFieldsets::FieldsetChild.new
       @fsc2.stub!(:id).and_return(200)
       @fsc2.stub!(:fieldset_id).and_return(@fieldset2.id)
       @fsc2.stub!(:child_id).and_return(@field1.id)
       @fsc2.stub!(:child_type).and_return("DynamicFieldsets::Field")
       @fsc2.stub!(:child).and_return(@field1)
 
-      @fsc3 = FieldsetChild.new
+      @fsc3 = DynamicFieldsets::FieldsetChild.new
       @fsc3.stub!(:id).and_return(300)
       @fsc3.stub!(:fieldset_id).and_return(@fieldset2.id)
       @fsc3.stub!(:child_id).and_return(@field2.id)
@@ -196,19 +196,19 @@ describe FieldsetAssociator do
 
       @fieldset2.stub!(:fieldset_children).and_return([@fsc2, @fsc3])
 
-      @group = DependencyGroup.new
+      @group = DynamicFieldsets::DependencyGroup.new
       @group.stub!(:id).and_return(100)
       @group.stub!(:fieldset_child_id).and_return(@fsc3.id)
       @group.stub!(:fieldset_child).and_return(@fsc3)
       @group.stub!(:action).and_return("show")
 
-      @clause = DependencyClause.new
+      @clause = DynamicFieldsets::DependencyClause.new
       @clause.stub!(:id).and_return(100)
       @clause.stub!(:dependency_group).and_return(@group)
       @clause.stub!(:dependency_group_id).and_return(@group.id)
       @group.stub!(:dependency_clauses).and_return([@clause])
 
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
       @dependency.stub!(:id).and_return(100)
       @dependency.stub!(:value).and_return(5)
       @dependency.stub!(:relationship).and_return("equals")
@@ -266,7 +266,5 @@ describe FieldsetAssociator do
       }
       @fsa.dependency_child_hash.should == expected_results
     end
-
   end
-
 end

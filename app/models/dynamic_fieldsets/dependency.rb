@@ -4,7 +4,7 @@ module DynamicFieldsets
   #
   # @author John "hex" Carter
   class Dependency < ActiveRecord::Base
-    set_table_name "dynamic_fieldsets_dependencies"
+    self.table_name = "dynamic_fieldsets_dependencies"
 
     RELATIONSHIP_LIST = ["equals","not equals","includes","not includes","blank","not blank"]
 

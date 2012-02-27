@@ -1,8 +1,8 @@
 source "http://rubygems.org"
 
-gem "rails", ">=3.0.7"
+gem "rails", "~> 3.0.7"
 
-group :development do
+group :development, :test do
   gem "capybara", ">= 0.4.0"
   gem "sqlite3"
   gem 'ruby-debug19'
@@ -13,7 +13,7 @@ group :development do
   # rspec
   gem "rspec", "~> 2.6.0"
   gem "rspec-rails", "~>2.6.1"
-  gem "shoulda", "~> 2.11.3"
+  gem "shoulda", "~> 3.0.0"
   gem "ruby_parser", "~> 2.3.1"  # outputs parsetrees
   gem "ZenTest"
   gem "autotest-rails"
@@ -24,7 +24,6 @@ group :development do
   gem "database_cleaner"
 
   # documentation
-  gem "rcov", ">= 0"
   gem "yard", "~> 0.6.0"
 
   # jenkins/hudson ci

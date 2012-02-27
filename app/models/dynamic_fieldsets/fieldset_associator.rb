@@ -1,6 +1,6 @@
 module DynamicFieldsets
   class FieldsetAssociator < ActiveRecord::Base
-    set_table_name "dynamic_fieldsets_fieldset_associators"
+    self.table_name = "dynamic_fieldsets_fieldset_associators"
 
     belongs_to :fieldset
     belongs_to :fieldset_model, :polymorphic => true

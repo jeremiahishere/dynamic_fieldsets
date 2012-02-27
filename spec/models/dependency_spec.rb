@@ -1,21 +1,20 @@
 require 'spec_helper'
-include DynamicFieldsets
 
-describe Dependency do
+describe DynamicFieldsets::Dependency do
   include DependencyHelper
 
   it "should respond to fieldset_child" do
-    Dependency.new.should respond_to :fieldset_child
+    DynamicFieldsets::Dependency.new.should respond_to :fieldset_child
   end
 
   it "should respond to dependency_clause" do
-    Dependency.new.should respond_to :dependency_clause
+    DynamicFieldsets::Dependency.new.should respond_to :dependency_clause
   end
 
   describe "validations" do
 
     before(:each) do
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
     end
 
     it "should be valid" do
@@ -45,9 +44,9 @@ describe Dependency do
 
   describe "evaluate" do
     before(:each) do
-      @fieldset_child = FieldsetChild.new
+      @fieldset_child = DynamicFieldsets::FieldsetChild.new
       @fieldset_child.stub!(:id).and_return(100)
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
       @dependency.attributes = valid_attributes
       @input_hash = {100 => "test value"}
     end
@@ -75,7 +74,7 @@ describe Dependency do
 
   describe "relationship_list" do
     it "should return an array" do
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
       @dependency.attributes = valid_attributes
       @dependency.relationship_list.should be_an_instance_of Array
     end
@@ -83,7 +82,7 @@ describe Dependency do
 
   describe "process_relationship" do
     before(:each) do
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
       @dependency.attributes = valid_attributes
       @dependency.value = "test string"
     end

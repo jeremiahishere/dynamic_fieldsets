@@ -3,7 +3,7 @@ module DynamicFieldsets
   # FieldsetChild
   # @author Jeremiah Hemphill, John "hex" Carter
   class FieldsetChild < ActiveRecord::Base
-    set_table_name "dynamic_fieldsets_fieldset_children"
+    self.table_name = "dynamic_fieldsets_fieldset_children"
 
     # Constants
 
@@ -44,16 +44,6 @@ module DynamicFieldsets
     # It ensures that the Child has a valid order number.
     def assign_order
       self.order_num = self.last_order_num + 1 if self.order_num.nil?
-    end
-
-    # Methods
-
-    # Returns a list of all the values in the FIELDSET_CHILD_LIST constant
-    #
-    # @params [None]
-    # @returns [Array] An array of all the values stored in FIELDSET_CHILD_LIST
-    def fieldset_child_list
-      return FIELDSET_CHILD_LIST
     end
 
     # Sends a validation error if there are any duplicate pairings of fieldsets and fieldset children.
@@ -102,30 +92,48 @@ module DynamicFieldsets
       parent_array.pop
       return false
     end
-    
+
+    # Filters
+
+    # Scopes and Static Methods
+
     scope :ordered, order( 'order_num asc' )
-    
+
+    # Methods
+
     # @return [ActiveRecord::Relation] Collection of FieldsetChildren that are direct descendents; ascending order.
     def children
       FieldsetChild.where( fieldset_id: self.child_id ).ordered
     end
-    
-    # @return [ActiveRecord::Relation] Collection of FieldsetChildren that share the same parent; ascending order.
-    def siblings
-      sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered
-      sib.delete_if{ |child| child.id == self.id }
-      sib
+
+    # Returns a list of all the values in the FIELDSET_CHILD_LIST constant
+    #
+    # @params [None]
+    # @returns [Array] An array of all the values stored in FIELDSET_CHILD_LIST
+    def fieldset_child_list
+      return FIELDSET_CHILD_LIST
+    end
+
+    # returns all the field record values for a single fieldset child
+    #
+    # @param [DynamicFieldsets::FieldsetAssociator] The parent fsa
+    # @return [Hash] A hash of field record values using the fieldset child id as they key
+    def get_value_using_fsa(fsa)
+      output = {}
+      if child.class == DynamicFieldsets::Fieldset
+        return child.get_values_using_fsa(fsa)
+      elsif child.class.superclass == DynamicFieldsets::Field
+        return child.get_values_using_fsa_and_fsc(fsa, self) 
+      else
+        # I am not sure if we need to use child.superclass equals Field due to the sti
+        throw "there is a problem with fieldset_child.get_value_using_fsa possibly due to the single table inheritance."
+      end
     end
     
     # @return [Integer] The order number of the last sibling.
     def last_order_num
       return 0 if siblings.empty?
       return self.siblings.last[:order_num]
-    end
-    
-
-    def to_hash
-      return { "id" => self.id, "fieldset_id" => self.fieldset_id, "child_id" => self.child_id, "child_type" => self.child_type }
     end
 
     # Returns the root fieldset of the child
@@ -145,21 +153,16 @@ module DynamicFieldsets
         return root_fieldset(parent_as_a_child.first.fieldset)
       end
     end
-
-    # returns all the field record values for a single fieldset child
-    #
-    # @param [DynamicFieldsets::FieldsetAssociator] The parent fsa
-    # @return [Hash] A hash of field record values using the fieldset child id as they key
-    def get_value_using_fsa(fsa)
-      output = {}
-      if child.class == DynamicFieldsets::Fieldset
-        return child.get_values_using_fsa(fsa)
-      elsif child.class.superclass == DynamicFieldsets::Field
-        return child.get_values_using_fsa_and_fsc(fsa, self) 
-      else
-        # I am not sure if we need to use child.superclass equals Field due to the sti
-        throw "there is a problem with fieldset_child.get_value_using_fsa possibly due to the single table inheritance."
-      end
+    
+    # @return [ActiveRecord::Relation] Collection of FieldsetChildren that share the same parent; ascending order.
+    def siblings
+      sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered
+      sib.delete_if{ |child| child.id == self.id }
+      sib
+    end
+    
+    def to_hash
+      return { "id" => self.id, "fieldset_id" => self.fieldset_id, "child_id" => self.child_id, "child_type" => self.child_type }
     end
   end
 end

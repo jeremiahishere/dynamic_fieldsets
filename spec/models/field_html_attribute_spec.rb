@@ -1,17 +1,16 @@
 require 'spec_helper'
-include DynamicFieldsets
   
-describe FieldHtmlAttribute do
+describe DynamicFieldsets::FieldHtmlAttribute do
   include FieldHtmlAttributeHelper
 
   it "should respond to field" do
-    field_html_attribute = FieldHtmlAttribute.new
+    field_html_attribute = DynamicFieldsets::FieldHtmlAttribute.new
     field_html_attribute.should respond_to :field
   end
   
   describe "validations" do
     before(:each) do
-      @field_html_attribute = FieldHtmlAttribute.new
+      @field_html_attribute = DynamicFieldsets::FieldHtmlAttribute.new
     end
 
     it "should be valid" do

@@ -1,24 +1,23 @@
 require 'spec_helper'
-include DynamicFieldsets
-  
-describe Fieldset do
+
+describe DynamicFieldsets::Fieldset do
   include FieldsetHelper
 
   it "should respond to parent" do 
-    Fieldset.new.should respond_to :parent
+    DynamicFieldsets::Fieldset.new.should respond_to :parent
   end
 
   it "should respond to child_fields" do
-    Fieldset.new.should respond_to :child_fields
+    DynamicFieldsets::Fieldset.new.should respond_to :child_fields
   end
 
   it "should respond to child_fieldsets" do
-    Fieldset.new.should respond_to :child_fieldsets
+    DynamicFieldsets::Fieldset.new.should respond_to :child_fieldsets
   end
   
   describe "validations" do
     before(:each) do
-      @fieldset = Fieldset.new
+      @fieldset = DynamicFieldsets::Fieldset.new
     end
 
     it "should be valid" do
@@ -39,7 +38,7 @@ describe Fieldset do
     end
 
     it "should require a unique nkey" do
-      Fieldset.create(valid_attributes)
+      DynamicFieldsets::Fieldset.create(valid_attributes)
       @fieldset.attributes = valid_attributes
       @fieldset.should have(1).error_on(:nkey)
     end
@@ -48,37 +47,37 @@ describe Fieldset do
   describe ".roots scope" do
     before(:each) do
       # we could stub this one but I am not convinced the polymorphic relationships actually work
-      @root_fieldset = Fieldset.new( valid_attributes )
+      @root_fieldset = DynamicFieldsets::Fieldset.new( valid_attributes )
       @root_fieldset.save
 
-      @child_fieldset = Fieldset.new( valid_attributes )
+      @child_fieldset = DynamicFieldsets::Fieldset.new( valid_attributes )
       @child_fieldset.nkey = "something_else" # need to pass validations
       @child_fieldset.save
 
-      @fieldset_children = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
+      @fieldset_children = DynamicFieldsets::FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
       @fieldset_children.save
     end
     
-    it ": Fieldset responds to .roots" do
-      Fieldset.should respond_to :roots
+    it ": DynamicFieldsets::Fieldset responds to .roots" do
+      DynamicFieldsets::Fieldset.should respond_to :roots
     end
     
     it "returns fieldsets with no parent" do
-      roots = Fieldset.roots
+      roots = DynamicFieldsets::Fieldset.roots
       roots.each do |root|
         root.parent.should be_nil
       end
     end
     
     it "does not return fieldsets with a parent" do
-      roots = Fieldset.roots
+      roots = DynamicFieldsets::Fieldset.roots
       roots.should_not include @child_fieldset
     end
   end
 
   describe ".root? method" do
     before(:each) do
-      @fieldset = Fieldset.new
+      @fieldset = DynamicFieldsets::Fieldset.new
     end
 
     it "calls parent" do  
@@ -98,7 +97,7 @@ describe Fieldset do
 
   describe "parent_fieldset_list static method" do
     it "should include values for any fieldset" do
-      fieldset = Fieldset.new(:name => "parent_fieldset_list test", :nkey => "parent_fieldset_list_test")
+      fieldset = DynamicFieldsets::Fieldset.new(:name => "parent_fieldset_list test", :nkey => "parent_fieldset_list_test")
       fieldset.save(:validate => false)
       DynamicFieldsets::Fieldset.parent_fieldset_list.should include [fieldset.name, fieldset.id]
     end
@@ -107,31 +106,29 @@ describe Fieldset do
   # gave up on stubs and mocks on this one due to how the data is constantized
   describe "children method" do
     before(:each) do
-      @root_fieldset = Fieldset.new( valid_attributes )
+      @root_fieldset = DynamicFieldsets::Fieldset.new( valid_attributes )
       @root_fieldset.stub!(:id).and_return(1234)
       
-      @child_fieldset = Fieldset.new( valid_attributes )
+      @child_fieldset = DynamicFieldsets::Fieldset.new( valid_attributes )
       @child_fieldset.nkey = "child_fieldset"
       @child_fieldset.save
-      @cfs = FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
+      @cfs = DynamicFieldsets::FieldsetChild.new(:child => @child_fieldset, :fieldset => @root_fieldset, :order_num => 1)
       
-      @field1 = Field.new(
+      @field1 = DynamicFieldsets::TextField.new(
         :name => "Test field name",
         :label => "Test field label",
-        :type => "textfield",
         :required => true,
         :enabled => true)
       @field1.save!
-      @cf1 = FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
+      @cf1 = DynamicFieldsets::FieldsetChild.new(:child => @field1, :fieldset => @root_fieldset, :order_num => 2)
       
-      @field2 = Field.new(
+      @field2 = DynamicFieldsets::TextField.new(
         :name => "Test field name",
         :label => "Test field label",
-        :type => "textfield",
         :required => true,
         :enabled => false)
       @field2.save!
-      @cf2 = FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset, :order_num => 3)
+      @cf2 = DynamicFieldsets::FieldsetChild.new(:child => @field2, :fieldset => @root_fieldset, :order_num => 3)
       
       @root_fieldset_children = [@cfs, @cf1, @cf2]
       @root_fieldset.stub!(:fieldset_children).and_return(@root_fieldset_children)
@@ -163,5 +160,4 @@ describe Fieldset do
       children.last.should == @field1
     end
   end
-  
 end

@@ -2,7 +2,7 @@ module DynamicFieldsets
   # Stores a single record's answer to a field in a fieldset
   # Fields with multiple answers should have multiple records in this model
   class FieldRecord < ActiveRecord::Base
-    set_table_name "dynamic_fieldsets_field_records"
+    self.table_name = "dynamic_fieldsets_field_records"
 
     belongs_to :fieldset_child
     belongs_to :fieldset_associator

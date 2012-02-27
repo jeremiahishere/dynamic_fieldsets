@@ -6,7 +6,7 @@ module FieldHelper
     {
       :name => "Test field name",
       :label => "Test field label",
-      :type => "textfield",
+      :type => DynamicFieldsets::Field,
       :required => true,
       :enabled => true,
     }

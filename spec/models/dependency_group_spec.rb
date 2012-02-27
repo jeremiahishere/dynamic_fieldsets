@@ -1,20 +1,19 @@
 require 'spec_helper'
-include DynamicFieldsets
 
-describe DependencyGroup do
+describe DynamicFieldsets::DependencyGroup do
   include DependencyGroupHelper
 
   it "should respond to fieldset_child" do
-    DependencyGroup.new.should respond_to :fieldset_child
+    DynamicFieldsets::DependencyGroup.new.should respond_to :fieldset_child
   end
 
   it "should respond to dependency_clauses" do
-    DependencyGroup.new.should respond_to :dependency_clauses
+    DynamicFieldsets::DependencyGroup.new.should respond_to :dependency_clauses
   end
 
   describe "validations" do
     before(:each) do
-      @group = DependencyGroup.new
+      @group = DynamicFieldsets::DependencyGroup.new
     end
 
     it "should be valid" do
@@ -38,19 +37,19 @@ describe DependencyGroup do
 
   describe "action_list method" do
     it "should return an hash" do
-      DependencyGroup.new.action_list.should be_a_kind_of(Hash)
+      DynamicFieldsets::DependencyGroup.new.action_list.should be_a_kind_of(Hash)
     end
   end
 
   describe "dependency_group_fieldset_chldren method" do
     before(:each) do
-      @fieldset_child_1 = FieldsetChild.create(:fieldset_id => 1, :child_id => 1, :child_type => "DynamicFieldsets::Field", :order_num => 1)
-      @fieldset_child_2 = FieldsetChild.create(:fieldset_id => 2, :child_id => 2, :child_type => "DynamicFieldsets::Field", :order_num => 2)
-      @fieldset_child_3 = FieldsetChild.create(:fieldset_id => 3, :child_id => 3, :child_type => "DynamicFieldsets::Field", :order_num => 3)
-      @group = DependencyGroup.create(:fieldset_child => @fieldset_child_3, :action => "show")
-      @clause = DependencyClause.create(:dependency_group => @group)
-      @dependency_1 = Dependency.create(:fieldset_child => @fieldset_child_1, :dependency_clause => @clause, :value => "5", :relationship => "equals")
-      @dependency_2 = Dependency.create(:fieldset_child => @fieldset_child_2, :dependency_clause => @clause, :value => "5", :relationship => "equals")
+      @fieldset_child_1 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => 1, :child_id => 1, :child_type => "DynamicFieldsets::Field", :order_num => 1)
+      @fieldset_child_2 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => 2, :child_id => 2, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+      @fieldset_child_3 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => 3, :child_id => 3, :child_type => "DynamicFieldsets::Field", :order_num => 3)
+      @group = DynamicFieldsets::DependencyGroup.create(:fieldset_child => @fieldset_child_3, :action => "show")
+      @clause = DynamicFieldsets::DependencyClause.create(:dependency_group => @group)
+      @dependency_1 = DynamicFieldsets::Dependency.create(:fieldset_child => @fieldset_child_1, :dependency_clause => @clause, :value => "5", :relationship => "equals")
+      @dependency_2 = DynamicFieldsets::Dependency.create(:fieldset_child => @fieldset_child_2, :dependency_clause => @clause, :value => "5", :relationship => "equals")
       @input_hash = JSON.parse(@group.dependency_group_fieldset_children)
     end
 
@@ -67,11 +66,11 @@ describe DependencyGroup do
 
   describe "dependent_fieldset_children method" do
     before(:each) do
-      @group = DependencyGroup.new
+      @group = DynamicFieldsets::DependencyGroup.new
       @group.attributes = valid_attributes
       @group.save
-      @clause = DependencyClause.create(:dependency_group => @group)
-      @dependency = Dependency.create(:value => 5, :relationship => "equals", :dependency_clause => @clause, :fieldset_child_id => 42)
+      @clause = DynamicFieldsets::DependencyClause.create(:dependency_group => @group)
+      @dependency = DynamicFieldsets::Dependency.create(:value => 5, :relationship => "equals", :dependency_clause => @clause, :fieldset_child_id => 42)
     end
 
     it "should return an array" do
@@ -90,7 +89,7 @@ describe DependencyGroup do
 
   describe "get_action method" do
     before(:each) do
-      @group = DependencyGroup.new
+      @group = DynamicFieldsets::DependencyGroup.new
       @group.stub!(:evaluate).and_return(true)
       @group.action = "show"
     end
@@ -111,9 +110,9 @@ describe DependencyGroup do
 
   describe "evaluate method" do
     before(:each) do
-      @group = DependencyGroup.new
-      @clause1 = DependencyClause.new
-      @clause2 = DependencyClause.new
+      @group = DynamicFieldsets::DependencyGroup.new
+      @clause1 = DynamicFieldsets::DependencyClause.new
+      @clause2 = DynamicFieldsets::DependencyClause.new
       @group.stub!(:dependency_clauses).and_return([@clause1, @clause2])
       @input_values = {}
     end
@@ -138,24 +137,24 @@ describe DependencyGroup do
 
   describe "to_hash" do
     before(:each) do
-      @field = Field.new
+      @field = DynamicFieldsets::Field.new
       @field.stub!(:id).and_return 100
 
-      @fieldset_child1 = FieldsetChild.new
+      @fieldset_child1 = DynamicFieldsets::FieldsetChild.new
       @fieldset_child1.stub!(:id).and_return 100
-      @fieldset_child2 = FieldsetChild.new
+      @fieldset_child2 = DynamicFieldsets::FieldsetChild.new
       @fieldset_child2.stub!(:id).and_return 200
 
-      @dependency = Dependency.new
+      @dependency = DynamicFieldsets::Dependency.new
       @dependency.stub!(:id).and_return 100
       @dependency.stub!(:fieldset_child_id).and_return @fieldset_child1.id
       @dependency.stub!(:relationship).and_return "equals"
       @dependency.stub!(:value).and_return 5
 
-      @clause = DependencyClause.new
+      @clause = DynamicFieldsets::DependencyClause.new
       @clause.stub!(:id).and_return 100
 
-      @group = DependencyGroup.new
+      @group = DynamicFieldsets::DependencyGroup.new
       @group.stub!(:id).and_return 100
       @group.stub!(:fieldset_child_id).and_return @fieldset_child2.id
       @group.stub!(:action).and_return "show"
@@ -195,10 +194,10 @@ describe DependencyGroup do
     end
 
     it "should have a specific return structure even with a greater complexity" do
-      fieldset_child3 = FieldsetChild.new
+      fieldset_child3 = DynamicFieldsets::FieldsetChild.new
       fieldset_child3.stub!(:id).and_return 300
       
-      dependency2 = Dependency.new
+      dependency2 = DynamicFieldsets::Dependency.new
       dependency2.stub!(:id).and_return 200
       dependency2.stub!(:relationship).and_return "equals"
       dependency2.stub!(:value).and_return 5
@@ -231,7 +230,5 @@ describe DependencyGroup do
 
       @group.to_hash.should == expected_result
     end
-
   end
-
 end

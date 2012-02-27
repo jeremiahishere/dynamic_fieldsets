@@ -1,28 +1,27 @@
 require 'spec_helper'
-include DynamicFieldsets
 
-describe FieldRecord do
+describe DynamicFieldsets::FieldRecord do
   include FieldRecordHelper
 
   it "should respond to field" do
-    FieldRecord.new.should respond_to :field
+    DynamicFieldsets::FieldRecord.new.should respond_to :field
   end
 
   it "should respond to fieldset_associator" do
-    FieldRecord.new.should respond_to :fieldset_associator
+    DynamicFieldsets::FieldRecord.new.should respond_to :fieldset_associator
   end
 
   describe "validations" do
     before(:each) do
-      @field_record = FieldRecord.new
+      @field_record = DynamicFieldsets::FieldRecord.new
     end
     
     it "should be valid" do
-      @field_record.fieldset_child = FieldsetChild.new
-      @field_record.fieldset_associator = FieldsetAssociator.new
+      @field_record.fieldset_child = DynamicFieldsets::FieldsetChild.new
+      @field_record.fieldset_associator = DynamicFieldsets::FieldsetAssociator.new
       @field_record.value = "42"
       child = mock_model(DynamicFieldsets::Field)
-      @field_record.fieldset_child = FieldsetChild.new(:child => child)
+      @field_record.fieldset_child = DynamicFieldsets::FieldsetChild.new(:child => child)
       @field_record.should be_valid
     end
 
@@ -45,7 +44,7 @@ describe FieldRecord do
 
     it "should error if the fieldset_child has the wrong type" do
       child = mock_model(DynamicFieldsets::Fieldset)
-      @field_record.fieldset_child = FieldsetChild.new(:child => child)
+      @field_record.fieldset_child = DynamicFieldsets::FieldsetChild.new(:child => child)
       @field_record.valid?
       @field_record.should have(1).error_on(:fieldset_child)
     end
