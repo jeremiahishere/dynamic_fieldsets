@@ -7,7 +7,6 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_renderer(fsa, fieldset_child, values = [], form_type)
-    puts "calling field renderer"
     if form_type == "form"
       return field_form_renderer(fsa, fieldset_child, values)
     else
@@ -52,7 +51,6 @@ module DynamicFieldsetsHelper
   # @param [Array] values Saved values for the field
   # @return [Array] The HTML elements for the field
   def field_form_renderer(fsa, fieldset_child, values = [])
-    puts "calling field form renderer"
     field = fieldset_child.child
     # maybe turn this into an instance method
     classes  = "#{field.type.gsub("DynamicFieldsets::", "").underscore.downcase} "
@@ -91,7 +89,6 @@ module DynamicFieldsetsHelper
   # @param [Hash] values Stored values for the fieldset
   # @return [Array] The HTML elements for the fieldset
   def fieldset_renderer(fsa, fieldset, values, form_type)
-    puts "calling fieldset renderer"
     lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
     lines.push "<h3 class='name'>#{fieldset.name}</h3>"
     lines.push "<ol>"
@@ -127,7 +124,6 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
-    puts "dynamic_fieldset_renderer"
     rendered_dynamic_fieldset = "<div id='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}'>\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}[fieldset_id]' value='#{fsa.fieldset_id}' />\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}[fieldset_model_name]' value='#{fsa.fieldset_model_name}' />\n"

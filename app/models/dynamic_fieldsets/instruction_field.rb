@@ -25,6 +25,11 @@ module DynamicFieldsets
       output[:label] = self.label
       return output
     end
+
+    # Do not update any options for the instruction
+    def update_field_records(fsa, fieldset_child, value)
+      # do nothing
+    end
   end
 end
 

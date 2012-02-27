@@ -190,7 +190,7 @@ module DynamicFieldsets
     # @param [DynamicFieldsets::FieldsetChild] fieldset_child The fieldset child for the value
     # @param [Array or String] value The new values inputted by the user from the form
     def update_field_records(fsa, fieldset_child, value)
-      throw "Field.update_field_options must be overridden to save data from the form."
+      throw "Field.update_field_records must be overridden to save data from the form."
     end
   end
 end

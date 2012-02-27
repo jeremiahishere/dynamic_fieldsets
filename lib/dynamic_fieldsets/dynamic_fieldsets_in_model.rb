@@ -95,7 +95,7 @@ module DynamicFieldsets
           end
         else
           # found a major problem, not sure how to get here
-          puts "found a child that wasn't a field or fieldset" + child.inspect
+          throw "found a child that wasn't a field or fieldset" + child.inspect
         end
       end
       
@@ -143,11 +143,8 @@ module DynamicFieldsets
         return post
       end
       
-      
-      # hacky system to save fieldset values
-      # needs to be refactored and tested
-      #
-      # among other things, it can edit field records for random fsas if the wrong information comes from the controller
+      # Given the form values, finds the keys that correspond to fieldsets
+      # then passes the value for the key to the fieldset associator object for saving into individual field records
       def save_dynamic_fieldsets
         values = self.dynamic_fieldset_values
         if !values.nil?
@@ -167,15 +164,18 @@ module DynamicFieldsets
       def save_fsa(key, fsa_values)
         key_id = key.gsub(/^#{DynamicFieldsets.config.form_fieldset_associator_prefix}/, "")
 
-        if key_id.eql? ""
-        then fsa = DynamicFieldsets::FieldsetAssociator.create(
-          :fieldset_id => fsa_values[:fieldset_id],
-          :fieldset_model_id => self.id,
-          :fieldset_model_type => self.class.name,
-          :fieldset_model_name => fsa_values[:fieldset_model_name] )
-        else fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
+        if(key_id == "")
+          fsa = DynamicFieldsets::FieldsetAssociator.create(
+            :fieldset_id => fsa_values[:fieldset_id],
+            :fieldset_model_id => self.id,
+            :fieldset_model_type => self.class.name,
+            :fieldset_model_name => fsa_values[:fieldset_model_name] 
+          )
+        else 
+          fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
         end
-        fsa.update_field_records_with_form_information(fsa_values)
+
+        fsa.update_fieldset_records_with_form_information(fsa_values)
       end
 
       # Matches methods that match named_fieldset and named_fieldset_fieldset

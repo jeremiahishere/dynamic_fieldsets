@@ -20,6 +20,8 @@ module DynamicFieldsets
       # @param [DynamicFieldsets::FieldsetChild] fieldset_child The fieldset child for the value
       # @param [Array or String] value The new values inputted by the user from the form
       def update_field_records(fsa, fieldset_child, value)
+        # make sure the value is a string in case the input from the form is bad
+        value = value.first if value.is_a?(Array)
         # retrieve record
         field_record = DynamicFieldsets::FieldRecord.where(:fieldset_associator_id => fsa.id, :fieldset_child_id => fieldset_child.id).first
         if field_record.nil? 
@@ -27,10 +29,10 @@ module DynamicFieldsets
           DynamicFieldsets::FieldRecord.create!(
             :fieldset_associator_id => fsa.id, 
             :fieldset_child_id => fieldset_child.id, 
-            :value => this_value)
+            :value => value)
         else 
           # update record
-          field_record.value = this_value
+          field_record.value = value 
           field_record.save
         end
       end

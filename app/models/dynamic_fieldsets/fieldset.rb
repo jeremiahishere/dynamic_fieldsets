@@ -75,5 +75,21 @@ module DynamicFieldsets
       end      
       return output
     end
+
+    # Updates field options based on information from the form
+    #
+    # The form values should only be values for the current fsa
+    #
+    # @param [Hash] form_values Information from the form
+    def update_field_records_with_form_information(form_values)
+      form_values.each_pair do |fieldset_child_key, value|
+        if fieldset_child_key.start_with?(DynamicFieldsets.config.form_field_prefix)
+          fieldset_child_id = fieldset_child_key.gsub(/^#{DynamicFieldsets.config.form_field_prefix}/, "")
+          fieldset_child = fieldset_children.select { |child| child.id == fieldset_child_id.to_i }.first
+          # this could potentially hit a fieldset and cause problems
+          fieldset_child.child.update_field_records(self, fieldset_child, value)
+        end
+      end
+    end
   end
 end
