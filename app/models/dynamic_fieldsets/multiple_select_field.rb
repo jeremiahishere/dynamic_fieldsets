@@ -26,7 +26,8 @@ module DynamicFieldsets
     # this returns field option ids based on the field default values
     # due to funness with field options
     #
-    # there is a good chance this is only needed due to a bug in multiple select's save default method
+    # there is a good chance this is only needed due to a bug in multiple select's save default method 
+    # We may need to take a look at this in the future.  I think it could be moved to a mixin. (JH 2-28-2012)
     # @return [Array] An array of field option ids that correspond to the field defaults
     def collect_default_values
       output = []

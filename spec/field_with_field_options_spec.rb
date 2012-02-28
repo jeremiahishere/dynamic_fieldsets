@@ -31,7 +31,7 @@ describe FieldWithFieldOptions do
       it "needs tests"
     end
 
-    it { should respond to :uses_field_options? }
+    it { should respond_to :uses_field_options? }
     describe ".uses_field_options?" do
       it "needs tests"
     end
