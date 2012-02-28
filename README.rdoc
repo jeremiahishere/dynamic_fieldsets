@@ -2,7 +2,7 @@
 
 User defined fieldsets for dynamic questions in forms.
 
-I recommend not using this until a 0.1 release.
+I recommend not using this until a 1.0 release.
 
 = how to use
 
@@ -15,30 +15,6 @@ Add the mixin to your model.  There are some configuration options here.
 There is a view helper you need to add to your application helper and call from the form view and the show view.
 
 The backend is automatically added to your project using the rails engine system.  At some point, there will be a controller generator to generate them out so you can add permissions/pagination/whatever else you need on your controllers.
-
-= Things to test
-
-* helper
-* model mixin
-* field option mixin
-* single answer mixin
-* multiple answer mixin
-* fsa model
-* fieldset child model
-* field model
-* field submodels:
-  * checkbox
-  * date
-  * datetime
-  * instruction
-  * multiple select
-  * radio
-  * select
-  * text
-  * textarea
-* config?
-* integration tests?
-* rewrite readme
 
 == Contributing to dynamic_fieldsets 
  

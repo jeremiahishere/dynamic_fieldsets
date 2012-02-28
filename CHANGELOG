@@ -1,3 +1,10 @@
+== 0.1.0
+
+* Major change to the structure of the code.  Fields now use single table inheritance to determine different functionality
+* Added views for each field
+* Added a config file and generator
+* Broke a huge number of tests, pended them, then didn't have enough time to rewrite them
+
 == 0.0.16
 
 * Updated the migration generator with indices.  
