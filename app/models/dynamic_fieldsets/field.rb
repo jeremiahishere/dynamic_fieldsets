@@ -37,12 +37,12 @@ module DynamicFieldsets
     # Deals with weird single table inheritance issues with cache classes off
     # Causes errors only in development mode
     #
-    # @return [Array<String>] An array of descendant class names
+    # @return [Array] An array of descendant class constants
     def self.descendants
       if ::Rails.application.config.cache_classes
         super
       else
-        DynamicFieldsets.config.available_field_types
+        DynamicFieldsets.config.available_field_types.map(&:constantize)
       end
     end
     

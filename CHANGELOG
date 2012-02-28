@@ -1,5 +1,9 @@
 == 0.1.0
 
+* Found a bug in the Field.descendants code that stopped the nested attributes from working
+
+= 0.1.0
+
 * Major change to the structure of the code.  Fields now use single table inheritance to determine different functionality
 * Added views for each field
 * Added a config file and generator
