@@ -5,17 +5,19 @@
 
 Gem::Specification.new do |s|
   s.name = "dynamic_fieldsets"
-  s.version = "0.0.16"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremiah Hemphill", "Ethan Pemble", "John Carter"]
-  s.date = "2012-02-13"
+  s.date = "2012-02-28"
   s.description = "Dynamic fieldsets for rails controllers"
   s.email = "jeremiah@cloudspace.com"
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
   s.files = [
+    ".rdebugrc",
+    ".rspec",
     "CHANGELOG",
     "Gemfile",
     "Gemfile.lock",
@@ -31,6 +33,10 @@ Gem::Specification.new do |s|
     "app/helpers/dynamic_fieldsets/fieldset_children_helper.rb",
     "app/helpers/dynamic_fieldsets/nested_model_helper.rb",
     "app/helpers/dynamic_fieldsets_helper.rb",
+    "app/models/dynamic_fieldsets.rb",
+    "app/models/dynamic_fieldsets/checkbox_field.rb",
+    "app/models/dynamic_fieldsets/date_field.rb",
+    "app/models/dynamic_fieldsets/datetime_field.rb",
     "app/models/dynamic_fieldsets/dependency.rb",
     "app/models/dynamic_fieldsets/dependency_clause.rb",
     "app/models/dynamic_fieldsets/dependency_group.rb",
@@ -42,6 +48,12 @@ Gem::Specification.new do |s|
     "app/models/dynamic_fieldsets/fieldset.rb",
     "app/models/dynamic_fieldsets/fieldset_associator.rb",
     "app/models/dynamic_fieldsets/fieldset_child.rb",
+    "app/models/dynamic_fieldsets/instruction_field.rb",
+    "app/models/dynamic_fieldsets/multiple_select_field.rb",
+    "app/models/dynamic_fieldsets/radio_field.rb",
+    "app/models/dynamic_fieldsets/select_field.rb",
+    "app/models/dynamic_fieldsets/text_field.rb",
+    "app/models/dynamic_fieldsets/textarea_field.rb",
     "app/views/dynamic_fieldsets/fields/_disable_field_form.html.erb",
     "app/views/dynamic_fieldsets/fields/_field_default_fields.html.erb",
     "app/views/dynamic_fieldsets/fields/_field_html_attribute_fields.html.erb",
@@ -67,8 +79,26 @@ Gem::Specification.new do |s|
     "app/views/dynamic_fieldsets/fieldsets/new.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/reorder.html.erb",
     "app/views/dynamic_fieldsets/fieldsets/show.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_checkbox_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_date_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_datetime_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_input_footer.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_input_header.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_instruction_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_multiple_select_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_radio_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_select_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_text_field.html.erb",
+    "app/views/dynamic_fieldsets/form_partials/_textarea_field.html.erb",
     "app/views/dynamic_fieldsets/shared/_javascript_watcher.html.erb",
     "app/views/dynamic_fieldsets/shared/_nested_model_javascript.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_incomplete.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_incomplete_footer.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_incomplete_header.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_instruction.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_multiple_answers.html.erb",
+    "app/views/dynamic_fieldsets/show_partials/_show_single_answer.html.erb",
+    "autotest/discover.rb",
     "config/.routes.rb.swp",
     "config/routes.rb",
     "dynamic_fieldsets.gemspec",
@@ -76,6 +106,9 @@ Gem::Specification.new do |s|
     "lib/dynamic_fieldsets/config.rb",
     "lib/dynamic_fieldsets/dynamic_fieldsets_in_model.rb",
     "lib/dynamic_fieldsets/engine.rb",
+    "lib/dynamic_fieldsets/field_with_field_options.rb",
+    "lib/dynamic_fieldsets/field_with_multiple_answers.rb",
+    "lib/dynamic_fieldsets/field_with_single_answer.rb",
     "lib/dynamic_fieldsets/railtie.rb",
     "lib/generators/dynamic_fieldsets/controllers_generator.rb",
     "lib/generators/dynamic_fieldsets/install_generator.rb",
@@ -104,6 +137,7 @@ Gem::Specification.new do |s|
     "spec/dummy/config/environments/production.rb",
     "spec/dummy/config/environments/test.rb",
     "spec/dummy/config/initializers/backtrace_silencers.rb",
+    "spec/dummy/config/initializers/dynamic_fieldsets.rb",
     "spec/dummy/config/initializers/inflections.rb",
     "spec/dummy/config/initializers/mime_types.rb",
     "spec/dummy/config/initializers/secret_token.rb",
@@ -143,7 +177,13 @@ Gem::Specification.new do |s|
     "spec/dynamic_fieldsets_helper_spec.rb",
     "spec/dynamic_fieldsets_in_model_spec.rb",
     "spec/dynamic_fieldsets_spec.rb",
+    "spec/field_with_field_options_spec.rb",
+    "spec/field_with_multiple_answers_spec.rb",
+    "spec/field_with_single_answer_spec.rb",
     "spec/integration/navigation_spec.rb",
+    "spec/models/checkbox_field_spec.rb",
+    "spec/models/date_field_spec.rb",
+    "spec/models/datetime_field_spec.rb",
     "spec/models/dependency_clause_spec.rb",
     "spec/models/dependency_group_spec.rb",
     "spec/models/dependency_spec.rb",
@@ -155,6 +195,11 @@ Gem::Specification.new do |s|
     "spec/models/fieldset_associator_spec.rb",
     "spec/models/fieldset_child_spec.rb",
     "spec/models/fieldset_spec.rb",
+    "spec/models/instruction_field_spec.rb",
+    "spec/models/multiple_select_field_spec.rb",
+    "spec/models/radio_field_spec.rb",
+    "spec/models/text_field_spec.rb",
+    "spec/models/textarea_field_spec.rb",
     "spec/spec_helper.rb",
     "spec/support/dependency_group_helper.rb",
     "spec/support/dependency_helper.rb",
@@ -177,53 +222,62 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rails>, [">= 3.0.7"])
+      s.add_runtime_dependency(%q<rails>, ["~> 3.0.7"])
       s.add_development_dependency(%q<capybara>, [">= 0.4.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<jeweler>, ["~> 1.6.3"])
+      s.add_development_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<rspec-rails>, ["~> 2.6.1"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
+      s.add_development_dependency(%q<shoulda>, ["~> 3.0.0"])
+      s.add_development_dependency(%q<ruby_parser>, ["~> 2.3.1"])
+      s.add_development_dependency(%q<ZenTest>, [">= 0"])
+      s.add_development_dependency(%q<autotest-rails>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
       s.add_development_dependency(%q<cucumber-rails>, [">= 0"])
       s.add_development_dependency(%q<database_cleaner>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.6.3"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
-      s.add_development_dependency(%q<json>, [">= 0"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_development_dependency(%q<ci_reporter>, [">= 0"])
     else
-      s.add_dependency(%q<rails>, [">= 3.0.7"])
+      s.add_dependency(%q<rails>, ["~> 3.0.7"])
       s.add_dependency(%q<capybara>, [">= 0.4.0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<ruby-debug19>, [">= 0"])
+      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
+      s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<rspec-rails>, ["~> 2.6.1"])
-      s.add_dependency(%q<yard>, ["~> 0.6.0"])
+      s.add_dependency(%q<shoulda>, ["~> 3.0.0"])
+      s.add_dependency(%q<ruby_parser>, ["~> 2.3.1"])
+      s.add_dependency(%q<ZenTest>, [">= 0"])
+      s.add_dependency(%q<autotest-rails>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
       s.add_dependency(%q<cucumber-rails>, [">= 0"])
       s.add_dependency(%q<database_cleaner>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
-      s.add_dependency(%q<rcov>, [">= 0"])
-      s.add_dependency(%q<json>, [">= 0"])
+      s.add_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_dependency(%q<ci_reporter>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rails>, [">= 3.0.7"])
+    s.add_dependency(%q<rails>, ["~> 3.0.7"])
     s.add_dependency(%q<capybara>, [">= 0.4.0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<ruby-debug19>, [">= 0"])
+    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
+    s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<rspec-rails>, ["~> 2.6.1"])
-    s.add_dependency(%q<yard>, ["~> 0.6.0"])
+    s.add_dependency(%q<shoulda>, ["~> 3.0.0"])
+    s.add_dependency(%q<ruby_parser>, ["~> 2.3.1"])
+    s.add_dependency(%q<ZenTest>, [">= 0"])
+    s.add_dependency(%q<autotest-rails>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
     s.add_dependency(%q<cucumber-rails>, [">= 0"])
     s.add_dependency(%q<database_cleaner>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.6.3"])
-    s.add_dependency(%q<rcov>, [">= 0"])
-    s.add_dependency(%q<json>, [">= 0"])
+    s.add_dependency(%q<yard>, ["~> 0.6.0"])
     s.add_dependency(%q<ci_reporter>, [">= 0"])
   end
 end
