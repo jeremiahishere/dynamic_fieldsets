@@ -27,7 +27,6 @@ module DynamicFieldsetsHelper
   def field_show_renderer(fsa, fieldset_child, values = [])
     field = fieldset_child.child
     lines = []
-
     if field.use_show_header_partial?
       lines.push render(:partial => field.show_header_partial )
     end

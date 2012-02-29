@@ -1,4 +1,10 @@
-== 0.1.0
+== 0.1.2
+
+* Fixed a bug where fields would not display correctly on the show page if they were never filled out
+* Fixed a bug in date and datetime fields were being converted to octal due to leading zeroes on the select options: "09" caused an error
+* Fixed a bug where all field records were associated with the same field fieldset associator
+
+== 0.1.1
 
 * Found a bug in the Field.descendants code that stopped the nested attributes from working
 

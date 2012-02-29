@@ -133,14 +133,14 @@ module DynamicFieldsets
           datefield  = ''
           datefield +=          post.delete( "#{field}(1i)" ) # year
           datefield += '-'
-          datefield += '%02d' % post.delete( "#{field}(2i)" ) # month
+          datefield += '%02d' % post.delete( "#{field}(2i)" ).to_i # month
           datefield += '-'
-          datefield += '%02d' % post.delete( "#{field}(3i)" ) # day
+          datefield += '%02d' % post.delete( "#{field}(3i)" ).to_i # day
           if post.keys.include? "#{field}(4i)" then
             datefield += ' '
-            datefield += '%02d' % post.delete( "#{field}(4i)" ) # hour
+            datefield += '%02d' % post.delete( "#{field}(4i)" ).to_i # hour
             datefield += ':'
-            datefield += '%02d' % post.delete( "#{field}(5i)" ) # minute
+            datefield += '%02d' % post.delete( "#{field}(5i)" ).to_i # minute
             datefield += ':'
             datefield += '00' # second
           end

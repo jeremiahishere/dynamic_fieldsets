@@ -52,7 +52,7 @@ module DynamicFieldsets
 
     #  given the params, passes along to the fieldset
     def update_fieldset_records_with_form_information(fsa_params)
-      fieldset.update_field_records_with_form_information(fsa_params)
+      fieldset.update_field_records_with_form_information(self, fsa_params)
     end
 
     # Record whose field matches the name and associator matches the current associator

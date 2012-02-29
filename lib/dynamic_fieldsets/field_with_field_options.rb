@@ -34,7 +34,11 @@ module DynamicFieldsets
 
       # given a value hash for a field, return the part that needs to be shown on the show page
       def get_value_for_show(value)
-        value[:name]
+        if value.nil?
+          return nil
+        else
+          value[:name]
+        end
       end
 
       def uses_field_options?
