@@ -76,7 +76,8 @@ module DynamicFieldsets
 
     # PUT /dynamic_fieldsets/fields/1
     def update
-      @field = params[:dynamic_fieldsets_field][:type].constantize.find(params[:id])
+      # note that on update, we need to get a Field object so that the type can be changed
+      @field = DynamicFieldsets::Field.find(params[:id])
 
       respond_to do |format|
         if @field.update_attributes(params[:dynamic_fieldsets_field])

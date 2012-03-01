@@ -1,6 +1,7 @@
 == unreleased changes
 
 * Fixed a typo in the generated config
+* Updated the field model so that type can be set through attributes
 
 == 0.1.2
 

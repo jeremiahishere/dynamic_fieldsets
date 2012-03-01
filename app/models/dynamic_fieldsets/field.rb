@@ -33,6 +33,13 @@ module DynamicFieldsets
 
     # Scopes and Static Methods
 
+    # Remove :type from the protected attributes so that it can be updated through the field frontend
+    # The different field types are similar enough that we should be able to change types at will
+    # If you change from field options to none, or multiple to single answers, you could have some lost data
+    def self.attributes_protected_by_default
+      super - [:type]
+    end
+
     # Either calls the defaul descendants method or pulls the data from the config
     # Deals with weird single table inheritance issues with cache classes off
     # Causes errors only in development mode

@@ -22,6 +22,9 @@
 </div>
 
 <div class="field">
+  <% unless @field.new_record? %>
+    <p>Be careful changing the field type on a field that already has records associated with.  Changing to an incompatible type could cause data loss.</p>
+  <% end %>
   <%= f.label :type %>: 
   <%= f.select :type, options_for_select(DynamicFieldsets::Field.descendant_collection, @field.type), :include_blank => "Choose One" %>
 </div>
