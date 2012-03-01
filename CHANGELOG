@@ -1,3 +1,7 @@
+== unreleased changes
+
+* Fixed a typo in the generated config
+
 == 0.1.2
 
 * Fixed a bug where fields would not display correctly on the show page if they were never filled out
