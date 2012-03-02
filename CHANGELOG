@@ -1,7 +1,9 @@
 == unreleased changes
 
+== 0.1.3 
+
 * Fixed a typo in the generated config
-* Updated the field model so that type can be set through attributes
+* Updated the field model so that type can be set through the controller
 
 == 0.1.2
 
