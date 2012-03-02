@@ -122,7 +122,7 @@ module DynamicFieldsets
       output = {}
       if child.class == DynamicFieldsets::Fieldset
         return child.get_values_using_fsa(fsa)
-      elsif child.class.superclass == DynamicFieldsets::Field
+      elsif child.class.superclass == DynamicFieldsets::Field || child.class.superclass.to_s == DynamicFieldsets::Field.to_s
         return child.get_values_using_fsa_and_fsc(fsa, self) 
       else
         # I am not sure if we need to use child.superclass equals Field due to the sti
