@@ -125,6 +125,7 @@ module DynamicFieldsets
       elsif child.class.superclass == DynamicFieldsets::Field
         return child.get_values_using_fsa_and_fsc(fsa, self) 
       else
+        debugger
         # I am not sure if we need to use child.superclass equals Field due to the sti
         throw "there is a problem with fieldset_child.get_value_using_fsa possibly due to the single table inheritance."
       end
