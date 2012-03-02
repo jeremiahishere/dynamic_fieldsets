@@ -80,6 +80,18 @@ module DynamicFieldsets
       @field = DynamicFieldsets::Field.find(params[:id])
 
       respond_to do |format|
+        # this is sort of a bad hack to make field type changes work
+        # it is setup to allow validations to stop the type from changing using validations
+        # this could be improved by figuring out how to set the type using update_attributes (JH 3-2-2012)
+        if @field.type != params[:dynamic_fieldsets_field][:type]
+          @field.type = params[:dynamic_fieldsets_field][:type]
+          if @field.save
+            @field = DynamicFieldsets::Field.find(params[:id])
+          else
+            format.html { render :action => "edit", :notice => 'Could not change the field type.' }
+          end
+        end
+        
         if @field.update_attributes(params[:dynamic_fieldsets_field])
           format.html { redirect_to(dynamic_fieldsets_field_path(@field), :notice => 'Successfully updated a field.') }
         else
