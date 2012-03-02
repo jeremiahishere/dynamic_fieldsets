@@ -50,6 +50,12 @@ module DynamicFieldsets
     def self.descendant_collection
       descendants.collect { |d| [d.to_s.gsub("DynamicFieldsets::", "").underscore.humanize, d.to_s ] }
     end
+
+    # Very similar to the output in descendant collection
+    # @return [String] A pretty version of the type
+    def display_type
+      type.gsub("DynamicFieldsets::", "").underscore.humanize
+    end
     
     # Form partial Methods
 
