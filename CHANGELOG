@@ -1,6 +1,7 @@
 == unreleased changes
 
 * Removed unloadable from the controllers because they were causing an issue when the controller generator was run
+* Updated the fieldset children manager page to show any type of field
 
 == 0.1.3 
 
