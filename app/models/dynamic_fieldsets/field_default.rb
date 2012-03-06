@@ -22,7 +22,7 @@ module DynamicFieldsets
     # http://www.youtube.com/watch?v=BeP6CpUnfc0 
     def convert_option_name_to_id
       if field.uses_field_options?
-        option = FieldOption.find_by_name(self.value)
+        option = FieldOption.where(:name => self.value, :field => self.field).first
         self.value = option.id unless option.nil?
       end
     end

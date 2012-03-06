@@ -2,7 +2,6 @@
 # Allows users to view but not create or edit fieldset associators
 module DynamicFieldsets
   class FieldsetAssociatorsController < ApplicationController
-    unloadable
 
     # show all fieldset associators
     def index

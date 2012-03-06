@@ -1,5 +1,12 @@
 == unreleased changes
 
+* Removed unloadable from the controllers because they were causing an issue when the controller generator was run
+* Updated the fieldset children manager page to show any type of field
+* Updated dependency system model validations so that they trigger correctly on create
+* Fixed selected value for the fieldset_child_id on fieldset child dependency edit page dependency_fields partial
+* Improved the behavior of the field option finder on the field default model
+* Updated the field record validator to handle the field child classes
+
 == 0.1.3 
 
 * Fixed a typo in the generated config

@@ -14,7 +14,8 @@ module DynamicFieldsets
     # make sure the fieldset child has the type field
     # does not explicitly check to make sure the fieldset_child exists, still have to validate presence
     def type_of_fieldset_child
-      if self.fieldset_child && !self.fieldset_child.child.is_a?(DynamicFieldsets::Field)
+      # yet another casualty of me not understanding how the objects are getting duplicated in development (JH 3-6-2012)
+      if self.fieldset_child && !self.fieldset_child.child.class.superclass.to_s.eql?("DynamicFieldsets::Field")
         self.errors.add(:fieldset_child, "The fieldset child must refer to a Field object")
       end
     end
