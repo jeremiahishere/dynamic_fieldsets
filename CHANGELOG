@@ -4,6 +4,7 @@
 * Updated the fieldset children manager page to show any type of field
 * Updated dependency system model validations so that they trigger correctly on create
 * Fixed selected value for the fieldset_child_id on fieldset child dependency edit page dependency_fields partial
+* Improved the behavior of the field option finder on the field default model
 
 == 0.1.3 
 
