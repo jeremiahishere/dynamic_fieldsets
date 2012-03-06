@@ -9,7 +9,8 @@ module DynamicFieldsets
     has_many :dependencies
     accepts_nested_attributes_for :dependencies, :allow_destroy => true
 
-    validates_presence_of :dependency_group_id
+    # hack to make saving through nested attributes work
+    validates_presence_of :dependency_group, :on => :update
 
     # Evaluates the depdendencies in the claus by ORing them together
     # Short circuit evaluation returns true as soon as possible
