@@ -1,6 +1,7 @@
 == unreleased changes
 
 * Fixed a missing association in the dependency model to the dependency clause model
+* Fixed a major issue in the dependency code where only the first dependency on the form would load
 
 == 0.1.4
 
