@@ -1,5 +1,9 @@
 == unreleased changes
 
+* Fixed a missing association in the dependency model to the dependency clause model
+
+== 0.1.4
+
 * Removed unloadable from the controllers because they were causing an issue when the controller generator was run
 * Updated the fieldset children manager page to show any type of field
 * Updated dependency system model validations so that they trigger correctly on create
