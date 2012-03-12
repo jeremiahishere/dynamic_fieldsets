@@ -1,5 +1,14 @@
 == unreleased changes
 
+== 0.1.5
+
+* Fixed a missing association in the dependency model to the dependency clause model
+* Fixed a major issue in the dependency code where only the first dependency on the form would load
+* Added a new option to the model mixin called initialize_on_create.  When set to true, it creates the fieldset associators when the model instance is created.
+* Moved the fieldset header and footer to partials so they can be overridden
+
+== 0.1.4
+
 * Removed unloadable from the controllers because they were causing an issue when the controller generator was run
 * Updated the fieldset children manager page to show any type of field
 * Updated dependency system model validations so that they trigger correctly on create

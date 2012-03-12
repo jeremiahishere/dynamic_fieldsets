@@ -11,6 +11,7 @@ module DynamicFieldsets
     # Relations    
 
     belongs_to :fieldset_child
+    belongs_to :dependency_clause
 
     # Validations
     validates_presence_of :fieldset_child

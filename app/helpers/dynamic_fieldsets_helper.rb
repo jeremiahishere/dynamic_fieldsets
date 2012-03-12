@@ -88,9 +88,8 @@ module DynamicFieldsetsHelper
   # @param [Hash] values Stored values for the fieldset
   # @return [Array] The HTML elements for the fieldset
   def fieldset_renderer(fsa, fieldset, values, form_type)
-    lines = ["<div id='fieldset-#{fieldset.id}' class='inputs'>"]
-    lines.push "<h3 class='name'>#{fieldset.name}</h3>"
-    lines.push "<ol>"
+    lines = []
+    lines.push render(:partial => "/dynamic_fieldsets/shared/fieldset_header", :locals => {:fieldset => fieldset})
 
     # this returns field/fieldset objects rather than fieldset children
     # that is why this code looks like it is accessing odd objects
@@ -103,8 +102,7 @@ module DynamicFieldsetsHelper
       end
     end
 
-    lines.push "</ol>"
-    lines.push "</div>"
+    lines.push render(:partial => "/dynamic_fieldsets/shared/fieldset_footer", :locals => {:fieldset => fieldset})
 
     return lines
   end
