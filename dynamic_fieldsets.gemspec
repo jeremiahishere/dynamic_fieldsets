@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "dynamic_fieldsets"
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremiah Hemphill", "Ethan Pemble", "John Carter"]
-  s.date = "2012-03-06"
+  s.date = "2012-03-12"
   s.description = "Dynamic fieldsets for rails controllers"
   s.email = "jeremiah@cloudspace.com"
   s.extra_rdoc_files = [
@@ -90,6 +90,8 @@ Gem::Specification.new do |s|
     "app/views/dynamic_fieldsets/form_partials/_select_field.html.erb",
     "app/views/dynamic_fieldsets/form_partials/_text_field.html.erb",
     "app/views/dynamic_fieldsets/form_partials/_textarea_field.html.erb",
+    "app/views/dynamic_fieldsets/shared/_fieldset_footer.html.erb",
+    "app/views/dynamic_fieldsets/shared/_fieldset_header.html.erb",
     "app/views/dynamic_fieldsets/shared/_javascript_watcher.html.erb",
     "app/views/dynamic_fieldsets/shared/_nested_model_javascript.html.erb",
     "app/views/dynamic_fieldsets/show_partials/_show_incomplete.html.erb",
