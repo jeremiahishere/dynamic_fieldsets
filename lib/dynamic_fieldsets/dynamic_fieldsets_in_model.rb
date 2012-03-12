@@ -16,22 +16,32 @@ module DynamicFieldsets
       # fieldset as the key:
       # :child_form => {options}
       # Options:
-      # Fieldset: The unique name of the fieldset the class is associated with
-      # Multiple: Boolean value to allow multiple answer sets for the same fieldset in the class.
+      # fieldset (mandatory): The unique name of the fieldset the class is associated with
+      # multiple (optional): Boolean value to allow multiple answer sets for the same fieldset in the class.
       #   Deafult to false.  Not curently implemented (7-25-2011).
+      # initialize_on_create (optional): Create the fieldste associator after create
       #
       # @param [Hash] args A hash of arguments for the fieldsets.
       def acts_as_dynamic_fieldset(args)
         mattr_accessor :dynamic_fieldsets unless self.respond_to?(:dynamic_fieldsets)
         self.dynamic_fieldsets = {} unless self.dynamic_fieldsets.is_a?(Hash)
 
+        # default values for the arguments
+        # fieldset is mandatory
+        defaults = {
+          :multiple => false,
+          :initialize_on_create => false
+        }
+
         args.each_pair do |key, value|
-          self.dynamic_fieldsets[key] = value
+          value_with_defaults = defaults.merge(value)
+          self.dynamic_fieldsets[key] = value_with_defaults
         end
 
         # hacky system to save fieldset values
         # needs to be refactored and tested
         mattr_accessor :dynamic_fieldset_values unless self.respond_to?(:dynamic_fieldset_values)
+        after_create :initialize_fieldset_associators
         after_save :save_dynamic_fieldsets
 
         include DynamicFieldsets::DynamicFieldsetsInModel::InstanceMethods
@@ -39,6 +49,16 @@ module DynamicFieldsets
     end
 
     module InstanceMethods
+      
+      # If the fieldset is set to initialize_on_create, then attempt to create the fsa
+      def initialize_fieldset_associators
+        self.dynamic_fieldsets.each_pair do |key, options|
+          if options[:initialize_on_create]
+            fsa = fieldset_associator(key)
+            fsa.save if fsa.new_record?
+          end
+        end
+      end
 
       # Overrides the ActiveModel Validations run_validations! method
       # It additionally adds validations for the fields that are required
@@ -149,7 +169,7 @@ module DynamicFieldsets
         end
         return post
       end
-      
+
       # Given the form values, finds the keys that correspond to fieldsets
       # then passes the value for the key to the fieldset associator object for saving into individual field records
       def save_dynamic_fieldsets

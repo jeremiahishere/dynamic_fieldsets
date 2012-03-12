@@ -2,6 +2,7 @@
 
 * Fixed a missing association in the dependency model to the dependency clause model
 * Fixed a major issue in the dependency code where only the first dependency on the form would load
+* Added a new option to the model mixin called initialize_on_create.  When set to true, it creates the fieldset associators when the model instance is created.
 
 == 0.1.4
 
