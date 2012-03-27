@@ -1,5 +1,9 @@
 == unreleased changes
 
+== 0.1.6
+
+* Fixed missing li tags in the show multiple answer partial
+
 == 0.1.5
 
 * Fixed a missing association in the dependency model to the dependency clause model
