@@ -1,101 +1,75 @@
 <script type='text/javascript'>
 
 // The only inputs we care about are visible... not hidden
-var allInputs = $(":input:not(:hidden)");
+var all_inputs = $(":input:not(:hidden)");
 
-/***************************************************************************
-   
-  field-[group_field]-child-[group_fsc] - just want the last value from the
-  input's id. This function rips it.
-
-  input - called upon the input that just called the change()
-  returns [integer] - the group_fsc id from the end of the id
-
-***************************************************************************/
-
-function grab_fsc_id(field, type) {
-	switch(type)
-	{
-		case 'text':
-			var id_array = field.attr('id').split('-');
-			return id_array[id_array.length-1];
-		case 'radio':
-			var id_array = field.closest("div").attr("id").split('-');
-			return id_array[id_array.length-1];
-		case 'textarea':
-			var id_array = field.attr('id').split('-');
-			return id_array[id_array.length-1];
-		case 'checkbox':
-			var id_array = field.closest("div").attr("id").split('-');
-			return id_array[id_array.length-1];
-		case 'select':
-			var id_array = field.attr('id').split('-');
-			return id_array[id_array.length-1];
-		case 'multi-select':	
-			var id_array = field.attr('id').split('-');
-			return id_array[id_array.length-1];
-		default:
-			return ''
-	}
+//Return the fieldset child id for the input
+//This uniquely associated the fieldset child with the fieldset associator
+//New fields should use the fieldset_child_id data attribute
+//But older fields can still attempt to parse it out of the id of the dom element
+//
+// field: Field dom element from dynamic fieldsets
+// type: The type of element from get_type
+// return: The fieldset child id of the field
+function get_fieldset_child_id(field, type) {
+  if(field.attr("data-fsc_id") != undefined)  {
+    return field.attr("data-fsc_id")
+  } else  {
+    switch(type)
+    {
+      case 'text':
+      case 'textarea':
+      case 'select':
+      case 'multi-select':	
+        var id_array = field.attr('id').split('-');
+        return id_array[id_array.length-1];
+      case 'radio':
+      case 'checkbox':
+        var id_array = field.closest("div").attr("id").split('-');
+        return id_array[id_array.length-1];
+      default:
+        return ''
+    }
+  }
 };
 
-/***************************************************************************
-
-  evaluate() does the logical computing between two values with a given
-  relationship.
-
-  params [entered_value] - The current value of the input that called the
-    change()
-  params [relationship] - The relationship of the dependency that the
-    input that called the change() is tied to
-  params [value] - The value that we are testing against for the dependency
-    that the input that called the change() is tied to
-  returns [bool] - The boolean value by comparing the entered_value against
-    the value using the relationship.
-
-**************************************************************************/
-
-function evaluate(entered_value, relationship, value) {
+//Determines whether the dependency has been satisfied
+//CHANGE THIS if the dependency model changes which relationships are allowed.
+//
+// user_value: The value on the form
+// stored_value: The value that satisfies the dependency
+// relationship: The predicate used to compare the user and stored values
+//
+// returns the result of the relationship between user and stored valued
+function evaluate_dependency(user_value, relationship, stored_value) {
 	switch(relationship)
 	{
-                /* CHANGE THIS if the model changes on which relationships
-                   are allowed.                                           */
 		case 'equals':
-			return entered_value == value;
+			return user_value == stored_value;
 		case 'not equals':
-			return entered_value != value;
+			return user_value != stored_value;
 		case 'includes':
-			return jQuery.inArray(value, entered_value) != -1;
+			return $.inArray(stored_value, user_value) != -1;
 		case 'not includes':
-			return jQuery.inArray(value, entered_value) == -1;
+			return $.inArray(stored_value, user_value) == -1;
 		case 'blank':
-			return entered_value == "";
+			return user_value == "";
 		case 'not blank':
-			return entered_value != "";
+			return user_value != "";
 		default:
 			return false;
 	}
 };
 
-/*************************************************************************
+// What to do to the field based on the dependency information
+// CHANGE THIS if the dependency group model changes which actions are allowed
+//
+// success_flag: whether the dependency group returned true or false
+// action: the type of update to apply to the field
+// group_field: the field to update (generally not the field that triggered the change)
+function dependency_action(success_flag, action, group_field) {
 
-  group_action() responds to the results of evaluate() to enact the
-  appropriate action upon the group_field of the dependency_group.
-
-  params [success_flag] - Either set to succeed or failure to indicate
-    the results of evaluate()
-  params [action] - Either set to show or enable.
-  params [group_field] - The field tied to the dependency_group that is
-    to experience the action based off of the success of evaluate()
-  returns - changes the group_field
-
-*************************************************************************/
-
-function group_action(success_flag, action, group_field) {
-
-	/* CHANGE THIS if the model change on which actions are allowed */
-
-	if (success_flag == true){
+	if (success_flag){
 		switch(action)
 		{
 			case 'show':
@@ -114,142 +88,105 @@ function group_action(success_flag, action, group_field) {
 	}
 };
 
-function grab_value(field, type) {
+function get_input_value(field, type) {
 	switch(type)
 	{
 		case 'text':
-			return field.attr('value').toLowerCase();
-		case 'radio':
-			if (field.val() == $(':checked').val())
-			{
-				field_val = field.attr('id').split('-').slice(2);
-				return field_val.join(" ").toLowerCase();
-			}
 		case 'textarea':
 			return field.val();
+		case 'radio':
+			if (field.attr('checked') == 'checked') {
+        return $.trim(field.parent('label').text());
+			}
 		case 'checkbox':
-			var value_ray = [];
-			var field_ray = [];
-			var sibling_ray = field.closest('div').children().children();
-			var checked_ray = $('input:checked');
-			value_ray = getIntersect(sibling_ray, checked_ray) 
-			for (var element in value_ray) {
-				field_ray.push(value_ray[element].id.split('-').slice(2)[0]);
-			}
-			return field_ray;
+      return $('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
+        return $.trim($(option).parent('label').text())
+      });
 		case 'select':
-			return $('#' + field.attr('id') + ' option:selected').text().toLowerCase();
+			return field.find(':selected').text();
 		case 'multi-select':
-			var value_ray = $('#' + field.attr('id') + ' option:selected');
-			var field_ray = []
-			for (var element in value_ray)
-			{
-				var temp = value_ray[element].text;
-				if (typeof(temp) == "string") { field_ray.push(temp.toLowerCase()); }
-			}
-			return field_ray;
+      return field.find(':selected').map(function(index, option)  {
+        return $(option).text();
+      });
 		default:
 			return '';
 	}
 };
 
-function grab_type(field) {
-	if (field.attr('type') != undefined)
-	{
+//returns the input type for the field
+//this code is necessary to handle text areas and multiple selects
+function get_field_type(field) {
+	if (field.attr('type') != undefined) {
 		return field.attr('type')
-	}
-	else if ($('textarea#'+field.attr('id')).length > 0)
-	{
+	} else if ($('textarea#'+field.attr('id')).length > 0) {
 		return "textarea";
-	}
-	else if ($('select#'+field.attr('id')).length > 0)
-	{
-		if (field.attr('multiple') == "multiple")
-		{
+	} else if ($('select#'+field.attr('id')).length > 0) {
+		if (field.attr('multiple') == "multiple") {
 			return "multi-select";
-		}
-		else {
+		} else {
 			return "select";
 		}
-	}
-	else
-	{
+	} else {
 		return "invalid";
 	}
 }
 
-function getIntersect(arr1, arr2) {
-    var temp = [];
-    for(var i = 0; i < arr1.length; i++){
-        for(var k = 0; k < arr2.length; k++){
-            if(arr1[i] == arr2[k]){
-                temp.push( arr1[i]);
-                break;
-            }
-        }
-    }
-    return temp;
+// when a dynamic fieldsets field fires a change event,
+// update the page based on dependency information
+//
+// the dependency information is stored in dynamic_fieldsets_dependencies
+all_inputs.change( function() {
+	var field = $(this);
+	var type = get_field_type(field);
+	var fieldset_child_id = get_fieldset_child_id(field, type);
+	var user_input = get_input_value(field, type)
+
+
+	if (fieldset_child_id in dynamic_fieldsets_dependencies) {
+    $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
+      update_dependency_group_for_fieldset_child(group, user_input);
+    });
+  }
+});
+
+// checks the clauses for a dependency group and runs the action
+// group: the dependency group
+// user_input: the input from the form
+function update_dependency_group_for_fieldset_child(group, user_input)  {
+  var action = group['action'];
+  var group_fsc_id = group['fieldset_child_id'];
+  var group_field_id = group['field_id'];
+  var group_field = '<%= DynamicFieldsets.config.form_field_prefix %>' + group_field_id + '-child-' + group_fsc_id;
+  
+  dependency_action(all_dependency_clauses_true(group, user_input), action, group_field)
 }
 
-/***********************************************************************
- 
-  This watches for ANY change that may take place on the page. It then
-  pushes the object through grab_fsc_id to get an id we can check against
-  the json_holder. If it's in there, it then grabs all the related data,
-  checks the current value against the expected value through the 
-  evaluate() function and then goes through the needed action AFTER
-  checking each dependency and dependency_clause.
- 
-***********************************************************************/
+//all dependencies must be satisfied
+//the first one that is false makes this return false
+//only return true if all return true
+function all_dependency_clauses_true(group, user_input)  {
+  for(var key in group["clause"])  {
+    var clause = group["clause"][key]
+    if(!at_least_one_dependency_true(clause, user_input))  {
+      return false;
+    }
+  }
+  return true;
+}
 
-allInputs.change( function() {
-	var field = $(this);
-	var type = grab_type(field);
-	var fieldset_child_id = grab_fsc_id(field, type);
-	var entered_value = grab_value(field, type)
-	if (fieldset_child_id in json_holder) {
-		for (var group in json_holder[fieldset_child_id]) {
-			var action = json_holder[fieldset_child_id][group]['action'];
-			var group_fsc_id = json_holder[fieldset_child_id][group]['fieldset_child_id'];
-			var group_field_id = json_holder[fieldset_child_id][group]['field_id'];
-			var group_field = '<%= DynamicFieldsets.config.form_field_prefix %>' + group_field_id + '-child-' + group_fsc_id;
+//The dependencies are ORed together
+//So as soon as one returns true, return true
+//Only return false if all are false
+function at_least_one_dependency_true(clause, user_input)  {
+  for(var key in clause)  {
+    var dependency = clause[key]
+    if(evaluate_dependency(user_input, dependency["relationship"], dependency["value"])) {
+      return true
+    }
+  }
+  return false
+}
 
-			// As each dependency clause is AND'd together, we'll assume it'll be
-			// true until short circuited into being false.`
-			var group_break_flag = true;
-			group:
-			for (var clause in json_holder[fieldset_child_id][group]["clause"]) {
-				// As each clause ORs dependencies together, we'll assume it'll be
-				// false until short circuited into being true.
-				var clause_break_flag = false;
-				clause:
-				for (var dependency in json_holder[fieldset_child_id][group]["clause"][clause])
-				{
-					var relationship = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['relationship'];
-					var value = json_holder[fieldset_child_id][group]["clause"][clause][dependency]['value'].toLowerCase();
-					// Short circuit from looking at each dependency in the case
-					// we determine a true dependency (OR)
-					if (evaluate(entered_value, relationship, value)) {
-						clause_break_flag = true;
-						break clause;
-					}
-				}
-
-				// Short circuit from looking at each clause in the case we determine
-				// a false dependency (AND)
-				if (clause_break_flag == false) {
-					group_break_flag = false;
-					break group;
-				}
-			}
-			// If successful, group_break_flag will pass true into group_action
-			group_action(group_break_flag, action, group_field);
-			
-		}
-
-	}
-
-})
-.change();
+all_inputs.change();
 
 </script>

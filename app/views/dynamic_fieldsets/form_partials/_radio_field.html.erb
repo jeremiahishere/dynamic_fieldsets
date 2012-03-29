@@ -1,4 +1,4 @@
-<div id='<%= name %>'>
+<div id='<%= id %>'>
   <% options.each do |option| %>
     <label for='<%= option[:name] %>'>
       <%= radio_button_tag(option[:name], option[:value], option[:checked], option[:html_attributes]) %>  
