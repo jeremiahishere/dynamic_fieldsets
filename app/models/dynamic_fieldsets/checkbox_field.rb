@@ -27,7 +27,7 @@ module DynamicFieldsets
           :value => option.id.to_s,
           :checked => values_or_defaults_for_form(args[:values]).include?(option.id.to_s),
           :label => option.name,
-          :html_attributes =>           
+          :html_attributes => adjusted_html_attributes,
         }
       end
       return output
