@@ -12,7 +12,7 @@ var all_inputs = $(":input:not(:hidden)");
 // type: The type of element from get_type
 // return: The fieldset child id of the field
 function get_fieldset_child_id(field, type) {
-  if(field.attr("data-fsc_id") != undefined)  {
+  if(typeof(field.attr("data-fsc_id")) != "undefined")  {
     return field.attr("data-fsc_id")
   } else  {
     switch(type)
@@ -31,7 +31,18 @@ function get_fieldset_child_id(field, type) {
         return ''
     }
   }
-};
+}
+
+// Pulls the fieldset associator id from the data attribute
+// And falls back on the the string between '-' and '_' at the beginning of the id
+function get_fieldset_associator_id(field)  {
+  if(typeof(field.attr("data-fsa_id")) != "undefined")  {
+    return field.attr("data-fsa_id")
+  } else {
+    //format should be fsa-###_field-###
+    return field.attr('id').split("_")[0].split("-")[1]
+  }
+}
 
 //Determines whether the dependency has been satisfied
 //CHANGE THIS if the dependency model changes which relationships are allowed.
@@ -139,12 +150,13 @@ all_inputs.change( function() {
 	var field = $(this);
 	var type = get_field_type(field);
 	var fieldset_child_id = get_fieldset_child_id(field, type);
+  var fieldset_associator_id = get_fieldset_associator_id(field);
 	var user_input = get_input_value(field, type)
 
 
 	if (fieldset_child_id in dynamic_fieldsets_dependencies) {
     $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-      update_dependency_group_for_fieldset_child(group, user_input);
+      update_dependency_group_for_fieldset_child(group, user_input, fieldset_associator_id);
     });
   }
 });
@@ -152,11 +164,11 @@ all_inputs.change( function() {
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
 // user_input: the input from the form
-function update_dependency_group_for_fieldset_child(group, user_input)  {
+function update_dependency_group_for_fieldset_child(group, user_input, fieldset_associator_id)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
-  var group_field = '<%= DynamicFieldsets.config.form_field_prefix %>' + group_field_id + '-child-' + group_fsc_id;
+  var group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fieldset_associator_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
   
   dependency_action(all_dependency_clauses_true(group, user_input), action, group_field)
 }

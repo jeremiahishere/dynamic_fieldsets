@@ -60,7 +60,8 @@ module DynamicFieldsetsHelper
       field_markup.push render(:partial => field.form_header_partial, :locals => {
           :classes => classes,
           :field => field,
-          :fieldset_child => fieldset_child
+          :fieldset_child => fieldset_child,
+          :field_input_name => DynamicFieldsets.config.form_fieldset_associator_prefix + fsa.id.to_s + "_" + DynamicFieldsets.config.form_field_prefix + fieldset_child.id.to_s,
         })
     end
       
