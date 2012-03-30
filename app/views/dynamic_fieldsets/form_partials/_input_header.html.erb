@@ -1,5 +1,5 @@
-<li class='<%= classes %>' id='input-<%= DynamicFieldsets.config.form_field_prefix %><%= field.id %>-child-<%= fieldset_child.id %>'>
-  <label for ='<%=DynamicFieldsets.config.form_field_prefix %><%= field.id %>'>
+<li class='<%= classes %>' id='input-<%= field_input_name %>'>
+<label for ='<%= field_input_name %>'>
     <%= field.label %>
     <% if field.required? %>
       <abbr title='required'>*</abbr>

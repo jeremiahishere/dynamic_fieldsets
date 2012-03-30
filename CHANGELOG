@@ -1,5 +1,11 @@
 == unreleased changes
 
+== 0.1.7
+* Major refactor of the dependency javascript.  All dependencies now work and dependencies on duplicate fields on the same page in different associators now work.
+* Renamed the dependency list variable to dynamic_fieldsets_dependencies
+* Fixed an issue on the checkbox field view where the id was not being set correctly
+* Fixed an issue on the radio field view where the id was not being set correctly
+
 == 0.1.6
 
 * Fixed missing li tags in the show multiple answer partial
