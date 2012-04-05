@@ -23,7 +23,7 @@ module DynamicFieldsets
     
     # Show single fieldset
     def show
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      @fieldset = DynamicFieldsets::Fieldset.find(params[:id])
 
       respond_to do |format|
         format.html
@@ -41,7 +41,7 @@ module DynamicFieldsets
     
     # Edit existing record
     def edit
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      @fieldset = DynamicFieldsets::Fieldset.find(params[:id])
 
       respond_to do |format|
         format.html
@@ -50,7 +50,7 @@ module DynamicFieldsets
 
     # Show a record and all children
     def children
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id params[:id]
+      @fieldset = DynamicFieldsets::Fieldset.find params[:id]
 
       respond_to do |format|
         format.html
@@ -59,8 +59,8 @@ module DynamicFieldsets
 
     # associates a field or fieldset with the given fieldset by creating a fieldset child
     def associate_child
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
-      @field = DynamicFieldsets::Field.find_by_id(params[:field])
+      @fieldset = DynamicFieldsets::Fieldset.find(params[:id])
+      @field = DynamicFieldsets::Field.find(params[:field])
 
       @fieldset_child = DynamicFieldsets::FieldsetChild.where(:child_id => @field.id, :child_type => @field.class.name, :fieldset_id => @fieldset.id).first
       if(@fieldset_child.nil?)
@@ -112,10 +112,10 @@ module DynamicFieldsets
         if parent_identifier.eql? @order.first[0] # This is the first number:
         then parent_id = parent_identifier # the root fieldset id.
         # Otherwise, we need to retrieve the parent fieldset_id from the FieldsetChild's child_id.
-        else parent_id = DynamicFieldsets::FieldsetChild.find_by_id(parent_identifier).child_id
+        else parent_id = DynamicFieldsets::FieldsetChild.find(parent_identifier).child_id
         end
         children.each_with_index do |fieldset_child_id,index|
-          fieldset_child = DynamicFieldsets::FieldsetChild.find_by_id fieldset_child_id
+          fieldset_child = DynamicFieldsets::FieldsetChild.find fieldset_child_id
           fieldset_child.fieldset_id = parent_id
           fieldset_child.order_num = index+1
           fieldset_child.save
@@ -135,7 +135,7 @@ module DynamicFieldsets
       respond_to do |format|
         if @fieldset.save
           if !parent_id.empty?
-            parent = DynamicFieldsets::Fieldset.find_by_id(parent_id)
+            parent = DynamicFieldsets::Fieldset.find(parent_id)
             DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @fieldset )
             #relation = @fieldset.fieldset_children.build( :fieldset => parent )
             #relation.child = @fieldset
@@ -150,7 +150,7 @@ module DynamicFieldsets
 
     # Update existing record
     def update
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      @fieldset = DynamicFieldsets::Fieldset.find(params[:id])
 
       respond_to do |format|
         if @fieldset.update_attributes(params[:dynamic_fieldsets_fieldset])
@@ -163,7 +163,7 @@ module DynamicFieldsets
 
     # Destroy existing record
     def destroy
-      @fieldset = DynamicFieldsets::Fieldset.find_by_id(params[:id])
+      @fieldset = DynamicFieldsets::Fieldset.find(params[:id])
       @fieldset.destroy
 
       respond_to do |format|

@@ -270,13 +270,13 @@ module DynamicFieldsets
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name, 
             :fieldset_model_name => sym,
-            :fieldset => self.dynamic_fieldsets[sym][:fieldset]).first
+            :fieldset_id => self.dynamic_fieldsets[sym][:fieldset]).first.id
           if fsa.nil?
             fsa = DynamicFieldsets::FieldsetAssociator.new(
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name,
             :fieldset_model_name => sym.to_s,
-            :fieldset => DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset]).first)
+            :fieldset_id => DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset]).first.id)
           end
           return fsa
         else
