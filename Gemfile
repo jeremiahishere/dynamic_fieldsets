@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "~> 3.0.7"
+gem "rails", ">= 3.0.7"
 
 group :development, :test do
   gem "capybara", ">= 0.4.0"
