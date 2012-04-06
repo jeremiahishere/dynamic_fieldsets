@@ -199,7 +199,7 @@ module DynamicFieldsets
             :fieldset_model_name => fsa_values[:fieldset_model_name] 
           )
         else 
-          fsa = DynamicFieldsets::FieldsetAssociator.find_by_id key_id
+          fsa = DynamicFieldsets::FieldsetAssociator.find(key_id)
         end
 
         fsa.update_fieldset_records_with_form_information(fsa_values)
@@ -269,14 +269,14 @@ module DynamicFieldsets
           fsa = DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name, 
-            :fieldset_model_name => sym,
-            :fieldset => self.dynamic_fieldsets[sym][:fieldset]).first
+            :fieldset_model_name => sym.to_s,
+            :fieldset_nkey => self.dynamic_fieldsets[sym][:fieldset].to_s).first
           if fsa.nil?
             fsa = DynamicFieldsets::FieldsetAssociator.new(
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name,
             :fieldset_model_name => sym.to_s,
-            :fieldset => DynamicFieldsets::Fieldset.find_by_nkey(self.dynamic_fieldsets[sym][:fieldset]))
+            :fieldset_id => DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset].to_s).first.id)
           end
           return fsa
         else
@@ -290,7 +290,7 @@ module DynamicFieldsets
       # @param [Fieldset] The fieldset object for the named fieldset
       def fieldset(sym)
         if match_fieldset_associator?(sym)
-          return DynamicFieldsets::Fieldset.find_by_nkey(:nkey => self.dynamic_fieldsets[sym][:fieldset])
+          return DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset]).first
         else
           return nil
         end

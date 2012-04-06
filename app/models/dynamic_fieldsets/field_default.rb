@@ -22,7 +22,7 @@ module DynamicFieldsets
     # http://www.youtube.com/watch?v=BeP6CpUnfc0 
     def convert_option_name_to_id
       if field.uses_field_options?
-        option = FieldOption.where(:name => self.value, :field => self.field).first
+        option = FieldOption.where(:name => self.value, :field_id => self.field.id).first
         self.value = option.id unless option.nil?
       end
     end
@@ -30,7 +30,7 @@ module DynamicFieldsets
     # @return [String] Either the value or the name of the field option reference by the value
     def pretty_value
       if !self.field.nil? && field.uses_field_options?
-        option = FieldOption.find_by_id(self.value)
+        option = FieldOption.find(self.value)
         if !option.nil?
           return option.name
         end

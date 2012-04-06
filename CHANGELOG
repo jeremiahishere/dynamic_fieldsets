@@ -1,5 +1,9 @@
 == unreleased changes
 
+== 0.1.9
+
+* A whole bunch of updates to upgrade rails 3.1 compatibility
+
 == 0.1.8
 
 * Relaxed rails version restriction

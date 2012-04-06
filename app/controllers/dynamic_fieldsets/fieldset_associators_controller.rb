@@ -14,7 +14,7 @@ module DynamicFieldsets
 
     # show one fieldset associator
     def show
-      @fieldset_associator = DynamicFieldsets::FieldsetAssociator.find_by_id(params[:id])
+      @fieldset_associator = DynamicFieldsets::FieldsetAssociator.find(params[:id])
       respond_to do |format|
         format.html
       end

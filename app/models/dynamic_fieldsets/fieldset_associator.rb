@@ -30,7 +30,7 @@ module DynamicFieldsets
     # @params [Hash] args A hash of arguments for the scope
     # @returns [Array] An array of fieldset associators that match the arguments
     def self.find_by_fieldset_model_parameters(args)
-      fieldset = Fieldset.find_by_nkey(args[:fieldset])
+      fieldset = Fieldset.where(:nkey => args[:fieldset_nkey].to_s).first
       throw "Fieldset not found in FieldsetAssociator.find_by_fieldset_model_parameters" if fieldset.nil?
 
       where(
