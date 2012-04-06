@@ -269,14 +269,14 @@ module DynamicFieldsets
           fsa = DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name, 
-            :fieldset_model_name => sym,
-            :fieldset_id => self.dynamic_fieldsets[sym][:fieldset]).first.id
+            :fieldset_model_name => sym.to_s,
+            :fieldset_nkey => self.dynamic_fieldsets[sym][:fieldset].to_s).first
           if fsa.nil?
             fsa = DynamicFieldsets::FieldsetAssociator.new(
             :fieldset_model_id => self.id,
             :fieldset_model_type => self.class.name,
             :fieldset_model_name => sym.to_s,
-            :fieldset_id => DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset]).first.id)
+            :fieldset_id => DynamicFieldsets::Fieldset.where(:nkey => self.dynamic_fieldsets[sym][:fieldset].to_s).first.id)
           end
           return fsa
         else
