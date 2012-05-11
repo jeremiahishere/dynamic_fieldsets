@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe DynamicFieldsets::DependencyClause do
+  before(:each) do
+    pending "total rewrite"
+  end
+
   it "should respond to dependency_group" do
     DynamicFieldsets::DependencyClause.new.should respond_to :dependency_group
   end

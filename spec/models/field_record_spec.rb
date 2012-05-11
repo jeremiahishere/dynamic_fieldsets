@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe DynamicFieldsets::FieldRecord do
   include FieldRecordHelper
+  before(:each) do
+    pending "total rewrite"
+  end
+
 
   it "should respond to field" do
     DynamicFieldsets::FieldRecord.new.should respond_to :field

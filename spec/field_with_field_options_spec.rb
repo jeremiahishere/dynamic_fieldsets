@@ -46,4 +46,26 @@ describe FieldWithFieldOptions do
       it "needs tests"
     end
   end
+
+
+  describe "options" do
+    before do
+      pending "This code has been moved here from the field model"
+    end
+
+    it "should return options from the field options table if enabled" do
+      field = DynamicFieldsets::Field.new
+      field_option = mock_model(DynamicFieldsets::FieldOption)
+      field_option.stub!(:enabled).and_return(true)
+      field.should_receive(:field_options).and_return([field_option])
+      field.options.should include field_option
+    end
+    it "should not return disabled options from the field options table" do
+      field = DynamicFieldsets::Field.new
+      field_option = mock_model(DynamicFieldsets::FieldOption)
+      field_option.stub!(:enabled).and_return(false)
+      field.should_receive(:field_options).and_return([field_option])
+      field.options.should_not include field_option
+    end
+  end
 end

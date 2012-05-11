@@ -25,7 +25,7 @@
   <%= f.fields_for :dependency_group, @fieldset_child.dependency_group do |dependency_group_form| %>
     <%= render :partial => "dependency_group_fields", :locals => {:f => dependency_group_form, :obj => @fieldset_child.dependency_group} %>
   <% end %>
-  <p><%= link_to_add_fields "Add Dependency", f, :dependency_group %></p>
+  <p><%= df_link_to_add_fields "Add Dependency", f, :dependency_group %></p>
 
   <div class="actions">
     <%= f.submit %>

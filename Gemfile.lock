@@ -135,7 +135,7 @@ GEM
       multi_json (~> 1.0.4)
       rubyzip
     sexp_processor (3.0.10)
-    shoulda (3.0.0)
+    shoulda (3.0.1)
       shoulda-context (~> 1.0.0)
       shoulda-matchers (~> 1.0.0)
     shoulda-context (1.0.0)

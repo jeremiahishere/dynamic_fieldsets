@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe DynamicFieldsets::Dependency do
   include DependencyHelper
+  before(:each) do
+    pending "total rewrite"
+  end
+
 
   it "should respond to fieldset_child" do
     DynamicFieldsets::Dependency.new.should respond_to :fieldset_child

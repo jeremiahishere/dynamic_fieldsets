@@ -4,6 +4,11 @@ include DynamicFieldsets
 
 describe DynamicFieldsetsInModel do
 
+  before(:each) do
+    pending "total rewrite"
+  end
+
+
   it "should respond to acts_as_dynamic_fieldset" do
     InformationForm.should respond_to :acts_as_dynamic_fieldset
   end

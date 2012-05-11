@@ -48,4 +48,23 @@ describe DynamicFieldsets::FieldWithSingleAnswer do
       it "needs tests"
     end
   end
+
+  describe "default" do
+    before(:each) do
+      pending "this code has been moved from the field model"
+      @field = DynamicFieldsets::Field.new
+    end
+
+    it "should return a string if the type does not support multiple options" do
+      @field.stub!(:options?).and_return(false)
+      @field.should_receive(:field_defaults).and_return(["default value"])
+      @field.default.should == "default value"
+    end
+
+    it "should return nil if the type supports multiple options" do
+      @field.stub!(:options?).and_return(true)
+      @field.default.should be_nil
+    end
+  end 
+
 end

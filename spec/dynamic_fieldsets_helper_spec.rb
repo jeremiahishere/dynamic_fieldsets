@@ -6,6 +6,10 @@ describe DynamicFieldsetsHelper do
   include DynamicFieldsetsHelper
   include FieldsetHelper
 
+  before(:each) do
+    pending "total rewrite"
+  end
+
   describe "field_renderer method" do
     before(:each) do
       @fsa = mock_model FieldsetAssociator
