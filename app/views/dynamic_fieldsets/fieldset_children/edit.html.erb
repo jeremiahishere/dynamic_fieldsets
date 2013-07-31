@@ -3,4 +3,5 @@
 <%= render 'form' %>
 
 <%= link_to 'Show', @fieldset_child %> |
-<%= link_to 'Back', dynamic_fieldsets_fieldset_children_path %>
+<%= link_to 'Back', dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset_child.fieldset) %>
+

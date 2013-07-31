@@ -1,7 +1,7 @@
 <script type='text/javascript'>
 
 // The only inputs we care about are visible... not hidden
-var all_inputs = $(":input:not(:hidden)");
+var all_inputs = $(":input:not(:hidden)").add("p[id^='fsa']");
 
 //Return the fieldset child id for the input
 //This uniquely associated the fieldset child with the fieldset associator
@@ -21,6 +21,7 @@ function get_fieldset_child_id(field, type) {
       case 'textarea':
       case 'select':
       case 'multi-select':	
+      case 'instruction':
         var id_array = field.attr('id').split('-');
         return id_array[id_array.length-1];
       case 'radio':
@@ -84,7 +85,7 @@ function dependency_action(success_flag, action, group_field) {
 		switch(action)
 		{
 			case 'show':
-				$('#input-' + group_field).show();
+				$('[id$=' + group_field +']').show();
 			case 'enable':
 				$('#' + group_field + ' :input').removeAttr('disabled');
 		}
@@ -92,7 +93,7 @@ function dependency_action(success_flag, action, group_field) {
 		switch(action)
 		{
 			case 'show':
-				$('#input-' + group_field).hide();
+				$('[id$=' + group_field +']').hide();
 			case 'enable':
 				$('#' + group_field + ' :input').attr('disabled', true);
 		}
@@ -152,7 +153,6 @@ all_inputs.change( function() {
 	var fieldset_child_id = get_fieldset_child_id(field, type);
   var fieldset_associator_id = get_fieldset_associator_id(field);
 	var user_input = get_input_value(field, type)
-
 
 	if (fieldset_child_id in dynamic_fieldsets_dependencies) {
     $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
