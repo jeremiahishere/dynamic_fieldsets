@@ -82,7 +82,47 @@ module DynamicFieldsetsHelper
 
     return field_markup
   end
-  
+ 
+  # Removes fieldset children that do not show in the edit form due to dependencies
+  # @param [Fieldset] fieldset The Fieldset to render
+  # @param [Hash] values Stored values for the fieldset
+  # @return [Array <FieldsetChild>] children that should render in show page
+  #
+  def hide_children(fieldset, values)
+    children = []
+    fieldset.fieldset_children.each do |child_field|
+      value = values[child_field.id]
+      dependent_on = DynamicFieldsets::DependencyGroup.where(:fieldset_child_id => child_field.id).first
+      if dependent_on.nil?
+        children << child_field
+      else
+        dependencies = dependent_on.dependency_clauses.collect(&:dependencies).flatten.uniq
+        dependencies.each do |dependency|
+          if values[dependency.fieldset_child_id].present?
+            dependent_on_type = dependency.fieldset_child.child.type
+            dependent_on_values = values[dependency.fieldset_child_id] 
+            check_values = []
+
+            if dependent_on_type == "DynamicFieldsets::CheckboxField" || dependent_on_type == "DynamicFieldsets::MultipleSelectField" 
+              dependent_on_values.each do |current_value|
+                check_values << current_value[:name]
+              end
+            else
+              check_values << dependent_on_values.has_key?(:name) ? dependent_on_values[:name] : dependent_on_values[:value]
+            end
+            
+            check_values.each do |check|
+              if dependent_on.action == "show" && check == dependency.value
+                children << child_field
+              end
+            end
+          end
+        end
+      end
+    end
+    return children.uniq
+  end
+ 
   # Builds HTML for the provided fieldset and its children.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
   # @param [Fieldset] fieldset The Fieldset to render
@@ -92,9 +132,16 @@ module DynamicFieldsetsHelper
     lines = []
     lines.push render(:partial => "/dynamic_fieldsets/shared/fieldset_header", :locals => {:fieldset => fieldset})
 
+    if form_type == "show"
+      # still have to add children that are fieldsets.. have not tested far enough to get into it
+      children = hide_children(fieldset, values)
+    else
+      children = fieldset.children
+    end
+
     # this returns field/fieldset objects rather than fieldset children
     # that is why this code looks like it is accessing odd objects
-    fieldset.children.each do |child|
+    children.each do |child|
       if child.is_a? DynamicFieldsets::Fieldset
         lines += fieldset_renderer( fsa, child, values, form_type )
       else # one of many possible types of child
@@ -133,7 +180,6 @@ module DynamicFieldsetsHelper
       rendered_dynamic_fieldset += line + "\n"
     end
     rendered_dynamic_fieldset += "</div>"
-
     return rendered_dynamic_fieldset.html_safe
   end
 
