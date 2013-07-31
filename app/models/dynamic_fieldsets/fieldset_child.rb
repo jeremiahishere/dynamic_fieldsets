@@ -23,7 +23,7 @@ module DynamicFieldsets
     # statement:
     #   IF Field1 == A AND Field2 == B THEN show Field3
     # In that example, Field1 and Field2 belong to dependencies and Field3 belongs to a dependency_group
-    has_one :dependency_group
+    has_one :dependency_group, :dependent => :destroy
     accepts_nested_attributes_for :dependency_group, :allow_destroy => true
 
     has_many :dependencies

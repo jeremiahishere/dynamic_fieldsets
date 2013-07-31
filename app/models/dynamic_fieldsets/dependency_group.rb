@@ -3,7 +3,7 @@ module DynamicFieldsets
     self.table_name = "dynamic_fieldsets_dependency_groups"
     belongs_to :fieldset_child
 
-    has_many :dependency_clauses
+    has_many :dependency_clauses, :dependent => :destroy
     accepts_nested_attributes_for :dependency_clauses, :allow_destroy => true
 
     # List of allowable actions for the group

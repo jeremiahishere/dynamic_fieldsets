@@ -6,7 +6,7 @@ module DynamicFieldsets
     self.table_name = "dynamic_fieldsets_dependency_clauses"
     belongs_to :dependency_group  
 
-    has_many :dependencies
+    has_many :dependencies, :dependent => :destroy
     accepts_nested_attributes_for :dependencies, :allow_destroy => true
 
     # hack to make saving through nested attributes work
