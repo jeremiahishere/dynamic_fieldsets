@@ -57,18 +57,27 @@ module DynamicFieldsets
       @field = params[:dynamic_fieldsets_field][:type].constantize.new(params[:dynamic_fieldsets_field])
 
       respond_to do |format|
+        type = params[:dynamic_fieldsets_field][:type] 
         
-        if @field.save
-          if !parent_id.empty?
-            parent = DynamicFieldsets::Fieldset.find(parent_id)
-            DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @field )
-            #relation = @fieldset.fieldset_children.build( :fieldset => parent )
-            #relation.child = @field
-            #relation.save
-          end
-          format.html { redirect_to(dynamic_fieldsets_field_path(@field), :notice => 'Successfully created a new field.') }
+        if  type == "" 
+          format.html { redirect_to(new_dynamic_fieldsets_field_path, :notice => 'Need to select a type') }
+        
+        elsif (type == "DynamicFieldsets::CheckboxField" || type == "DynamicFieldsets::RadioField" || type == "DynamicFieldsets::MultipleSelectField" || type == "DynamicFieldsets::SelectField") && !params[:dynamic_fieldsets_field].has_key?(:field_options_attributes)
+          format.html { redirect_to(new_dynamic_fieldsets_field_path, :notice => 'Need to add at least one option with field type '+type.split('::').last) }
+        
         else
-          format.html { render :action => "new" }
+          if @field.save
+            if !parent_id.empty?
+              parent = DynamicFieldsets::Fieldset.find(parent_id)
+              DynamicFieldsets::FieldsetChild.create( :fieldset => parent, :child => @field )
+              #relation = @fieldset.fieldset_children.build( :fieldset => parent )
+              #relation.child = @field
+              #relation.save
+            end
+            format.html { redirect_to(dynamic_fieldsets_field_path(@field), :notice => 'Successfully created a new field.') }
+          else
+            format.html { render :action => "new" }
+          end
         end
       end
     end
