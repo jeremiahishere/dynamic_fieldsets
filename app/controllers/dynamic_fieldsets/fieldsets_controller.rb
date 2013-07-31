@@ -66,7 +66,7 @@ module DynamicFieldsets
       if(@fieldset_child.nil?)
         @fieldset_child = DynamicFieldsets::FieldsetChild.new(
           :child_id => @field.id, 
-          :child_type => @field.class.name,
+          :child_type => "DynamicFieldsets::Field",
           :fieldset_id => @fieldset.id,
           :order_num => DynamicFieldsets::FieldsetChild.where(:fieldset_id => @fieldset.id).count + 1)
       else
@@ -82,7 +82,7 @@ module DynamicFieldsets
           end
           format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset), :notice => notice_text )}
         else
-          format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset), :notice => "Field was not successsfully associated." )}
+          format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset), :notice => @fieldset_child.errors) }
         end
       end
     end

@@ -28,7 +28,6 @@ module DynamicFieldsets
     # updates the fieldset_child and uses accepts_nested_attributes_for to setup a dependency system
     def update
       @fieldset_child = DynamicFieldsets::FieldsetChild.find(params[:id])
-
       respond_to do |format|
         if @fieldset_child.update_attributes(params[:dynamic_fieldsets_fieldset_child])
           format.html { redirect_to(dynamic_fieldsets_children_dynamic_fieldsets_fieldset_path(@fieldset_child.root_fieldset), :notice => "Successfully updated a child")}

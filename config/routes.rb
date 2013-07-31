@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   namespace :dynamic_fieldsets do
     resources :fieldset_associators
 
-    resources :fieldsets
     match "/fieldsets/roots" => "fieldsets#roots"
+    resources :fieldsets
     match "/fieldsets/:id/children" => "fieldsets#children", :as => :children_dynamic_fieldsets_fieldset
     match "/fieldsets/:id/children/reorder" => "fieldsets#reorder"
     match "/fieldsets/new(/:parent)" => "fieldsets#new", :as => :new_dynamic_fieldsets_fieldset
