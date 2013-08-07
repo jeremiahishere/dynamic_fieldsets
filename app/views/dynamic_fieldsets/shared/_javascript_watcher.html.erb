@@ -45,61 +45,6 @@ function get_fieldset_associator_id(field)  {
   }
 }
 
-//Determines whether the dependency has been satisfied
-//CHANGE THIS if the dependency model changes which relationships are allowed.
-//
-// user_value: The value on the form
-// stored_value: The value that satisfies the dependency
-// relationship: The predicate used to compare the user and stored values
-//
-// returns the result of the relationship between user and stored valued
-function evaluate_dependency(user_value, relationship, stored_value) {
-	switch(relationship)
-	{
-		case 'equals':
-			return user_value == stored_value;
-		case 'not equals':
-			return user_value != stored_value;
-		case 'includes':
-			return $.inArray(stored_value, user_value) != -1;
-		case 'not includes':
-			return $.inArray(stored_value, user_value) == -1;
-		case 'blank':
-			return user_value == "";
-		case 'not blank':
-			return user_value != "";
-		default:
-			return false;
-	}
-};
-
-// What to do to the field based on the dependency information
-// CHANGE THIS if the dependency group model changes which actions are allowed
-//
-// success_flag: whether the dependency group returned true or false
-// action: the type of update to apply to the field
-// group_field: the field to update (generally not the field that triggered the change)
-function dependency_action(success_flag, action, group_field) {
-
-	if (success_flag){
-		switch(action)
-		{
-			case 'show':
-				$('[id$=' + group_field +']').show();
-			case 'enable':
-				$('#' + group_field + ' :input').removeAttr('disabled');
-		}
-	} else {
-		switch(action)
-		{
-			case 'show':
-				$('[id$=' + group_field +']').hide();
-			case 'enable':
-				$('#' + group_field + ' :input').attr('disabled', true);
-		}
-	}
-};
-
 function get_input_value(field, type) {
 	switch(type)
 	{
@@ -109,7 +54,11 @@ function get_input_value(field, type) {
 		case 'radio':
 			if (field.attr('checked') == 'checked') {
         return $.trim(field.parent('label').text());
-			}
+			} 
+      //it should only grab results for checked radios
+      else { 
+        return $.trim(field.parent().parent().find('[checked="checked"]').parent('label').text());
+      }
 		case 'checkbox':
       return $('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
         return $.trim($(option).parent('label').text())
@@ -144,42 +93,49 @@ function get_field_type(field) {
 }
 
 // when a dynamic fieldsets field fires a change event,
+// store current values of all fields in associative array (AU 08-07-13)
+//   pass fieldset_child_id of field that was changed to other functions
 // update the page based on dependency information
 //
 // the dependency information is stored in dynamic_fieldsets_dependencies
 all_inputs.change( function() {
-	var field = $(this);
-	var type = get_field_type(field);
-	var fieldset_child_id = get_fieldset_child_id(field, type);
-  var fieldset_associator_id = get_fieldset_associator_id(field);
-	var user_input = get_input_value(field, type)
-
-	if (fieldset_child_id in dynamic_fieldsets_dependencies) {
-    $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-      update_dependency_group_for_fieldset_child(group, user_input, fieldset_associator_id);
+    field = $(this);
+    var type = get_field_type(field);
+    var fieldset_child_id = get_fieldset_child_id(field, type)
+    var fieldset_associator_id = get_fieldset_associator_id(field);
+    
+    var user_inputs = {}
+    $.each(all_inputs, function(index, input){
+      var all_type = get_field_type($(input));
+      var all_fieldset_child_id = get_fieldset_child_id($(input), all_type)
+      user_inputs[all_fieldset_child_id] = get_input_value($(input), all_type);
     });
-  }
+      
+    if (fieldset_child_id in dynamic_fieldsets_dependencies) {
+      $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
+        update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_id);
+      });
+    } 
 });
 
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
 // user_input: the input from the form
-function update_dependency_group_for_fieldset_child(group, user_input, fieldset_associator_id)  {
+function update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_id)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
   var group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fieldset_associator_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
-  
-  dependency_action(all_dependency_clauses_true(group, user_input), action, group_field)
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_field, 0 )
 }
 
-//all dependencies must be satisfied
+//all dependencies clauses are ANDed
 //the first one that is false makes this return false
 //only return true if all return true
-function all_dependency_clauses_true(group, user_input)  {
+function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
   for(var key in group["clause"])  {
     var clause = group["clause"][key]
-    if(!at_least_one_dependency_true(clause, user_input))  {
+    if(!at_least_one_dependency_true(fieldset_child_id, clause, user_inputs))  {
       return false;
     }
   }
@@ -189,15 +145,130 @@ function all_dependency_clauses_true(group, user_input)  {
 //The dependencies are ORed together
 //So as soon as one returns true, return true
 //Only return false if all are false
-function at_least_one_dependency_true(clause, user_input)  {
+//It looks to see what dependencies inside the clause should actually be tested (AU 08-07-13)
+//  If dependency doesn't match current field, it looks up the correct stored input to compare
+function at_least_one_dependency_true(fieldset_child_id, clause, user_inputs)  {
   for(var key in clause)  {
     var dependency = clause[key]
-    if(evaluate_dependency(user_input, dependency["relationship"], dependency["value"])) {
+    if( evaluate_dependency(user_inputs[fieldset_child_id], dependency["relationship"], dependency["value"]) ){
       return true
+    } else if( fieldset_child_id != dependency['fieldset_child_id'] ) { 
+      if( evaluate_dependency(user_inputs[dependency['fieldset_child_id']], dependency['relationship'], dependency['value']) ){
+        return true
+      }
     }
   }
   return false
 }
+
+
+//Determines whether the dependency has been satisfied
+//CHANGE THIS if the dependency model changes which relationships are allowed.
+//
+// user_value: The value on the form
+// stored_value: The value that satisfies the dependency
+// relationship: The predicate used to compare the user and stored values
+//
+// returns the result of the relationship between user and stored valued
+function evaluate_dependency(user_value, relationship, stored_value) {
+	switch(relationship)
+	{
+		case 'equals':
+			return user_value == stored_value;
+		case 'not equals':
+			return user_value != stored_value;
+		case 'includes':
+			return $.inArray(stored_value, user_value) != -1;
+		case 'not includes':
+			return $.inArray(stored_value, user_value) == -1;
+		case 'blank':
+			return user_value == "";
+		case 'not blank':
+			return user_value != "";
+		default:
+			return false;
+	}
+};
+
+// What to do to the field based on the dependency information
+// CHANGE THIS if the dependency group model changes which actions are allowed
+//
+// success_flag: whether the dependency group returned true or false
+// action: the type of update to apply to the field
+// group_field: the field to update (generally not the field that triggered the change)
+function dependency_action(success_flag, action, group_field, counter) {
+	if (success_flag){
+		switch(action)
+		{
+			case 'show':
+				$('[id$=' + group_field +']').show();
+			case 'enable':
+				$('#' + group_field + ' :input').removeAttr('disabled');
+		}
+	} else {
+		switch(action)
+		{
+			case 'show':
+				$('[id$=' + group_field +']').hide();
+			case 'enable':
+				$('#' + group_field + ' :input').attr('disabled', true);
+		}
+    
+    clear_unused_fields(group_field)
+
+    //save from infinite recursion, only goes as deep as there are dependency groups
+    if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
+      nested_dependencies(success_flag, action, group_field, counter)
+    }	
+  }
+  
+};
+
+function clear_unused_fields(group_field) {
+  field = $('[id$='+group_field+']').children(':input');
+  type = get_field_type(field);
+  switch(type)
+	{
+		case 'text':
+		case 'textarea':
+			field.val("");
+		case 'radio':
+			if (field.attr('checked') == 'checked') {
+			} 
+		case 'checkbox':
+      //$('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
+      //});
+		case 'select':
+			//field.find(':selected').text();
+		case 'multi-select':
+      //return field.find(':selected').map(function(index, option)  {
+      //});
+	}
+};
+
+//looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
+function nested_dependencies(success_flag, action, group_field, counter) {
+  var dependent_on = group_field.split("-").pop();
+  for( var key in dynamic_fieldsets_dependencies ) {
+    var child = dynamic_fieldsets_dependencies[key]
+    for( var keyg in child ) {
+      //ignore own group since dependents won't be here
+      if( keyg != dependent_on ) {
+        var group_search = child[keyg]
+        for( var keyc in group_search["clause"] ) {
+          var clause = group_search["clause"][keyc]
+          for( var keyd in clause ) {
+            var dependency = clause[keyd]
+            if ( dependency["fieldset_child_id"] == dependent_on ) {
+              var dependent_id = group_field.replace(dependent_on, group_search["fieldset_child_id"])
+              dependency_action(success_flag, action, dependent_id, counter+1)
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
 all_inputs.change();
 

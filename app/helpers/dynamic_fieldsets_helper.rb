@@ -94,7 +94,7 @@ module DynamicFieldsetsHelper
       value = values[child_field.id]
       dependent_on = DynamicFieldsets::DependencyGroup.where(:fieldset_child_id => child_field.id).first
       if dependent_on.nil?
-        children << child_field
+        children << child_field.child
       else
         dependencies = dependent_on.dependency_clauses.collect(&:dependencies).flatten.uniq
         dependencies.each do |dependency|
@@ -108,12 +108,12 @@ module DynamicFieldsetsHelper
                 check_values << current_value[:name]
               end
             else
-              check_values << dependent_on_values.has_key?(:name) ? dependent_on_values[:name] : dependent_on_values[:value]
+              check_values << (dependent_on_values.has_key?(:name) ? dependent_on_values[:name] : dependent_on_values[:value])
             end
             
             check_values.each do |check|
               if dependent_on.action == "show" && check == dependency.value
-                children << child_field
+                children << child_field.child
               end
             end
           end
@@ -132,13 +132,9 @@ module DynamicFieldsetsHelper
     lines = []
     lines.push render(:partial => "/dynamic_fieldsets/shared/fieldset_header", :locals => {:fieldset => fieldset})
 
-    if form_type == "show"
-      # still have to add children that are fieldsets.. have not tested far enough to get into it
-      children = hide_children(fieldset, values)
-    else
-      children = fieldset.children
-    end
-
+    # still have to add children that are fieldsets.. have not tested far enough to get into it
+    children = form_type == "show" ? hide_children(fieldset, values) : fieldset.children
+        
     # this returns field/fieldset objects rather than fieldset children
     # that is why this code looks like it is accessing odd objects
     children.each do |child|

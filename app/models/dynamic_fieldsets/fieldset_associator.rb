@@ -84,7 +84,7 @@ module DynamicFieldsets
         output[fieldset_child.id] = {}
         fieldset_child.dependencies.each do |dependency|
           dependency_group = dependency.dependency_clause.dependency_group
-          output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
+          output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash #if dependency_group.present?
         end
       end
       return output
@@ -101,7 +101,7 @@ module DynamicFieldsets
       output = []
       parent_fieldset.fieldset_children.each do |fieldset_child|
         if fieldset_child.child_type == "DynamicFieldsets::Field"
-          if !fieldset_child.dependencies.empty?
+          if fieldset_child.dependencies.present?
             output.push fieldset_child
           # else then next
           end
