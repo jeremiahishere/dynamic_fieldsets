@@ -53,12 +53,14 @@ function get_input_value(field, type) {
 			return field.val();
 		case 'radio':
 			if (field.attr('checked') == 'checked') {
-        return $.trim(field.parent('label').text());
+        var output = $.trim(field.parent('label').text());
 			} 
       //it should only grab results for checked radios
       else { 
-        return $.trim(field.parent().parent().find('[checked="checked"]').parent('label').text());
+        var output = $.trim(field.parent().parent().find(':checked').parent('label').text());
       }
+      console.log(output);
+      return output;
 		case 'checkbox':
       return $('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
         return $.trim($(option).parent('label').text())
