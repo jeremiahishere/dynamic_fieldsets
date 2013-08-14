@@ -59,7 +59,6 @@ function get_input_value(field, type) {
       else { 
         var output = $.trim(field.parent().parent().find(':checked').parent('label').text());
       }
-      console.log(output);
       return output;
 		case 'checkbox':
       return $('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
