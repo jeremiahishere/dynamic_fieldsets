@@ -59,7 +59,6 @@ function get_input_value(field, type) {
       else { 
         var output = $.trim(field.parent().parent().find(':checked').parent('label').text());
       }
-      console.log(output);
       return output;
 		case 'checkbox':
       return $('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
@@ -101,6 +100,12 @@ function get_field_type(field) {
 //
 // the dependency information is stored in dynamic_fieldsets_dependencies
 all_inputs.change( function() {
+    update_fields();
+});
+
+// added this break down, so that update_fields can be called from the app
+// this is necessary when additional input types are used within fieldsets AU 08-14-13
+function update_fields() {
     field = $(this);
     var type = get_field_type(field);
     var fieldset_child_id = get_fieldset_child_id(field, type)
@@ -118,7 +123,7 @@ all_inputs.change( function() {
         update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_id);
       });
     } 
-});
+};
 
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
