@@ -84,7 +84,8 @@ module DynamicFieldsets
         output[fieldset_child.id] = {}
         fieldset_child.dependencies.each do |dependency|
           dependency_group = dependency.dependency_clause.dependency_group
-          output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash #if dependency_group.present?
+          output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
+          output[fieldset_child.id][dependency_group.id][:fieldset_associators] = dependency_group.fieldset_child.fieldset.fieldset_associators.collect(&:id)
         end
       end
       return output

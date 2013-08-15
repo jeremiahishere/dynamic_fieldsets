@@ -186,7 +186,12 @@ module DynamicFieldsetsHelper
   # @return [String] The javascript variable that shows what fields have dependencies
   def javascript_renderer(fsa)
     unless fsa.id == nil
-      rendered_javascript = "<script type='text/javascript'> var dynamic_fieldsets_dependencies = #{fsa.dependency_child_hash.to_json}; </script>"
+      rendered_javascript = "<script type='text/javascript'> 
+      if ( typeof dynamic_fieldsets_dependencies == 'undefined' ){
+        var dynamic_fieldsets_dependencies = #{fsa.dependency_child_hash.to_json}; 
+      } else {
+        $.extend(dynamic_fieldsets_dependencies, #{fsa.dependency_child_hash.to_json}); 
+      }</script>"
       rendered_javascript += render "dynamic_fieldsets/shared/javascript_watcher"
       return rendered_javascript.html_safe
     else

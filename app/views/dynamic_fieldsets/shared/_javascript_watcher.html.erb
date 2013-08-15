@@ -1,7 +1,7 @@
 <script type='text/javascript'>
 
 // The only inputs we care about are visible... not hidden
-var all_inputs = $(":input:not(:hidden)").add("p[id^='fsa']");
+var all_inputs = $(":input:not(:hidden)[id^=fsa]").add("p[id^='fsa']");
 
 //Return the fieldset child id for the input
 //This uniquely associated the fieldset child with the fieldset associator
@@ -103,7 +103,6 @@ all_inputs.change( function() {
     field = $(this);
     var type = get_field_type(field);
     var fieldset_child_id = get_fieldset_child_id(field, type)
-    var fieldset_associator_id = get_fieldset_associator_id(field);
     
     var user_inputs = {}
     $.each(all_inputs, function(index, input){
@@ -111,10 +110,11 @@ all_inputs.change( function() {
       var all_fieldset_child_id = get_fieldset_child_id($(input), all_type)
       user_inputs[all_fieldset_child_id] = get_input_value($(input), all_type);
     });
-      
+    
     if (fieldset_child_id in dynamic_fieldsets_dependencies) {
       $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-        update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_id);
+        fieldset_associator_ids = dynamic_fieldsets_dependencies[fieldset_child_id][index]["fieldset_associators"]; 
+        update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_ids);
       });
     } 
 });
@@ -122,12 +122,15 @@ all_inputs.change( function() {
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
 // user_input: the input from the form
-function update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_id)  {
+function update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_ids)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
-  var group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fieldset_associator_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
-  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_field, 0 )
+  var group_fields = []
+  $.each(fieldset_associator_ids, function(index, fsa_id) {
+    group_fields[index] = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
+  });
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_fields, 0 )
 }
 
 //all dependencies clauses are ANDed
@@ -197,32 +200,34 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 // success_flag: whether the dependency group returned true or false
 // action: the type of update to apply to the field
 // group_field: the field to update (generally not the field that triggered the change)
-function dependency_action(success_flag, action, group_field, counter) {
-	if (success_flag){
-		switch(action)
-		{
-			case 'show':
-				$('[id$=' + group_field +']').show();
-			case 'enable':
-				$('#' + group_field + ' :input').removeAttr('disabled');
-		}
-	} else {
-		switch(action)
-		{
-			case 'show':
-				$('[id$=' + group_field +']').hide();
-			case 'enable':
-				$('#' + group_field + ' :input').attr('disabled', true);
-		}
+function dependency_action(success_flag, action, group_fields, counter) {
+  $.each(group_fields, function(index, group_field){
+    if (success_flag){
+        switch(action)
+        {
+          case 'show':
+            $('[id$=' + group_field +']').show();
+          case 'enable':
+            $('#' + group_field + ' :input').removeAttr('disabled');
+        }
     
-    clear_unused_fields(group_field)
+    } else {
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').hide();
+        case 'enable':
+          $('#' + group_field + ' :input').attr('disabled', true);
+      }
+      
+      clear_unused_fields(group_field)
 
-    //save from infinite recursion, only goes as deep as there are dependency groups
-    if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
-      nested_dependencies(success_flag, action, group_field, counter)
-    }	
-  }
-  
+      //save from infinite recursion, only goes as deep as there are dependency groups
+      if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
+        nested_dependencies(success_flag, action, group_field, counter)
+      }	
+    }
+  });
 };
 
 function clear_unused_fields(group_field) {
