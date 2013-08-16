@@ -98,7 +98,7 @@ module DynamicFieldsets
     # Scopes and Static Methods
 
     scope :ordered, order( 'order_num asc' )
-
+    
     # Methods
 
     # @return [ActiveRecord::Relation] Collection of FieldsetChildren that are direct descendents; ascending order.

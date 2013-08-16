@@ -203,13 +203,13 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 function dependency_action(success_flag, action, group_fields, counter) {
   $.each(group_fields, function(index, group_field){
     if (success_flag){
-        switch(action)
-        {
-          case 'show':
-            $('[id$=' + group_field +']').show();
-          case 'enable':
-            $('#' + group_field + ' :input').removeAttr('disabled');
-        }
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').show();
+        case 'enable':
+          $('#' + group_field + ' :input').removeAttr('disabled');
+      }
     
     } else {
       switch(action)

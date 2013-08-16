@@ -31,7 +31,7 @@
       <span class="name"><%= child.label %></span>
       <span class="admin">
         <span class="show"><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></span>
-        <span class="edit"><%= link_to "Edit Dependency", edit_dynamic_fieldsets_fieldset_child_path(child) %></span>
+        <span class="edit"><%= link_to "Edit Dependency", edit_dynamic_fieldsets_fieldset_child_path(fieldset_child) %></span>
         <span class="edit"><%= link_to 'Edit Field', edit_dynamic_fieldsets_field_path(child) %></span>
         <span class="destroy"><%= button_to 'Remove', dynamic_fieldsets_remove_fieldset_child_path(fieldset_child), :method => :post %></span>
       </span>
