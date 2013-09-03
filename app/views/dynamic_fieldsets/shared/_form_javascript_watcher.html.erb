@@ -111,8 +111,6 @@ all_inputs.change( function() {
       user_inputs[all_fieldset_child_id] = get_input_value($(input), all_type);
     });
   
-    //console.log(user_inputs);
-   
     if (fieldset_child_id in dynamic_fieldsets_dependencies) {
       $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
         fieldset_associator_ids = dynamic_fieldsets_dependencies[fieldset_child_id][index]["fieldset_associators"]; 
@@ -141,7 +139,7 @@ function update_dependency_group_for_fieldset_child(fieldset_child_id, group, us
 function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
   for(var key in group["clause"])  {
     var clause = group["clause"][key]
-    if(!at_least_one_dependency_true(fieldset_child_id, clause, user_inputs))  {
+    if(!at_least_one_dependency_true(clause, user_inputs))  {
       return false;
     }
   }
@@ -153,18 +151,13 @@ function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
 //Only return false if all are false
 //It looks to see what dependencies inside the clause should actually be tested (AU 08-07-13)
 //  If dependency doesn't match current field, it looks up the correct stored input to compare
-function at_least_one_dependency_true(fieldset_child_id, clause, user_inputs)  {
+function at_least_one_dependency_true(clause, user_inputs)  {
   for(var key in clause)  {
     var dependency = clause[key]
-    //need to keep debugging.. AND not working?
-    //console.log(user_inputs[fieldset_child_id])
+    var fieldset_child_id = dependency["fieldset_child_id"]
     if( evaluate_dependency(user_inputs[fieldset_child_id], dependency["relationship"], dependency["value"]) ){
       return true
-    } else if( fieldset_child_id != dependency['fieldset_child_id'] ) { 
-      if( evaluate_dependency(user_inputs[dependency['fieldset_child_id']], dependency['relationship'], dependency['value']) ){
-        return true
-      }
-    }
+    } 
   }
   return false
 }
