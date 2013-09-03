@@ -125,7 +125,7 @@ function nested_dependencies(success_flag, action, group_field, counter) {
             var dependency = clause[keyd]
             if ( dependency["fieldset_child_id"] == dependent_on ) {
               var dependent_id = group_field.replace(dependent_on, group_search["fieldset_child_id"])
-              dependency_action(success_flag, action, dependent_id, counter+1)
+              dependency_action(success_flag, action, [dependent_id], counter+1)
             }
           }
         }

@@ -199,54 +199,54 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 // group_field: the field to update (generally not the field that triggered the change)
 function dependency_action(success_flag, action, group_fields, counter) {
   $.each(group_fields, function(index, group_field){
-    if (success_flag){
-      switch(action)
-      {
-        case 'show':
-          $('[id$=' + group_field +']').show();
-        case 'enable':
-          $('#' + group_field + ' :input').removeAttr('disabled');
-      }
-    
-    } else {
-      switch(action)
-      {
-        case 'show':
-          $('[id$=' + group_field +']').hide();
-        case 'enable':
-          $('#' + group_field + ' :input').attr('disabled', true);
-      }
+    if( $('[id$='+group_field+']').size() > 0 ) {
+      if (success_flag){
+        switch(action)
+        {
+          case 'show':
+            $('[id$=' + group_field +']').show();
+          case 'enable':
+            $('#' + group_field + ' :input').removeAttr('disabled');
+        }
       
-      clear_unused_fields(group_field)
+      } else {
+        switch(action)
+        {
+          case 'show':
+            $('[id$=' + group_field +']').hide();
+          case 'enable':
+            $('#' + group_field + ' :input').attr('disabled', true);
+        }
+        clear_unused_fields(group_field)
 
-      //save from infinite recursion, only goes as deep as there are dependency groups
-      if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
-        nested_dependencies(success_flag, action, group_field, counter)
-      }	
+        //save from infinite recursion, only goes as deep as there are dependency groups
+        if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
+          nested_dependencies(success_flag, action, group_field, counter)
+        }	
+      }
     }
   });
 };
 
 function clear_unused_fields(group_field) {
-  field = $('[id$='+group_field+']').children(':input');
-  type = get_field_type(field);
-  switch(type)
-	{
-		case 'text':
-		case 'textarea':
-			field.val("");
-		case 'radio':
-			if (field.attr('checked') == 'checked') {
-			} 
-		case 'checkbox':
-      //$('input[name="' + field.attr('name') + '"]:checked').map(function(index,option) { 
-      //});
-		case 'select':
-			//field.find(':selected').text();
-		case 'multi-select':
-      //return field.find(':selected').map(function(index, option)  {
-      //});
-	}
+  fields = $('[id$='+group_field+'] :input')
+  fields.each( function(index, field) { 
+    field = $(field)
+    type = get_field_type(field);
+    switch(type)
+    {
+      case 'text':
+      case 'textarea':
+        field.val("");
+      case 'radio':
+      case 'checkbox':
+        if (field.attr('checked') == 'checked') {
+          field.removeAttr('checked')
+        } 
+      case 'select':
+      case 'multi-select':
+    }
+  });
 };
 
 //looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
@@ -264,7 +264,7 @@ function nested_dependencies(success_flag, action, group_field, counter) {
             var dependency = clause[keyd]
             if ( dependency["fieldset_child_id"] == dependent_on ) {
               var dependent_id = group_field.replace(dependent_on, group_search["fieldset_child_id"])
-              dependency_action(success_flag, action, dependent_id, counter+1)
+              dependency_action(success_flag, action, [dependent_id], counter+1)
             }
           }
         }
