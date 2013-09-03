@@ -91,7 +91,7 @@ module DynamicFieldsets
           fieldset_child_id = fieldset_child_key.gsub(/^#{DynamicFieldsets.config.form_field_prefix}/, "")
           fieldset_child = fieldset_children.select { |child| child.id == fieldset_child_id.to_i }.first
           # this could potentially hit a fieldset and cause problems
-          fieldset_child.child.update_field_records(fsa, fieldset_child, value)
+          fieldset_child.child.update_field_records(fsa, fieldset_child, value) if fieldset_child.present?
         end
       end
     end

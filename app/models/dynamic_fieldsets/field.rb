@@ -148,11 +148,15 @@ module DynamicFieldsets
     # @return [Hash] Information needed for the show partial, don't know what I need yet
     def show_partial_locals(args)
       # these should be incredibly temporary
-      {
+      output = {
         :value => args[:value],
         :values => args[:values],
         :label => self.label,
+        :object => "#{DynamicFieldsets::config.form_fieldset_associator_prefix}#{args[:fsa].id}",
+        :method => "#{DynamicFieldsets::config.form_field_prefix}#{args[:fieldset_child].id}",
       }
+      output[:id] = "#{output[:object]}_#{output[:method]}"
+      return output
     end
 
     # given a value hash for a field, return the part that needs to be shown on the show page
