@@ -32,6 +32,8 @@ module DynamicFieldsetsHelper
     end
 
     args = {
+      :fsa => fsa,
+      :fieldset_child => fieldset_child,
       :value => values,
       :values => values
     }
@@ -83,46 +85,6 @@ module DynamicFieldsetsHelper
     return field_markup
   end
  
-  # Removes fieldset children that do not show in the edit form due to dependencies
-  # @param [Fieldset] fieldset The Fieldset to render
-  # @param [Hash] values Stored values for the fieldset
-  # @return [Array <FieldsetChild>] children that should render in show page
-  #
-  def hide_children(fieldset, values)
-    children = []
-    fieldset.fieldset_children.each do |child_field|
-      value = values[child_field.id]
-      dependent_on = DynamicFieldsets::DependencyGroup.where(:fieldset_child_id => child_field.id).first
-      if dependent_on.nil?
-        children << child_field.child
-      else
-        dependencies = dependent_on.dependency_clauses.collect(&:dependencies).flatten.uniq
-        dependencies.each do |dependency|
-          if values[dependency.fieldset_child_id].present?
-            dependent_on_type = dependency.fieldset_child.child.type
-            dependent_on_values = values[dependency.fieldset_child_id] 
-            check_values = []
-
-            if dependent_on_type == "DynamicFieldsets::CheckboxField" || dependent_on_type == "DynamicFieldsets::MultipleSelectField" 
-              dependent_on_values.each do |current_value|
-                check_values << current_value[:name]
-              end
-            else
-              check_values << (dependent_on_values.has_key?(:name) ? dependent_on_values[:name] : dependent_on_values[:value])
-            end
-            
-            check_values.each do |check|
-              if dependent_on.action == "show" && check == dependency.value
-                children << child_field.child
-              end
-            end
-          end
-        end
-      end
-    end
-    return children.uniq
-  end
- 
   # Builds HTML for the provided fieldset and its children.
   # @param [FieldsetAssociator] fsa parent FieldsetAssociator
   # @param [Fieldset] fieldset The Fieldset to render
@@ -132,8 +94,7 @@ module DynamicFieldsetsHelper
     lines = []
     lines.push render(:partial => "/dynamic_fieldsets/shared/fieldset_header", :locals => {:fieldset => fieldset})
 
-    # still have to add children that are fieldsets.. have not tested far enough to get into it
-    children = form_type == "show" ? hide_children(fieldset, values) : fieldset.children
+    children = fieldset.children
         
     # this returns field/fieldset objects rather than fieldset children
     # that is why this code looks like it is accessing odd objects
@@ -155,14 +116,14 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_show_renderer(fsa)
-    return dynamic_fieldset_renderer(fsa, "show")
+    return dynamic_fieldset_renderer(fsa, "show") << javascript_renderer("show",fsa)
   end
 
   # Build HTML for a specific dynamic fieldset on a form page
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_form_renderer(fsa)
-    return dynamic_fieldset_renderer(fsa, "form") << javascript_renderer(fsa)
+    return dynamic_fieldset_renderer(fsa, "form") << javascript_renderer("form",fsa)
   end
 
   # Builds HTML for a specific dynamic fieldset in a form.
@@ -184,15 +145,21 @@ module DynamicFieldsetsHelper
   #
   # @params [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The javascript variable that shows what fields have dependencies
-  def javascript_renderer(fsa)
+  def javascript_renderer(form_type, fsa)
     unless fsa.id == nil
       rendered_javascript = "<script type='text/javascript'> 
-      if ( typeof dynamic_fieldsets_dependencies == 'undefined' ){
-        var dynamic_fieldsets_dependencies = #{fsa.dependency_child_hash.to_json}; 
-      } else {
-        $.extend(dynamic_fieldsets_dependencies, #{fsa.dependency_child_hash.to_json}); 
-      }</script>"
-      rendered_javascript += render "dynamic_fieldsets/shared/javascript_watcher"
+        if ( typeof dynamic_fieldsets_dependencies == 'undefined' ){
+          var dynamic_fieldsets_dependencies = #{fsa.dependency_child_hash.to_json}; 
+        } else {
+          $.extend(dynamic_fieldsets_dependencies, #{fsa.dependency_child_hash.to_json}); 
+        }</script>"
+      
+      if form_type == "form"
+        rendered_javascript += render "dynamic_fieldsets/shared/form_javascript_watcher"
+      elsif form_type == "show"
+        rendered_javascript += render "dynamic_fieldsets/shared/show_javascript_watcher"
+      end 
+      
       return rendered_javascript.html_safe
     else
       return ""

@@ -1,0 +1,138 @@
+<script type='text/javascript'>
+
+var all_divs = $("div :not(:hidden)[id^=fsa]").add("p[id^='fsa']");
+
+function hide_fields(){
+  var values = {}
+  $.each(all_divs, function(index, div){
+    var div_id = $(div).attr('id');
+    var fieldset_child_id = div_id.substring(div_id.length-1);
+    var fsa_id = div_id.split("_")[0].split("-")[1]
+
+    if($(div).is("p")){
+      values[fieldset_child_id] = div.innerHTML
+    } else {
+      if($(div).attr('type') == 'single'){
+        values[fieldset_child_id] = $(div).find('span').find('span').text()
+      } else {
+        values[fieldset_child_id] = $(div).find('li').map(function(index, li){
+          return $(div).find('span').find('span').text()
+        });
+      }
+    }
+
+    var dependency_group = dynamic_fieldsets_dependencies[fieldset_child_id];
+    if((typeof dependency_group) != "undefined"){
+      $.each(dependency_group, function(index, group){
+        var fieldset_associator_ids = group['fieldset_associators'];
+        evaluate_dependencies(fieldset_child_id, group, values, fieldset_associator_ids)
+      }) 
+    }
+  });
+}
+
+function evaluate_dependencies(fieldset_child_id, group, values, fieldset_associator_ids)  {
+  var action = group['action'];
+  var group_fsc_id = group['fieldset_child_id'];
+  var group_field_id = group['field_id'];
+  var group_fields = []
+  $.each(fieldset_associator_ids, function(index, fsa_id) {
+    group_fields[index] = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
+  });
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, values), action, group_fields, 0 )
+}
+
+function all_dependency_clauses_true(fieldset_child_id, group, values)  {
+  for(var key in group["clause"])  {
+    var clause = group["clause"][key]
+    if(!at_least_one_dependency_true(clause, values))  {
+      return false;
+    }
+  }
+  return true;
+}
+
+function at_least_one_dependency_true(clause, values)  {
+  for(var key in clause)  {
+    var dependency = clause[key]
+    var fieldset_child_id = dependency["fieldset_child_id"]
+    if( evaluate_dependency(values[fieldset_child_id], dependency["relationship"], dependency["value"]) ){
+      return true
+    }
+  }
+  return false
+}
+
+function evaluate_dependency(user_value, relationship, stored_value) {
+	switch(relationship)
+	{
+		case 'equals':
+			return user_value == stored_value;
+		case 'not equals':
+			return user_value != stored_value;
+		case 'includes':
+			return $.inArray(stored_value, user_value) != -1;
+		case 'not includes':
+			return $.inArray(stored_value, user_value) == -1;
+		case 'blank':
+			return user_value == "";
+		case 'not blank':
+			return user_value != "";
+		default:
+			return false;
+	}
+};
+
+function dependency_action(success_flag, action, group_fields, counter) {
+  $.each(group_fields, function(index, group_field){
+    if (success_flag){
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').show();
+        case 'enable':
+          $('#' + group_field + ' :input').removeAttr('disabled');
+      }
+    
+    } else {
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').hide();
+        case 'enable':
+          $('#' + group_field + ' :input').attr('disabled', true);
+      }
+      
+      //save from infinite recursion, only goes as deep as there are dependency groups
+      if( counter < Object.keys(dynamic_fieldsets_dependencies).length ) {
+        nested_dependencies(success_flag, action, group_field, counter)
+      }	
+    }
+  });
+};
+
+function nested_dependencies(success_flag, action, group_field, counter) {
+  var dependent_on = group_field.split("-").pop();
+  for( var key in dynamic_fieldsets_dependencies ) {
+    var child = dynamic_fieldsets_dependencies[key]
+    for( var keyg in child ) {
+      //ignore own group since dependents won't be here
+      if( keyg != dependent_on ) {
+        var group_search = child[keyg]
+        for( var keyc in group_search["clause"] ) {
+          var clause = group_search["clause"][keyc]
+          for( var keyd in clause ) {
+            var dependency = clause[keyd]
+            if ( dependency["fieldset_child_id"] == dependent_on ) {
+              var dependent_id = group_field.replace(dependent_on, group_search["fieldset_child_id"])
+              dependency_action(success_flag, action, [dependent_id], counter+1)
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+hide_fields();
+</script>
