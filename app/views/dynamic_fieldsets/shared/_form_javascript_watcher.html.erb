@@ -13,7 +13,7 @@ var all_inputs = $(":input:not(:hidden)[id^=fsa]").add("p[id^='fsa']").add("text
 // return: The fieldset child id of the field
 function get_fieldset_child_id(field, type) {
   if(typeof(field.attr("data-fsc_id")) != "undefined")  {
-    return field.attr("data-fsc_id")
+    return field.attr("data-fsc_id");
   } else  {
     switch(type)
     {
@@ -38,10 +38,10 @@ function get_fieldset_child_id(field, type) {
 // And falls back on the the string between '-' and '_' at the beginning of the id
 function get_fieldset_associator_id(field)  {
   if(typeof(field.attr("data-fsa_id")) != "undefined")  {
-    return field.attr("data-fsa_id")
+    return field.attr("data-fsa_id");
   } else {
     //format should be fsa-###_field-###
-    return field.attr('id').split("_")[0].split("-")[1]
+    return field.attr('id').split("_")[0].split("-")[1];
   }
 }
 
@@ -62,7 +62,7 @@ function get_input_value(field, type) {
       return output;
 		case 'checkbox':
       return field.parent().parent().find(':checked').map(function(index,option) { 
-        return $.trim($(option).parent('label').text())
+        return $.trim($(option).parent('label').text());
       });
 		case 'select':
 			return field.find(':selected').text();
@@ -79,7 +79,7 @@ function get_input_value(field, type) {
 //this code is necessary to handle text areas and multiple selects
 function get_field_type(field) {
 	if (field.attr('type') != undefined) {
-		return field.attr('type')
+		return field.attr('type');
 	} else if ($('textarea#'+field.attr('id')).length > 0) {
 		return "textarea";
 	} else if ($('select#'+field.attr('id')).length > 0) {
@@ -102,12 +102,12 @@ function get_field_type(field) {
 all_inputs.change( function() {
     field = $(this);
     var type = get_field_type(field);
-    var fieldset_child_id = get_fieldset_child_id(field, type)
+    var fieldset_child_id = get_fieldset_child_id(field, type);
     
-    var user_inputs = {}
+    var user_inputs = {};
     $.each(all_inputs, function(index, input){
       var all_type = get_field_type($(input));
-      var all_fieldset_child_id = get_fieldset_child_id($(input), all_type)
+      var all_fieldset_child_id = get_fieldset_child_id($(input), all_type);
       user_inputs[all_fieldset_child_id] = get_input_value($(input), all_type);
     });
 
@@ -126,11 +126,11 @@ function update_dependency_group_for_fieldset_child(fieldset_child_id, group, us
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
-  var group_fields = []
+  var group_fields = [];
   $.each(fieldset_associator_ids, function(index, fsa_id) {
     group_fields[index] = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
   });
-  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_fields, 0 )
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_fields, 0 );
 }
 
 //all dependencies clauses are ANDed
@@ -138,7 +138,7 @@ function update_dependency_group_for_fieldset_child(fieldset_child_id, group, us
 //only return true if all return true
 function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
   for(var key in group["clause"])  {
-    var clause = group["clause"][key]
+    var clause = group["clause"][key];
     if(!at_least_one_dependency_true(clause, user_inputs))  {
       return false;
     }
@@ -153,13 +153,13 @@ function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
 //  If dependency doesn't match current field, it looks up the correct stored input to compare
 function at_least_one_dependency_true(clause, user_inputs)  {
   for(var key in clause)  {
-    var dependency = clause[key]
-    var fieldset_child_id = dependency["fieldset_child_id"]
+    var dependency = clause[key];
+    var fieldset_child_id = dependency["fieldset_child_id"];
     if( evaluate_dependency(user_inputs[fieldset_child_id], dependency["relationship"], dependency["value"]) ){
-      return true
+      return true;
     } 
   }
-  return false
+  return false;
 }
 
 
@@ -217,9 +217,9 @@ function dependency_action(success_flag, action, group_fields, counter) {
           case 'enable':
             $('#' + group_field + ' :input').attr('disabled', true);
         }
-        clear_unused_field(group_field)
+        clear_unused_field(group_field);
 
-        nested_dependencies(success_flag, action, group_field)
+        nested_dependencies(success_flag, action, group_field);
       }
     }
   });
@@ -227,10 +227,9 @@ function dependency_action(success_flag, action, group_fields, counter) {
 
 //clears fields that are being hidden
 function clear_unused_field(group_field) {
-  fields = $('[id$='+group_field+'] :input')
+  var fields = $('[id$='+group_field+'] :input');
   fields.each( function(index, field) { 
-    field = $(field)
-    type = get_field_type(field);
+    type = get_field_type($(field));
     switch(type)
     {
       case 'text':
@@ -239,7 +238,7 @@ function clear_unused_field(group_field) {
       case 'radio':
       case 'checkbox':
         if (field.attr('checked') == 'checked') {
-          field.removeAttr('checked')
+          field.removeAttr('checked');
         } 
       case 'select':
       case 'multi-select':
@@ -251,20 +250,20 @@ function clear_unused_field(group_field) {
 function nested_dependencies(success_flag, action, group_field) {
   var dependent_on = group_field.split("-").pop();
   for( var key in dynamic_fieldsets_dependencies ) {
-    var child = dynamic_fieldsets_dependencies[key]
+    var child = dynamic_fieldsets_dependencies[key];
     for( var keyg in child ) {
-      var group_search = child[keyg]
+      var group_search = child[keyg];
       for( var keyc in group_search["clause"] ) {
-        var clause = group_search["clause"][keyc]
+        var clause = group_search["clause"][keyc];
         for( var keyd in clause ) {
-          var dependency = clause[keyd]
+          var dependency = clause[keyd];
           //select dependent by comparing who the dependency belongs to
           if ( dependency["fieldset_child_id"] == dependent_on ) {
-            var fsa = group_field.split("_")[0]
-            var field = group_field.split("_")[1]
-            var dependent_id = field.replace(dependent_on, group_search["fieldset_child_id"])
-            var full_dep_id = fsa+"_"+dependent_id
-            dependency_action(success_flag, action, [full_dep_id])
+            var fsa = group_field.split("_")[0];
+            var field = group_field.split("_")[1];
+            var dependent_id = field.replace(dependent_on, group_search["fieldset_child_id"]);
+            var full_dep_id = fsa+"_"+dependent_id;
+            dependency_action(success_flag, action, [full_dep_id]);
           }
         }
       }
