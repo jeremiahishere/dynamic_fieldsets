@@ -1,5 +1,23 @@
 == unreleased changes
 
+== 0.1.17
+* Handling for nested fieldsets dependencies and for 'parallele' fieldset dependencies
+* Wrote a js watcher for the show page, since previous solution is limited to a single fieldset. 
+* Fixed problems that came up for AND and OR dependencies during more complex testing.
+
+== 0.1.16
+* Added fieldset associator ids to fieldeset dependency hash so we can handle inter fieldset dependencies. 
+
+== 0.1.12
+* Removed blank option from selects, it was causing problems on submission
+  changed the way 'checked' radios are read to jquery
+
+== 0.1.11
+
+* Fixed dependencies: AND, OR, multiple, and nested working,
+  -textboxes are cleared when hidden (still need to handle inputs and selects)
+  All values are now evaluated when any change, for radios only the checked one is read
+
 == 0.1.10
 
 * Fixed a namespacing issue in the nested model helper where it was overriding the helper of another project with the same method name.
