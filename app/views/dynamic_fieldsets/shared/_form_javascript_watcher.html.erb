@@ -106,14 +106,29 @@ all_inputs.change( function() {
     
     var user_inputs = {};
     $.each(all_inputs, function(index, input){
-      var all_type = get_field_type($(input));
-      var all_fieldset_child_id = get_fieldset_child_id($(input), all_type);
-      user_inputs[all_fieldset_child_id] = get_input_value($(input), all_type);
+      var total_type = get_field_type($(input));
+      var total_fieldset_child_id = get_fieldset_child_id($(input), total_type);
+
+      //checking if field is used has multiple associators to make a unique entry for each in user_inputs
+      if (total_fieldset_child_id in dynamic_fieldsets_dependencies) {
+        $.each(dynamic_fieldsets_dependencies[total_fieldset_child_id], function(index2, group) {
+          var total_fieldset_associator_ids = group["fieldset_associators"]; 
+          if( total_fieldset_associator_ids.length == 1){
+            user_inputs[total_fieldset_associator_ids[0]+"-"+total_fieldset_child_id] = get_input_value($(input), total_type);
+          } else {
+            $.each( total_fieldset_associator_ids ,function(index3,fsa){
+              user_inputs[fsa+"-"+total_fieldset_child_id] = get_input_value($(input), total_type);
+            });
+          }
+        });
+      } 
     });
+
+    console.log(user_inputs)
 
     if (fieldset_child_id in dynamic_fieldsets_dependencies) {
       $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-        fieldset_associator_ids = dynamic_fieldsets_dependencies[fieldset_child_id][index]["fieldset_associators"]; 
+        var fieldset_associator_ids = group["fieldset_associators"]; 
         update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_ids);
       });
     } 
@@ -234,11 +249,11 @@ function clear_unused_field(group_field) {
     {
       case 'text':
       case 'textarea':
-        field.val("");
+        $(field).val("");
       case 'radio':
       case 'checkbox':
-        if (field.attr('checked') == 'checked') {
-          field.removeAttr('checked');
+        if ($(field).attr('checked') == 'checked') {
+          $(field).removeAttr('checked');
         } 
       case 'select':
       case 'multi-select':

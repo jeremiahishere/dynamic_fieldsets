@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120213211033) do
+ActiveRecord::Schema.define(:version => 20130919203346) do
 
   create_table "dynamic_fieldsets_dependencies", :force => true do |t|
     t.integer  "fieldset_child_id"
@@ -128,6 +128,13 @@ ActiveRecord::Schema.define(:version => 20120213211033) do
 
   create_table "information_forms", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sub_forms", :force => true do |t|
+    t.string   "name"
+    t.integer  "information_form_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

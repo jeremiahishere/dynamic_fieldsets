@@ -15,9 +15,15 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  
   <%= dynamic_fieldset_form_renderer(@information_form.child_form) %>
   <%= dynamic_fieldset_form_renderer(@information_form.child_form2) %>
-  <div class="actions">
+
+  <% @information_form.sub_forms.each do |sub| %>
+    <%= dynamic_fieldset_form_renderer(sub.child_form3) %>
+  <% end %>
+
+<div class="actions">
     <%= f.submit %>
   </div>
 <% end %>

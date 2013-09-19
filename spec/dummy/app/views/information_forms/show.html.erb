@@ -9,5 +9,9 @@
 <%= dynamic_fieldset_show_renderer(@information_form.child_form) %>
 <%= dynamic_fieldset_show_renderer(@information_form.child_form2) %>
 
+<% @information_form.sub_forms.each do |sub| %>
+  <%= dynamic_fieldset_show_renderer(sub.child_form3) %>
+<% end %>
+
 <%= link_to 'Edit', edit_information_form_path(@information_form) %> |
 <%= link_to 'Back', information_forms_path %>
