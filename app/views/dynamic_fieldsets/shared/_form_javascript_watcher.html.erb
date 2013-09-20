@@ -106,30 +106,22 @@ all_inputs.change( function() {
     
     var user_inputs = {};
     $.each(all_inputs, function(index, input){
-      var total_type = get_field_type($(input));
-      var total_fieldset_child_id = get_fieldset_child_id($(input), total_type);
+      var each_type = get_field_type($(input));
+      var each_fieldset_child_id = get_fieldset_child_id($(input), each_type);
 
       //checking if field is used has multiple associators to make a unique entry for each in user_inputs
-      if (total_fieldset_child_id in dynamic_fieldsets_dependencies) {
-        $.each(dynamic_fieldsets_dependencies[total_fieldset_child_id], function(index2, group) {
-          var total_fieldset_associator_ids = group["fieldset_associators"]; 
-          if( total_fieldset_associator_ids.length == 1){
-            user_inputs[total_fieldset_associator_ids[0]+"-"+total_fieldset_child_id] = get_input_value($(input), total_type);
-          } else {
-            $.each( total_fieldset_associator_ids ,function(index3,fsa){
-              user_inputs[fsa+"-"+total_fieldset_child_id] = get_input_value($(input), total_type);
-            });
-          }
+      if (each_fieldset_child_id in dynamic_fieldsets_dependencies) {
+        $.each(dynamic_fieldsets_dependencies[each_fieldset_child_id], function(index2, group) {
+          var each_fsa = $(input).attr('id').split("_")[0].split('-')[1]
+          user_inputs[each_fsa+"-"+each_fieldset_child_id] = get_input_value($(input), each_type);
         });
       } 
     });
 
-    console.log(user_inputs)
-
     if (fieldset_child_id in dynamic_fieldsets_dependencies) {
       $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-        var fieldset_associator_ids = group["fieldset_associators"]; 
-        update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_ids);
+        var current_fsa = field.attr('id').split("_")[0].split('-')[1]
+        update_dependency_group_for_fieldset_child(fieldset_child_id, current_fsa, group, user_inputs);
       });
     } 
 });
@@ -137,24 +129,21 @@ all_inputs.change( function() {
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
 // user_input: the input from the form
-function update_dependency_group_for_fieldset_child(fieldset_child_id, group, user_inputs, fieldset_associator_ids)  {
+function update_dependency_group_for_fieldset_child(fieldset_child_id, current_fsa, group, user_inputs)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
-  var group_fields = [];
-  $.each(fieldset_associator_ids, function(index, fsa_id) {
-    group_fields[index] = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
-  });
-  dependency_action(all_dependency_clauses_true(fieldset_child_id, group, user_inputs), action, group_fields, 0 );
+  group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + current_fsa + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, current_fsa, group, user_inputs), action, group_field);
 }
 
 //all dependencies clauses are ANDed
 //the first one that is false makes this return false
 //only return true if all return true
-function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
+function all_dependency_clauses_true(fieldset_child_id, fieldset_associator, group, user_inputs)  {
   for(var key in group["clause"])  {
     var clause = group["clause"][key];
-    if(!at_least_one_dependency_true(clause, user_inputs))  {
+    if(!at_least_one_dependency_true(clause, user_inputs, fieldset_associator))  {
       return false;
     }
   }
@@ -166,11 +155,11 @@ function all_dependency_clauses_true(fieldset_child_id, group, user_inputs)  {
 //Only return false if all are false
 //It looks to see what dependencies inside the clause should actually be tested (AU 08-07-13)
 //  If dependency doesn't match current field, it looks up the correct stored input to compare
-function at_least_one_dependency_true(clause, user_inputs)  {
+function at_least_one_dependency_true(clause, user_inputs, fieldset_associator)  {
   for(var key in clause)  {
     var dependency = clause[key];
     var fieldset_child_id = dependency["fieldset_child_id"];
-    if( evaluate_dependency(user_inputs[fieldset_child_id], dependency["relationship"], dependency["value"]) ){
+    if( evaluate_dependency(user_inputs[fieldset_associator+"-"+fieldset_child_id], dependency["relationship"], dependency["value"]) ){
       return true;
     } 
   }
@@ -212,32 +201,30 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 // success_flag: whether the dependency group returned true or false
 // action: the type of update to apply to the field
 // group_field: the field to update (generally not the field that triggered the change)
-function dependency_action(success_flag, action, group_fields, counter) {
-  $.each(group_fields, function(index, group_field){
-    if( $('[id$='+group_field+']').size() > 0 ) {
-      if (success_flag){
-        switch(action)
-        {
-          case 'show':
-            $('[id$=' + group_field +']').show();
-          case 'enable':
-            $('#' + group_field + ' :input').removeAttr('disabled');
-        }
-      
-      } else {
-        switch(action)
-        {
-          case 'show':
-            $('[id$=' + group_field +']').hide();
-          case 'enable':
-            $('#' + group_field + ' :input').attr('disabled', true);
-        }
-        clear_unused_field(group_field);
-
-        nested_dependencies(success_flag, action, group_field);
+function dependency_action(success_flag, action, group_field) {
+  if( $('[id$='+group_field+']').size() > 0 ) {
+    if (success_flag){
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').show();
+        case 'enable':
+          $('#' + group_field + ' :input').removeAttr('disabled');
       }
+    
+    } else {
+      switch(action)
+      {
+        case 'show':
+          $('[id$=' + group_field +']').hide();
+        case 'enable':
+          $('#' + group_field + ' :input').attr('disabled', true);
+      }
+      clear_unused_field(group_field);
+
+      nested_dependencies(success_flag, action, group_field);
     }
-  });
+  }
 };
 
 //clears fields that are being hidden

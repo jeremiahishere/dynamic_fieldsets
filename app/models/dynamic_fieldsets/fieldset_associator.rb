@@ -86,11 +86,6 @@ module DynamicFieldsets
           dependency_group = dependency.dependency_clause.dependency_group
           output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
           fieldset = dependency_group.fieldset_child.fieldset
-          if fieldset.fieldset_associators.collect(&:id).present?
-            output[fieldset_child.id][dependency_group.id][:fieldset_associators] = fieldset.fieldset_associators.collect(&:id)
-          else
-            output[fieldset_child.id][dependency_group.id][:fieldset_associators] = find_parent_fsa(fieldset).collect(&:id)
-          end
         end
       end
       return output

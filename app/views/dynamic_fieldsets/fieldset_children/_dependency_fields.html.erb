@@ -1,5 +1,5 @@
 <tr>
-  <td><%= f.select :fieldset_child_id, options_for_select(DynamicFieldsets::FieldsetChild.select { |x| x.child_type == "DynamicFieldsets::Field" && x.child.type != "DynamicFieldsets::InstructionField" }.collect { |c| [c.child.name, c.id]}, obj.fieldset_child_id)%></td>
+  <td><%= f.select :fieldset_child_id, options_for_select(@fieldset_child.fieldset.fieldset_children.select { |x| x.child_type == "DynamicFieldsets::Field" && x.child.type != "DynamicFieldsets::InstructionField" }.collect { |c| [c.child.name, c.id]}, obj.fieldset_child_id)%></td>
   <td><%= f.select :relationship, DynamicFieldsets::Dependency::RELATIONSHIP_LIST %></td>
   <td><%= f.text_field :value %></td>
   <td>
