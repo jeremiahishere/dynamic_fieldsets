@@ -148,10 +148,12 @@ module DynamicFieldsetsHelper
   def javascript_renderer(fsa, form_type)
     unless fsa.id == nil
       rendered_javascript = "<script type='text/javascript'> 
+        var current_fsa = #{fsa.id};
         if ( typeof dynamic_fieldsets_dependencies == 'undefined' ){
-          var dynamic_fieldsets_dependencies = #{fsa.dependency_child_hash.to_json}; 
+          var dynamic_fieldsets_dependencies = {};
+          dynamic_fieldsets_dependencies[current_fsa] = #{fsa.dependency_child_hash.to_json}; 
         } else {
-          $.extend(dynamic_fieldsets_dependencies, #{fsa.dependency_child_hash.to_json}); 
+          dynamic_fieldsets_dependencies[current_fsa] = #{fsa.dependency_child_hash.to_json}; 
         }</script>"
       
       if form_type == "form"

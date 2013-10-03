@@ -100,41 +100,39 @@ function get_field_type(field) {
 //
 // the dependency information is stored in dynamic_fieldsets_dependencies
 all_inputs.change( function() {
-    field = $(this);
-    var type = get_field_type(field);
-    var fieldset_child_id = get_fieldset_child_id(field, type);
-    
-    var user_inputs = {};
-    $.each(all_inputs, function(index, input){
-      var each_type = get_field_type($(input));
-      var each_fieldset_child_id = get_fieldset_child_id($(input), each_type);
+  field = $(this);
+  var type = get_field_type(field);
+  var fieldset_child_id = get_fieldset_child_id(field, type);
+  var fieldset_associator_id = get_fieldset_associator_id(field);
+  
+  var user_inputs = {};
+  $.each(all_inputs, function(index, input){
+    var each_type = get_field_type($(input));
+    var input_id = $(input).attr('id');
+    if (each_type == 'checkbox' || each_type == 'radio'){
+      user_inputs[$(input).parent().parent().attr('id')] = get_input_value($(input), each_type);
+    } else{ 
+      user_inputs[input_id] = get_input_value($(input), each_type);
+    }
+  });
 
-      //checking if field is used has multiple associators to make a unique entry for each in user_inputs
-      if (each_fieldset_child_id in dynamic_fieldsets_dependencies) {
-        $.each(dynamic_fieldsets_dependencies[each_fieldset_child_id], function(index2, group) {
-          var each_fsa = $(input).attr('id').split("_")[0].split('-')[1]
-          user_inputs[each_fsa+"-"+each_fieldset_child_id] = get_input_value($(input), each_type);
-        });
-      } 
+  var dependencies_by_fsa = dynamic_fieldsets_dependencies[fieldset_associator_id];
+  if (fieldset_child_id in dependencies_by_fsa) {
+    $.each(dependencies_by_fsa[fieldset_child_id], function(index, group)  {
+      update_dependency_group_for_fieldset_child(fieldset_child_id, fieldset_associator_id, group, user_inputs);
     });
-
-    if (fieldset_child_id in dynamic_fieldsets_dependencies) {
-      $.each(dynamic_fieldsets_dependencies[fieldset_child_id], function(index, group)  {
-        var current_fsa = field.attr('id').split("_")[0].split('-')[1]
-        update_dependency_group_for_fieldset_child(fieldset_child_id, current_fsa, group, user_inputs);
-      });
-    } 
+  } 
 });
 
 // checks the clauses for a dependency group and runs the action
 // group: the dependency group
 // user_input: the input from the form
-function update_dependency_group_for_fieldset_child(fieldset_child_id, current_fsa, group, user_inputs)  {
+function update_dependency_group_for_fieldset_child(fieldset_child_id, fsa_id, group, user_inputs)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
   var group_field_id = group['field_id'];
-  group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + current_fsa + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
-  dependency_action(all_dependency_clauses_true(fieldset_child_id, current_fsa, group, user_inputs), action, group_field);
+  var group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
+  dependency_action(all_dependency_clauses_true(fieldset_child_id, fsa_id, group, user_inputs), action, group_field);
 }
 
 //all dependencies clauses are ANDed
@@ -159,7 +157,7 @@ function at_least_one_dependency_true(clause, user_inputs, fieldset_associator) 
   for(var key in clause)  {
     var dependency = clause[key];
     var fieldset_child_id = dependency["fieldset_child_id"];
-    if( evaluate_dependency(user_inputs[fieldset_associator+"-"+fieldset_child_id], dependency["relationship"], dependency["value"]) ){
+    if( evaluate_dependency(user_inputs["fsa-"+fieldset_associator+"_field-"+fieldset_child_id], dependency["relationship"], dependency["value"]) ){
       return true;
     } 
   }
@@ -250,9 +248,11 @@ function clear_unused_field(group_field) {
 
 //looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
 function nested_dependencies(success_flag, action, group_field) {
+  var fsa = group_field.split("-")[0].split("_")[1]
   var dependent_on = group_field.split("-").pop();
-  for( var key in dynamic_fieldsets_dependencies ) {
-    var child = dynamic_fieldsets_dependencies[key];
+  var dependencies_by_fieldset = dynamic_fieldsets_dependencies[fsa];
+  for( var key in dependencies_by_fieldset ) {
+    var child = dependencies_by_fieldset[key];
     for( var keyg in child ) {
       var group_search = child[keyg];
       for( var keyc in group_search["clause"] ) {
