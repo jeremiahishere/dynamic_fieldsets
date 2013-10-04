@@ -23,21 +23,20 @@ function hide_fields(){
     var div_id = $(div).attr('id');
     var fieldset_child_id = div_id.split("_")[1].split("-")[1];
     var dependency_group = dynamic_fieldsets_dependencies[current_fsa][fieldset_child_id];
-    if((typeof dependency_group) != "undefined"){
+    if( typeof dependency_group != "undefined" ){ //&& $(div).attr('style') != 'display: none;'){
       $.each(dependency_group, function(index, group){
-        evaluate_dependencies(div_id, group, values);
+        process_dependencies(div_id, group, values);
       });
     }
   });
 }
 
-function evaluate_dependencies(div_id, group, values)  {
+function process_dependencies(current_div, group, values)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
-  var group_field_id = group['field_id'];
-  var div_id = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + current_fsa + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_field_id;
+  var div_id = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + current_fsa + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
   var fieldset_associator_id = div_id.split("_")[0].split("-")[1];
-  dependency_action(all_dependency_clauses_true(fieldset_associator_id, group, values), action, div_id);
+  dependency_action(current_div, all_dependency_clauses_true(fieldset_associator_id, group, values), action, div_id);
 }
 
 function all_dependency_clauses_true(fsa_id, group, values)  {
@@ -82,7 +81,8 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 	}
 };
 
-function dependency_action(success_flag, action, div_id) {
+function dependency_action(current_div, success_flag, action, div_id) {
+  console.log(current_div+"--->"+div_id);
   if (success_flag){
     switch(action)
     {
@@ -100,10 +100,17 @@ function dependency_action(success_flag, action, div_id) {
       case 'enable':
         $('#' + div_id + ' :input').attr('disabled', true);
     }
-    
-    //nested_dependencies(success_flag, action, div_id);
+    clear_unused_labels(current_div);
+
+    nested_dependencies(success_flag, action, div_id);
   }
 };
+
+
+function clear_unused_labels(div_id) {
+  var field = $('[id$='+div_id+']');
+  field.find('[class=label]').find('span').text('')
+}
 
 function nested_dependencies(success_flag, action, div_id) {
   var dependent_on = div_id.split("-").pop();
@@ -117,7 +124,7 @@ function nested_dependencies(success_flag, action, div_id) {
           var dependency = clause[keyd];
           if ( dependency["fieldset_child_id"] == dependent_on ) {
             var dependent_id = div_id.replace(dependent_on, group_search["fieldset_child_id"])
-            dependency_action(success_flag, action, dependent_id);
+            dependency_action(div_id, success_flag, action, dependent_id);
           }
         }
       }

@@ -1,7 +1,6 @@
 <script type='text/javascript'>
 
-// The only inputs we care about are visible... not hidden
-var all_inputs = $(":input:not(:hidden)[id^=fsa]").add("p[id^='fsa']").add("textarea[id^='fsa']");
+all_inputs = $(":input[id^=fsa-]").add("p[id^=fsa-]").add("textarea[id^=fsa-]");
 
 //Return the fieldset child id for the input
 //This uniquely associated the fieldset child with the fieldset associator
@@ -130,7 +129,6 @@ all_inputs.change( function() {
 function update_dependency_group_for_fieldset_child(fieldset_child_id, fsa_id, group, user_inputs)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
-  var group_field_id = group['field_id'];
   var group_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + group_fsc_id;
   dependency_action(all_dependency_clauses_true(fieldset_child_id, fsa_id, group, user_inputs), action, group_field);
 }
@@ -248,7 +246,7 @@ function clear_unused_field(group_field) {
 
 //looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
 function nested_dependencies(success_flag, action, group_field) {
-  var fsa = group_field.split("-")[0].split("_")[1]
+  var fsa = group_field.split("_")[0].split("-")[1];
   var dependent_on = group_field.split("-").pop();
   var dependencies_by_fieldset = dynamic_fieldsets_dependencies[fsa];
   for( var key in dependencies_by_fieldset ) {
@@ -261,11 +259,8 @@ function nested_dependencies(success_flag, action, group_field) {
           var dependency = clause[keyd];
           //select dependent by comparing who the dependency belongs to
           if ( dependency["fieldset_child_id"] == dependent_on ) {
-            var fsa = group_field.split("_")[0];
-            var field = group_field.split("_")[1];
-            var dependent_id = field.replace(dependent_on, group_search["fieldset_child_id"]);
-            var full_dep_id = fsa+"_"+dependent_id;
-            dependency_action(success_flag, action, [full_dep_id]);
+            var dependent_id = group_field.replace(dependent_on, group_search["fieldset_child_id"]);
+            dependency_action(success_flag, action, dependent_id);
           }
         }
       }
