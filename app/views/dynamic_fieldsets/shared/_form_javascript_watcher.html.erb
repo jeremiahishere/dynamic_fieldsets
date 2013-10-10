@@ -1,6 +1,6 @@
 <script type='text/javascript'>
 
-all_inputs = $(":input[id^=fsa-]").add("p[id^=fsa-]").add("textarea[id^=fsa-]");
+var all_inputs = $(":input[id^=fsa-]").add("p[id^=fsa-]").add("textarea[id^=fsa-]");
 
 //Return the fieldset child id for the input
 //This uniquely associated the fieldset child with the fieldset associator
@@ -99,7 +99,7 @@ function get_field_type(field) {
 //
 // the dependency information is stored in dynamic_fieldsets_dependencies
 all_inputs.change( function() {
-  field = $(this);
+  var field = $(this);
   var type = get_field_type(field);
   var fieldset_child_id = get_fieldset_child_id(field, type);
   var fieldset_associator_id = get_fieldset_associator_id(field);
@@ -124,8 +124,10 @@ all_inputs.change( function() {
 });
 
 // checks the clauses for a dependency group and runs the action
+// fieldset_child_id: field being currently evaluated
+// fsa_id: fsa it corresponds to
 // group: the dependency group
-// user_input: the input from the form
+// user_inputs: array of inputs from all fields on page
 function update_dependency_group_for_fieldset_child(fieldset_child_id, fsa_id, group, user_inputs)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
@@ -133,9 +135,9 @@ function update_dependency_group_for_fieldset_child(fieldset_child_id, fsa_id, g
   dependency_action(all_dependency_clauses_true(fieldset_child_id, fsa_id, group, user_inputs), action, group_field);
 }
 
-//all dependencies clauses are ANDed
-//the first one that is false makes this return false
-//only return true if all return true
+// all dependencies clauses are ANDed
+// the first one that is false makes this return false
+// only return true if all return true
 function all_dependency_clauses_true(fieldset_child_id, fieldset_associator, group, user_inputs)  {
   for(var key in group["clause"])  {
     var clause = group["clause"][key];
@@ -146,11 +148,11 @@ function all_dependency_clauses_true(fieldset_child_id, fieldset_associator, gro
   return true;
 }
 
-//The dependencies are ORed together
-//So as soon as one returns true, return true
-//Only return false if all are false
-//It looks to see what dependencies inside the clause should actually be tested (AU 08-07-13)
-//  If dependency doesn't match current field, it looks up the correct stored input to compare
+// The dependencies are ORed together
+// So as soon as one returns true, return true
+// Only return false if all are false
+// It looks to see what dependencies inside the clause should actually be tested (AU 08-07-13)
+// If dependency doesn't match current field, it looks up the correct stored input to compare
 function at_least_one_dependency_true(clause, user_inputs, fieldset_associator)  {
   for(var key in clause)  {
     var dependency = clause[key];
@@ -223,11 +225,11 @@ function dependency_action(success_flag, action, group_field) {
   }
 };
 
-//clears fields that are being hidden
+// clears fields that are being hidden
 function clear_unused_field(group_field) {
   var fields = $('[id$='+group_field+'] :input');
   fields.each( function(index, field) { 
-    type = get_field_type($(field));
+    var type = get_field_type($(field));
     switch(type)
     {
       case 'text':
@@ -244,7 +246,7 @@ function clear_unused_field(group_field) {
   });
 };
 
-//looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
+// looks through dependency hash to find dependent fields that may need to be hidden (AU 08-07-13)
 function nested_dependencies(success_flag, action, group_field) {
   var fsa = group_field.split("_")[0].split("-")[1];
   var dependent_on = group_field.split("-").pop();

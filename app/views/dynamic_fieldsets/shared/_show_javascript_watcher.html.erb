@@ -23,7 +23,7 @@ function hide_fields(){
     var div_id = $(div).attr('id');
     var fieldset_child_id = div_id.split("_")[1].split("-")[1];
     var dependency_group = dynamic_fieldsets_dependencies[current_fsa][fieldset_child_id];
-    if( typeof dependency_group != "undefined" ){ //&& $(div).attr('style') != 'display: none;'){
+    if( typeof dependency_group != "undefined" ){
       $.each(dependency_group, function(index, group){
         process_dependencies(div_id, group, values);
       });
@@ -31,6 +31,10 @@ function hide_fields(){
   });
 }
 
+// checks dependency clauses in a dependency group and determines what action to take
+// current_div: the div we are currently processing
+// group: the dependency group passed from dynamic_fieldsets_dependencies
+// values: the values stored for each field indexed by div id attributes
 function process_dependencies(current_div, group, values)  {
   var action = group['action'];
   var group_fsc_id = group['fieldset_child_id'];
@@ -39,6 +43,7 @@ function process_dependencies(current_div, group, values)  {
   dependency_action(current_div, all_dependency_clauses_true(fieldset_associator_id, group, values), action, div_id);
 }
 
+// all dependencies are in AND relations so all must be true 
 function all_dependency_clauses_true(fsa_id, group, values)  {
   for(var key in group["clause"])  {
     var clause = group["clause"][key];
@@ -49,18 +54,27 @@ function all_dependency_clauses_true(fsa_id, group, values)  {
   return true;
 }
 
+// all dependencies within clause are in OR relationship, 
+// only one needs to be true, to return true for the clause
 function at_least_one_dependency_true(fsa_id, clause, values)  {
   for(var key in clause)  {
     var dependency = clause[key];
     var fsc_id = dependency["fieldset_child_id"];
     var full_field = '<%= DynamicFieldsets.config.form_fieldset_associator_prefix %>' + fsa_id + '_' + '<%=DynamicFieldsets.config.form_field_prefix %>' + fsc_id;
-    if( evaluate_dependency(values[full_field], dependency["relationship"], dependency["value"]) ){
+    // does not bother to evaluate the values on fields that have been previosuly hidden
+    // CHANGE if there is a question that has dependents above it in order
+    //        a different way of skipping evaluation of hidden fields will be needed
+    if( evaluate_dependency(values[full_field], dependency["relationship"], dependency["value"]) 
+      && $('#'+full_field).attr('style') != 'display: none;'){
       return true;
     }
   }
   return false;
 }
 
+// looks at field values collected from divs and compares them to the values set to trigger dependencies
+// relationship: how the given value must match expected values
+// returns true if user_value and stored_value match correctly
 function evaluate_dependency(user_value, relationship, stored_value) {
 	switch(relationship)
 	{
@@ -81,8 +95,14 @@ function evaluate_dependency(user_value, relationship, stored_value) {
 	}
 };
 
+// enacts selected action on objects according to dependency
+//
+// current_div: div whose values are being read
+// success_flag: whether the values was as expected in the dependency
+// div_id: div on which action will be made according to dependency to current_div
+//
+// this function calls nested_dependencies whenever a field is hidden to hide any others dependent on it
 function dependency_action(current_div, success_flag, action, div_id) {
-  console.log(current_div+"--->"+div_id);
   if (success_flag){
     switch(action)
     {
@@ -91,7 +111,6 @@ function dependency_action(current_div, success_flag, action, div_id) {
       case 'enable':
         $('#' + div_id + ' :input').removeAttr('disabled');
     }
-  
   } else {
     switch(action)
     {
@@ -100,18 +119,16 @@ function dependency_action(current_div, success_flag, action, div_id) {
       case 'enable':
         $('#' + div_id + ' :input').attr('disabled', true);
     }
-    clear_unused_labels(current_div);
-
     nested_dependencies(success_flag, action, div_id);
   }
 };
 
-
-function clear_unused_labels(div_id) {
-  var field = $('[id$='+div_id+']');
-  field.find('[class=label]').find('span').text('')
-}
-
+// looks through dependency hash to find dependent fields that should be hidden when current one is
+//
+// div_id: the div that was just hidden during the previous dependency evaluation
+//
+// this function ends up either making a call to hide another field through dependency_action
+// or does nothing when the div it's evaluating has no dependents
 function nested_dependencies(success_flag, action, div_id) {
   var dependent_on = div_id.split("-").pop();
   for( var key in dynamic_fieldsets_dependencies[current_fsa] ) {
@@ -122,6 +139,7 @@ function nested_dependencies(success_flag, action, div_id) {
         var clause = group_search["clause"][keyc];
         for( var keyd in clause ) {
           var dependency = clause[keyd];
+          //select dependent by comparing who the dependency belongs to
           if ( dependency["fieldset_child_id"] == dependent_on ) {
             var dependent_id = div_id.replace(dependent_on, group_search["fieldset_child_id"])
             dependency_action(div_id, success_flag, action, dependent_id);
