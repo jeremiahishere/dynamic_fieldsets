@@ -242,6 +242,7 @@ function clear_unused_field(group_field) {
         } 
       case 'select':
       case 'multi-select':
+        $(field).prop("selectedIndex",0);
     }
   });
 };
