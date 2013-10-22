@@ -4,10 +4,26 @@ describe DynamicFieldsets::FieldsetChild do
   include FieldsetChildHelper
 
   before do
-    @child = DynamicFieldsets::FieldsetChild.new
+    DynamicFieldsets::FieldsetChild.delete_all
+    DynamicFieldsets::Fieldset.delete_all
+    @parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
+    @child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+    @test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
+    
+    field1 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
+    field2 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
+    field3 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
+
+    @child1 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @child_fieldset.id, :child_id => field1.id, :child_type => "DynamicFieldsets::Field", :order_num => 1)
+    @child2 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @child_fieldset.id, :child_id => field2.id, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+    @child3 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @child_fieldset.id, :child_id => field3.id, :child_type => "DynamicFieldsets::Field", :order_num => 3)
+    
+    @sib1 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => field1.id, :child_type => "DynamicFieldsets::Field", :order_num => 1)
+    @sib2 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => field2.id, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+    @sib3 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => field3.id, :child_type => "DynamicFieldsets::Field", :order_num => 3)
   end
 
-  subject { @child }
+  subject { @test_child }
 
   describe "fields" do
     it { should respond_to :fieldset_id }
@@ -17,9 +33,6 @@ describe DynamicFieldsets::FieldsetChild do
   end
 
   describe "associations" do
-    before do
-      pending "can't get shoulda working"
-    end
     it { should belong_to :child }
     it { should belong_to :fieldset }
     it { should have_many :field_records }
@@ -113,57 +126,71 @@ describe DynamicFieldsets::FieldsetChild do
   # Scopes and static methods
   it { DynamicFieldsets::FieldsetChild.should respond_to(:ordered) }
   describe ".ordered scope" do
-    it "needs tests"
+    it "returns fieldset children in ascending order by attribute order_num" do\
+      #debugger
+      DynamicFieldsets::FieldsetChild.ordered.should == [@test_child,@child1,@sib1,@child2,@sib2,@child3,@sib3]
+    end
   end
 
   # Methods
 
   it { should respond_to :children }
   describe ".children" do
-    it "needs tests"
+    it "returns fieldset children that descend from this one" do
+      @test_child.children.should == [@child1,@child2,@child3]
+    end
   end
 
   it { should respond_to :fieldset_child_list }
   describe ".fieldset_child_list" do
     it "should match the constant FIELDSET_CHILD_LIST" do
-      @child.fieldset_child_list.should == DynamicFieldsets::FieldsetChild::FIELDSET_CHILD_LIST
+      @test_child.fieldset_child_list.should == DynamicFieldsets::FieldsetChild::FIELDSET_CHILD_LIST
     end
   end
 
   it { should respond_to :get_value_using_fsa }
   describe ".get_value_using_fsa" do
-    it "needs tests"
+    it "needs to call get_values_using_fsa if fieldset child is a fieldset" do
+      @fsa = DynamicFieldsets::FieldsetAssociator.create(:fieldset_id => @parent_fieldset.id, :fieldset_model_id => 1, :fieldset_model_type => "Test", :fieldset_model_name => "test")
+
+      @test_child.child.should_receive(:get_values_using_fsa).with(@fsa)
+      @test_child.get_value_using_fsa(@fsa)
+    end
   end
 
   it { should respond_to :last_order_num }
   describe ".last_order_num" do
-    it "needs tests"
+    before (:each) do
+      @new_field = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
+      @new_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "new_fieldset", :description => "test")
+      @new_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @new_fieldset.id, :child_id => @new_field.id, :child_type => "DynamicFieldsets::Field", :order_num => 1)
+    end
+    
+    it "should return 0 when fieldset child has no siblings" do
+      @new_child.last_order_num.should == 0
+    end
+    
+    it "should return last ordered fieldset child otherwise" do
+      second_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @new_fieldset.id, :child_id => @new_field.id, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+      @new_child.last_order_num.should == 2
+    end
   end
 
   describe "root_fieldset method" do
-    before(:each) do
-      # too many issues with stubbing, getting lazy and saving
-      # could be refactored at some point
-
-      @field = DynamicFieldsets::Field.create({ :name => "Test field name", :label => "Test field label", :type => "textfield", :required => true, :enabled => true, })
-      @fieldset = DynamicFieldsets::Fieldset.create({:name => "Hire Form", :description => "Hire a person for a job", :nkey => "hire_form"})
-      @root_fieldset = DynamicFieldsets::Fieldset.create({:name => "Hire Form2", :description => "Hire a person for a job2", :nkey => "hire_form2"})
-
-      @field_child = DynamicFieldsets::FieldsetChild.create(:child => @child, :fieldset => @fieldset, :order_num => 1)
-      @child = DynamicFieldsets::FieldsetChild.create(:child => @fieldset, :fieldset => @root_fieldset, :order_num => 2)
-    end
     it "should return a fieldset if it is not present as the child in fieldset child" do
-      @child.root_fieldset.should == @root_fieldset
+      @test_child.root_fieldset.should == @parent_fieldset
     end
 
     it "should recurse if the fieldset is present as a child in a fieldset child" do
-      @field_child.root_fieldset.id.should == @root_fieldset.id
+      @child1.root_fieldset.id.should == @parent_fieldset.id
     end
   end
 
   it { should respond_to :siblings }
   describe ".siblings" do
-    it "needs tests"
+    it "return fieldset children that have same parent (not including self)" do
+      @test_child.siblings.should == [@sib1, @sib2, @sib3]
+    end
   end
 
   it { should respond_to :to_hash }

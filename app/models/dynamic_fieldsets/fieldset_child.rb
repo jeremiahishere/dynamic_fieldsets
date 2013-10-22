@@ -156,9 +156,7 @@ module DynamicFieldsets
     
     # @return [ActiveRecord::Relation] Collection of FieldsetChildren that share the same parent; ascending order.
     def siblings
-      sib = FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered
-      sib.delete_if{ |child| child.id == self.id }
-      sib
+      FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered.select{|x| x.id != self.id}
     end
     
     def to_hash

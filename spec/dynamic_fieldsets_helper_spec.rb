@@ -6,9 +6,7 @@ describe DynamicFieldsetsHelper do
   include DynamicFieldsetsHelper
   include FieldsetHelper
 
-  before(:each) do
-    pending "total rewrite"
-  end
+  #before(:each) do pending "total rewrite" end
 
   describe "field_renderer method" do
     before(:each) do
@@ -18,8 +16,7 @@ describe DynamicFieldsetsHelper do
     end
     
     it "should call the form helper if the form_type is form" do
-      self.should_receive(:field_form_renderer)
-      field_renderer(@fsa, @fieldset_child, @values, "form")
+      field_renderer(@fsa, @fieldset_child, @values, "form").should_receive(:field_form_renderer)
     end
 
     it "should default to the show helper if the form_type is not form" do
@@ -30,7 +27,7 @@ describe DynamicFieldsetsHelper do
 
   describe "field_show_renderer method" do
     before(:each) do
-      pending "This was significantly refactored"
+      #pending "This was significantly refactored"
       @fsa = mock_model FieldsetAssociator
       @field = Field.new
       @fieldset_child = mock_model FieldsetChild
@@ -63,7 +60,7 @@ describe DynamicFieldsetsHelper do
 
   describe "field_form_renderer" do
     before do
-      pending "significant refactoring done here.  probably all of these are trash now"
+      #pending "significant refactoring done here.  probably all of these are trash now"
     end
 
     describe ".field_form_renderer appends html attributes to the field element" do
@@ -368,7 +365,7 @@ describe DynamicFieldsetsHelper do
 
   describe "dynamic_fieldset_form_renderer method" do
     it "should call dynamic_fieldset_renderer with 'form'" do
-      pending 'hex is working on this'
+      #pending 'hex is working on this'
       fsa = mock_model(FieldsetAssociator)
       self.should_receive(:dynamic_fieldset_renderer).with(fsa, "form")
       dynamic_fieldset_form_renderer(fsa)

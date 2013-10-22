@@ -3,7 +3,7 @@ module FieldsetChildHelper
     {
       :child_id => 1,
       :child_type => "DynamicFieldsets::Field",
-      :fieldset_id => 1,
+      :fieldset_id => 3,
       :order_num => 1
     }
   end
