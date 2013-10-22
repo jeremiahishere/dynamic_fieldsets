@@ -171,7 +171,8 @@ describe DynamicFieldsets::FieldsetChild do
     end
     
     it "should return last ordered fieldset child otherwise" do
-      second_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @new_fieldset.id, :child_id => @new_field.id, :child_type => "DynamicFieldsets::Field", :order_num => 2)
+      second_field = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
+      second_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @new_fieldset.id, :child_id => second_field.id, :child_type => "DynamicFieldsets::Field", :order_num => 2)
       @new_child.last_order_num.should == 2
     end
   end
@@ -195,7 +196,8 @@ describe DynamicFieldsets::FieldsetChild do
 
   it { should respond_to :to_hash }
   describe "to_hash method" do
-    it "needs specs"
-    it "needs comments"
+    it "returns attributes in a hash" do
+      @test_child.to_hash.should == {"id" => @test_child.id, "fieldset_id" => @test_child.fieldset_id, "child_id" => @test_child.child_id, "child_type" => @test_child.child_type}
+    end
   end
 end

@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe DynamicFieldsets::Dependency do
   include DependencyHelper
-  before(:each) do
-    pending "total rewrite"
-  end
-
 
   it "should respond to fieldset_child" do
     DynamicFieldsets::Dependency.new.should respond_to :fieldset_child
@@ -22,12 +18,18 @@ describe DynamicFieldsets::Dependency do
     end
 
     it "should be valid" do
+      # had to add an actual fieldset child for it to pass validations
+      parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
+      child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+      test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => parent_fieldset.id, :child_id => child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
+      
       @dependency.attributes = valid_attributes
+      @dependency.fieldset_child = test_child
       @dependency.should be_valid
     end
 
     it "should have a fieldset_child_id" do
-      @dependency.should have(1).error_on(:fieldset_child_id)
+      @dependency.should have(1).error_on(:fieldset_child)
     end
 
     it "should not require a dependency_clause_id" do
@@ -171,6 +173,9 @@ describe DynamicFieldsets::Dependency do
   end
 
   describe "to_hash method" do
-    it "should have spec tests"
+    it "should have spec tests" do
+      @dependency = DynamicFieldsets::Dependency.new
+      @dependency.to_hash.should == { "id" => @dependency.id, "fieldset_child_id" => @dependency.fieldset_child_id, "value" => @dependency.value, "relationship" => @dependency.relationship, "dependency_clause_id" => @dependency.dependency_clause_id }
+    end
   end
 end

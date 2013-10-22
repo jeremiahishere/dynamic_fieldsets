@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe DynamicFieldsets::DependencyClause do
-  before(:each) do
-    pending "total rewrite"
-  end
 
   it "should respond to dependency_group" do
     DynamicFieldsets::DependencyClause.new.should respond_to :dependency_group
@@ -24,7 +21,9 @@ describe DynamicFieldsets::DependencyClause do
     end
 
     it "should require a dependency group" do
-      @clause.should have(1).error_on(:dependency_group_id)
+      # had to add this because validation is only done on update
+      @clause.update_attributes({})
+      @clause.should have(1).error_on(:dependency_group)
     end
   end
 

@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe DynamicFieldsets::DependencyGroup do
   include DependencyGroupHelper
-  before(:each) do
-    pending "total rewrite"
-  end
-
 
   it "should respond to fieldset_child" do
     DynamicFieldsets::DependencyGroup.new.should respond_to :fieldset_child
@@ -74,7 +70,12 @@ describe DynamicFieldsets::DependencyGroup do
       @group.attributes = valid_attributes
       @group.save
       @clause = DynamicFieldsets::DependencyClause.create(:dependency_group => @group)
-      @dependency = DynamicFieldsets::Dependency.create(:value => 5, :relationship => "equals", :dependency_clause => @clause, :fieldset_child_id => 42)
+      DynamicFieldsets::FieldsetChild.delete_all
+      DynamicFieldsets::Fieldset.delete_all
+      @parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
+      @child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+      @test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
+      @dependency = DynamicFieldsets::Dependency.create(:value => 5, :relationship => "equals", :dependency_clause => @clause, :fieldset_child_id => @test_child.id)
     end
 
     it "should return an array" do
@@ -82,8 +83,7 @@ describe DynamicFieldsets::DependencyGroup do
     end
       
     it "should return fieldset children ids included in the group" do
-      #debugger
-      @group.dependent_fieldset_children.should include 42
+      @group.dependent_fieldset_children.should include @test_child.id
     end
 
     it "should not return fieldset children ids not included in the group" do

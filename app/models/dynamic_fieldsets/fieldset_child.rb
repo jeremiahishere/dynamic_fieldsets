@@ -159,6 +159,7 @@ module DynamicFieldsets
       FieldsetChild.where( fieldset_id: self.fieldset_id ).ordered.select{|x| x.id != self.id}
     end
     
+    # @return [Hash] instance attributes mapped out to attribute names
     def to_hash
       return { "id" => self.id, "fieldset_id" => self.fieldset_id, "child_id" => self.child_id, "child_type" => self.child_type }
     end
