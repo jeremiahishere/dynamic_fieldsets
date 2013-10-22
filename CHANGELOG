@@ -1,7 +1,16 @@
 == unreleased changes
 
+== 0.1.19
+* Added auto clearing for selects boxes when they're hidden by their dependency actions
+* js show watcher now hides unused questions
+* fixed nested dependencies hiding on form page
+
+== 0.1.18
+* Removed inter-fieldset dependencies
+* made it so fieldset child associations can only be made with 'children' of the same fieldset (frontend)
+
 == 0.1.17
-* Handling for nested fieldsets dependencies and for 'parallele' fieldset dependencies
+* Handling for nested fieldsets dependencies and for 'parallel' fieldset dependencies
 * Wrote a js watcher for the show page, since previous solution is limited to a single fieldset. 
 * Fixed problems that came up for AND and OR dependencies during more complex testing.
 
