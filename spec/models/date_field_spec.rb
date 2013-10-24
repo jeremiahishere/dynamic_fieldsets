@@ -26,14 +26,15 @@ describe DynamicFieldsets::DateField do
   describe ".form_partial_locals" do
     before (:all) do
       parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
-        child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
-      @fsa = DynamicFieldsets::FieldsetAssociator.create(:fieldset_id => parent_fieldset.id, :fieldset_model_id => 1, :fieldset_model_type => "Test", :fieldset_model_name => "test")
+      child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+      fsa = DynamicFieldsets::FieldsetAssociator.create(:fieldset_id => parent_fieldset.id, :fieldset_model_id => 1, :fieldset_model_type => "Test", :fieldset_model_name => "test")
       fsc = DynamicFieldsets::FieldsetChild.create(:fieldset_id => parent_fieldset.id, :child_id => child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
-      @attributes = {:fsa => @fsa, :fieldset_child => fsc, :values => [], :value => nil}
+      @attributes = {:fsa => fsa, :fieldset_child => fsc, :values => [], :value => nil}
     end
     it "should call super" do
-      #fsa, fieldset_child, attrs, object, and method get set in superclass Field form_partial_locals method
-      @date.form_partial_locals(@attributes)[:fsa].should == @fsa
+      #superclass instance for @date
+      DynamicFieldsets::Field.find(@date.id).stub!(:form_partial_locals).and_return({:super => 'called'})
+      @date.form_partial_locals(@attributes)[:super].should == 'called'
     end
     it "should include start year and default in the output" do
       @date.form_partial_locals(@attributes)[:date_options].keys.should == [:start_year, :default]

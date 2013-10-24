@@ -27,44 +27,43 @@ describe DynamicFieldsets::FieldDefault do
   # instead of testing the method directly
   describe "convert_option_name_to_id method" do
     before(:each) do
-      @field = DynamicFieldsets::Field.new(:type => "select")
-      @field.stub!(:id).and_return(1)
+      @field = DynamicFieldsets::SelectField.new(:name => "select", :label => "select")
+      @field.type = "DynamciFieldsets::SelectField"
+      @field.save
       @field_option = DynamicFieldsets::FieldOption.new(:name => "test value")
       @field_option.stub!(:id).and_return(2)
-      DynamicFieldsets::FieldOption.stub!(:find_by_name).and_return(@field_option)
+      DynamicFieldsets::FieldOption.stub!(:where).and_return([@field_option])
       @default = DynamicFieldsets::FieldDefault.new(:field => @field, :value => "test value")
     end
 
-    # removing this validation until the sti code is inplace
-    # changed the field name from field_type to type so rails is trying to find models
     it "should convert the value to a field option id if the field's type is an option type" do
-      pending
       @default.save
       @default.value.should == @field_option.id
     end
 
     it "should retain it's value if the field's type is not an option type" do
-      @field.type = "textfield"
-      @default.save
+      @field = DynamicFieldsets::TextField.new(:name => "select", :label => "select")
+      @field.type = "DynamciFieldsets::TextField"
+      @field.save
       @default.value.should_not == @field_option.id
     end
   end
 
   describe "pretty_value method" do
     before(:each) do
-      @field = DynamicFieldsets::Field.new(:type => "select")
-      @field.stub!(:id).and_return(1)
+      @field = DynamicFieldsets::SelectField.new(:name => "select", :label => "select")
+      @field.type = "DynamciFieldsets::SelectField"
+      @field.save
       @field_option = DynamicFieldsets::FieldOption.new(:name => "test value")
       @field_option.stub!(:id).and_return(2)
-      DynamicFieldsets::FieldOption.stub!(:find_by_name).and_return(@field_option)
+      DynamicFieldsets::FieldOption.stub!(:find).and_return(@field_option)
       @default = DynamicFieldsets::FieldDefault.new(:field => @field, :value => "test value")
     end
 
-    # removing this validation until the sti code is inplace
-    # changed the field name from field_type to type so rails is trying to find models
     it "should return the value if the field is not an option type" do
-      pending
-      @field.type = "textfield"
+      @field = DynamicFieldsets::TextField.new(:name => "select", :label => "select")
+      @field.type = "DynamciFieldsets::TextField"
+      @field.save
       @default.pretty_value.should == @default.value
     end
 

@@ -29,7 +29,7 @@ module DynamicFieldsets
 
     # @return [String] Either the value or the name of the field option reference by the value
     def pretty_value
-      if !self.field.nil? && field.uses_field_options?
+      if field.present? && field.uses_field_options?
         option = FieldOption.find(self.value)
         if !option.nil?
           return option.name
