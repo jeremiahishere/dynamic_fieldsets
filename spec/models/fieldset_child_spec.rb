@@ -4,10 +4,12 @@ describe DynamicFieldsets::FieldsetChild do
   include FieldsetChildHelper
 
   before do
-    DynamicFieldsets::FieldsetChild.delete_all
-    DynamicFieldsets::Fieldset.delete_all
-    @parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
-    @child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+    #@parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
+    #@child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
+    @parent_fieldset = DynamicFieldsets::Fieldset.new
+    @parent_fieldset.stub!(:id).and_return(100)
+    @child_fieldset = DynamicFieldsets::Fieldset.new
+    @child_fieldset.stub!(:id).and_return(200)
     @test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
     
     field1 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
@@ -127,8 +129,7 @@ describe DynamicFieldsets::FieldsetChild do
   it { DynamicFieldsets::FieldsetChild.should respond_to(:ordered) }
   describe ".ordered scope" do
     it "returns fieldset children in ascending order by attribute order_num" do\
-      #debugger
-      DynamicFieldsets::FieldsetChild.ordered.should == [@test_child,@child1,@sib1,@child2,@sib2,@child3,@sib3]
+      DynamicFieldsets::FieldsetChild.ordered.should == [@sib1,@child1,@sib2,@child2,@sib3,@child3]
     end
   end
 

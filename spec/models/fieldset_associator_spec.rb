@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe DynamicFieldsets::FieldsetAssociator do
   include FieldsetAssociatorHelper
-  before(:each) do
-    pending "total rewrite"
-  end
-
   
   it "should respond to fieldset" do
     DynamicFieldsets::FieldsetAssociator.new.should respond_to :fieldset
@@ -65,17 +61,17 @@ describe DynamicFieldsets::FieldsetAssociator do
     end
 
     it "should call DynamicFieldsets::Fieldset find_by_nkey" do
-      DynamicFieldsets::Fieldset.should_receive(:find_by_nkey).and_return(@fieldset)
+      DynamicFieldsets::Fieldset.should_receive(:where).and_return([@fieldset])
       DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes)
     end
 
     it "should throw an error if the fieldset does not exist" do
-      DynamicFieldsets::Fieldset.stub!(:find_by_nkey).and_return(nil)
+      DynamicFieldsets::Fieldset.stub!(:where).and_return([nil])
       lambda { DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes) }.should raise_error
     end
 
     it "should return the correct fieldset associator" do
-      DynamicFieldsets::Fieldset.stub!(:find_by_nkey).and_return(@fieldset)
+      DynamicFieldsets::Fieldset.stub!(:where).and_return([@fieldset])
       # this is a fun hack because of all the fsas being made during tests
       DynamicFieldsets::FieldsetAssociator.find_by_fieldset_model_parameters(@fieldset_model_attributes).should include @fsa
     end
@@ -83,19 +79,26 @@ describe DynamicFieldsets::FieldsetAssociator do
 
   describe "field_values method" do
     before(:each) do
-      pending "this method was completely rewritten.  Most of the functionality was moved to other models."
       @fsa = DynamicFieldsets::FieldsetAssociator.new
-
-      @field = mock_model DynamicFieldsets::Field
-      @fieldset_child = mock_model DynamicFieldsets::FieldsetChild
+      @fsa.stub!(:id).and_return 23
+      @fieldset = DynamicFieldsets::Fieldset.new
+      
+      @field = DynamicFieldsets::DateField.new
+      @fieldset_child = DynamicFieldsets::FieldsetChild.new
+      
       @fieldset_child.stub!(:child).and_return @field
       @fieldset_child.stub!(:id).and_return 37
 
-      @field_record = mock_model DynamicFieldsets::FieldRecord
+      @field_record = DynamicFieldsets::FieldRecord.new
+      @field_record.stub!(:fieldset_associator).and_return @fsa
       @field_record.stub!(:fieldset_child).and_return @fieldset_child
       @field_record.stub!(:value).and_return 42
 
+      @fieldset.stub!(:fieldset_children).and_return [@fieldset_child]
+      @fsa.stub!(:fieldset).and_return @fieldset
       @fsa.stub!(:field_records).and_return [@field_record, @field_record]
+      
+      DynamicFieldsets::FieldRecord.stub!(:where).with({:fieldset_associator_id => @fsa.id, :fieldset_child_id => @fieldset_child.id}).and_return([@field_record, @field_record])
     end
 
     it "returns a hash" do
@@ -103,37 +106,56 @@ describe DynamicFieldsets::FieldsetAssociator do
       @fsa.field_values.should be_a_kind_of Hash
     end
 
-    it "calls field_records" do
-      @fsa.should_receive(:field_records).and_return []
-      @fsa.field_values
-    end
-
     # I am aware these two tests aren't really realistic because ids should be different
     # Results should be consistent with these when ids are different
     it "returns multiple select values as an array of ids" do
-      @fieldset_child.child.stub!(:type).and_return 'multiple_select'
-      @fsa.field_values.should == { 37 => [42, 42] }
+      multiple_select_field = @fieldset_child.child.becomes(DynamicFieldsets::MultipleSelectField)
+      multiple_select_field.type = "DynamicFieldsets::MultipleSelectField"
+
+      field_option = DynamicFieldsets::FieldOption.new(:name => "test")
+      DynamicFieldsets::FieldOption.stub!(:find).with(@field_record.value).and_return(field_option)
+      
+      @fieldset_child.stub!(:child).and_return(multiple_select_field)
+      @fsa.field_values.should == { 37 => [{:value => 42, :name => "test"}, {:value => 42, :name => "test"}] }
     end
 
     it "returns checkboxes values as an array of ids" do
-      @field.stub!(:type).and_return 'checkbox'
-      @fsa.field_values.should == { 37 => [42, 42] }
+      checkbox_field = @fieldset_child.child.becomes(DynamicFieldsets::CheckboxField)
+      checkbox_field.type = "DynamicFieldsets::CheckboxField"
+      
+      field_option = DynamicFieldsets::FieldOption.new(:name => "test")
+      DynamicFieldsets::FieldOption.stub!(:find).with(@field_record.value).and_return(field_option)
+
+      @fieldset_child.stub!(:child).and_return(checkbox_field)
+      @fsa.field_values.should == { 37 => [{:value => 42, :name => "test"}, {:value => 42, :name => "test"}] }
     end
 
     it "returns select values as an id" do
-      @field.stub!(:type).and_return 'select'
-      @fsa.field_values.should == { 37 => 42 }
+      select_field = @fieldset_child.child.becomes(DynamicFieldsets::SelectField)
+      select_field.type = "DynamicFieldsets::SelectField"
+      
+      field_option = DynamicFieldsets::FieldOption.new(:name => "test")
+      DynamicFieldsets::FieldOption.stub!(:find).with(@field_record.value).and_return(field_option)
+      
+      @fieldset_child.stub!(:child).and_return(select_field)
+      @fsa.field_values.should == { 37 => {:value => 42, :name => "test"} }
     end
 
     it "returns radio values as an id" do
-      @field.stub!(:type).and_return 'radio'
-      @fsa.field_values.should == { 37 => 42 }
+      radio_field = @fieldset_child.child.becomes(DynamicFieldsets::RadioField)
+      radio_field.type = "DynamicFieldsets::RadioField"
+      
+      field_option = DynamicFieldsets::FieldOption.new(:name => "test")
+      DynamicFieldsets::FieldOption.stub!(:find).with(@field_record.value).and_return(field_option)
+      
+      @fieldset_child.stub!(:child).and_return(radio_field)
+      @fsa.field_values.should == { 37 => {:value => 42, :name => "test"} }
     end
 
     it "returns all other field types as strings" do
       @field.stub!(:type).and_return 'textfield'
       @field_record.stub!(:value).and_return 'forty two'
-      @fsa.field_values.should == { 37 => "forty two" }
+      @fsa.field_values.should == { 37 => {:value => "forty two"} }
     end
   end
 
@@ -159,7 +181,7 @@ describe DynamicFieldsets::FieldsetAssociator do
     end
   end
 
-  describe "dependency_child_hash and look_for_dependents" do
+  describe "dependency_child_hash and look_for_dependent_ons" do
     before(:each) do
       @fsa = DynamicFieldsets::FieldsetAssociator.new
 
@@ -224,48 +246,31 @@ describe DynamicFieldsets::FieldsetAssociator do
       @clause.stub!(:dependencies).and_return([@dependency])
     end
 
-    # The next two tests are specifically for look_for_dependents
+    # The next two tests are specifically for look_for_dependent_ons
 
     it "should update the correct array" do
-      pending
-      @fieldset_child_collection = []
-      look_for_dependents(@fieldset1)
+      @fieldset_child_collection = @fsa.look_for_dependent_ons(@fieldset1)
       @fieldset_child_collection.empty?.should be_false
     end
 
     it "should update the array to appropriate value" do
-      pending
-      @fieldset_child_collection = []
       expected_results = [@fsc2]
-      look_for_dependents(@fieldset1)
+      @fieldset_child_collection = @fsa.look_for_dependent_ons(@fieldset1)
       @fieldset_child_collection.should == expected_results
     end 
 
     # The next few tests are specifically for dependency_child_hash
 
     it "should return a hash" do
-      stub!(:look_for_dependents).and_return([@fsc1])
+      @fsa.stub!(:look_for_dependent_ons).and_return([@fsc1])
       @fsa.dependency_child_hash.should be_a_kind_of Hash
     end
 
     it "should have a precise response" do
-      stub!(:look_for_dependents).and_return([@fsc1])
+      @fsa.stub!(:look_for_dependent_ons).and_return([@fsc2])
       expected_results = {
         @fsc2.id => {
-          @group.id => {
-            "action" => "show",
-            "fieldset_child_id" => @fsc3.id,
-            "field_id" => @field2.id,
-            "clause" => {
-              @clause.id => {
-                  @dependency.id => {
-                    "fieldset_child_id" => @fsc2.id,
-                    "relationship" => "equals",
-                    "value" => 5
-                  }
-              }
-            }
-          }
+           @group.id => @group.to_hash
         }
       }
       @fsa.dependency_child_hash.should == expected_results

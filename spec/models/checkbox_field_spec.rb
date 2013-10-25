@@ -21,15 +21,15 @@ describe DynamicFieldsets::CheckboxField do
   describe ".form_partial_locals" do
     before (:all) do
       @fsa = DynamicFieldsets::FieldsetAssociator.new
-      fsa.stub!(:id).and_return(1)
+      @fsa.stub!(:id).and_return(1)
       @fsc = DynamicFieldsets::FieldsetChild.new
-      fsc.stub!(:id).and_return(1)
+      @fsc.stub!(:id).and_return(1)
       @attributes = {:fsa => @fsa, :fieldset_child => @fsc, :values => [], :value => []}
     end
     it "should call super" do
       # fsa and fsc are set in the superclass (Field) form_partial_locals method
       @checkbox.form_partial_locals(@attributes)[:fsa].should == @fsa
-      @checkbox.form_partial_locals(@attributes)[:fsc].should == @fsc
+      @checkbox.form_partial_locals(@attributes)[:fieldset_child].should == @fsc
     end
     it "should do a bunch of stuff with the options key" do
       @checkbox.form_partial_locals(@attributes)[:options][0][:name] == "one"

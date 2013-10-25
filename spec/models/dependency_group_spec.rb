@@ -70,8 +70,6 @@ describe DynamicFieldsets::DependencyGroup do
       @group.attributes = valid_attributes
       @group.save
       @clause = DynamicFieldsets::DependencyClause.create(:dependency_group => @group)
-      DynamicFieldsets::FieldsetChild.delete_all
-      DynamicFieldsets::Fieldset.delete_all
       @parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
       @child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
       @test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")

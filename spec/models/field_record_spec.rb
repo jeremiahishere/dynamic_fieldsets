@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe DynamicFieldsets::FieldRecord do
   include FieldRecordHelper
-  before(:each) do
-    pending "total rewrite"
-  end
-
 
   it "should respond to field" do
     DynamicFieldsets::FieldRecord.new.should respond_to :field
@@ -24,7 +20,8 @@ describe DynamicFieldsets::FieldRecord do
       @field_record.fieldset_child = DynamicFieldsets::FieldsetChild.new
       @field_record.fieldset_associator = DynamicFieldsets::FieldsetAssociator.new
       @field_record.value = "42"
-      child = mock_model(DynamicFieldsets::Field)
+      #chose SelectField at random, needs to be a subclass of Field for FieldRecord to validate
+      child = mock_model(DynamicFieldsets::SelectField)
       @field_record.fieldset_child = DynamicFieldsets::FieldsetChild.new(:child => child)
       @field_record.should be_valid
     end

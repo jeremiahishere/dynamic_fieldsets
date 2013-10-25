@@ -177,7 +177,7 @@ module DynamicFieldsets
 
     # @return [Boolean] True if there are any field records for the field or if it is in any fieldsets
     def in_use?
-      self.fieldset_children.count { |child| !child.fieldset_id.nil? || !child.field_records.empty? } > 0
+      self.fieldset_children.count { |child| child.fieldset_id.present? || child.field_records.present? } > 0
     end
 
     # Fields such as selects, checkboxes, and radios use predefined field options for their values

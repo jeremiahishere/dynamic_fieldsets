@@ -85,7 +85,6 @@ module DynamicFieldsets
         fieldset_child.dependencies.each do |dependency|
           dependency_group = dependency.dependency_clause.dependency_group
           output[fieldset_child.id][dependency_group.id] = dependency_group.to_hash
-          fieldset = dependency_group.fieldset_child.fieldset
         end
       end
       return output

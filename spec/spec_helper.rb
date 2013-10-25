@@ -28,6 +28,7 @@ RSpec.configure do |config|
   # methods or matchers
   require 'rspec/expectations'
   require 'shoulda/matchers/integrations/rspec'
+  require 'database_cleaner'
   config.include RSpec::Matchers
 
   # == Mock Framework
@@ -35,4 +36,16 @@ RSpec.configure do |config|
 
   # use transactions
   config.use_transactional_fixtures = true
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end
