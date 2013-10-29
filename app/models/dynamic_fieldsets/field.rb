@@ -104,7 +104,8 @@ module DynamicFieldsets
     # @return [Hash] A hash of html attribute key: value pairs
     def html_attribute_hash
       attrs = {}
-      field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if !field_html_attributes.empty?
+      debugger
+      field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if field_html_attributes.present?
       return attrs
     end
      

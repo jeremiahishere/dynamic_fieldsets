@@ -4,13 +4,14 @@ describe DynamicFieldsets::FieldsetChild do
   include FieldsetChildHelper
 
   before do
-    #@parent_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "parent_fieldset", :description => "test")
-    #@child_fieldset = DynamicFieldsets::Fieldset.create(:name => "test", :nkey => "child_fieldset", :description => "test")
     @parent_fieldset = DynamicFieldsets::Fieldset.new
     @parent_fieldset.stub!(:id).and_return(100)
     @child_fieldset = DynamicFieldsets::Fieldset.new
     @child_fieldset.stub!(:id).and_return(200)
+    
     @test_child = DynamicFieldsets::FieldsetChild.create(:fieldset_id => @parent_fieldset.id, :child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset")
+    @test_child.stub!(:child).and_return(@child_fieldset)
+    @test_child.stub!(:fieldset).and_return(@parent_fieldset)
     
     field1 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
     field2 = DynamicFieldsets::TextField.create(:name => "test", :label => "test")
@@ -129,7 +130,7 @@ describe DynamicFieldsets::FieldsetChild do
   it { DynamicFieldsets::FieldsetChild.should respond_to(:ordered) }
   describe ".ordered scope" do
     it "returns fieldset children in ascending order by attribute order_num" do\
-      DynamicFieldsets::FieldsetChild.ordered.should == [@sib1,@child1,@sib2,@child2,@sib3,@child3]
+      DynamicFieldsets::FieldsetChild.ordered.should == [@test_child,@child1,@sib1,@child2,@sib2,@child3,@sib3]
     end
   end
 
@@ -184,7 +185,10 @@ describe DynamicFieldsets::FieldsetChild do
     end
 
     it "should recurse if the fieldset is present as a child in a fieldset child" do
-      @child1.root_fieldset.id.should == @parent_fieldset.id
+      @child1.stub!(:fieldset).and_return(@child_fieldset)
+      DynamicFieldsets::FieldsetChild.should_receive(:where).with({:child_id => @child_fieldset.id, :child_type => "DynamicFieldsets::Fieldset"}).and_return([@test_child])
+      DynamicFieldsets::FieldsetChild.should_receive(:where).with({:child_id => @parent_fieldset.id, :child_type => "DynamicFieldsets::Fieldset"}).and_return([])
+      @child1.root_fieldset.should == @parent_fieldset
     end
   end
 
