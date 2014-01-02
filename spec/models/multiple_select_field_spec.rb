@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe DynamicFieldsets::MultipleSelectField do
-  it "needs tests"
   before do
     @mselect = DynamicFieldsets::MultipleSelectField.create(:name => "test", :label => "test")
   end
@@ -44,11 +43,29 @@ describe DynamicFieldsets::MultipleSelectField do
       @mselect.form_partial_locals(@attributes)[:fieldset_child].should == @fsc
     end
 
-    it "should call values_or_defaults_for_form"
-    it "should include selected_ids and collection"
+    it "should call values_or_defaults_for_form" do
+      @mselect.should_receive(:values_or_defaults_for_form)
+      @mselect.form_partial_locals(@attributes)
+    end
+    
+    it "should include selected_ids and collection" do
+      @mselect.form_partial_locals(@attributes)[:selected_ids].should be_true
+      @mselect.form_partial_locals(@attributes)[:collection].should be_true
+    end
   end
 
   describe ".collect_default_values" do
-    it "needs tests"  
+    before(:all) do
+      @field_option1 = DynamicFieldsets::FieldOption.create(:name => 'first')
+      @field_option2 = DynamicFieldsets::FieldOption.create(:name => 'second')
+      @field_options = [@field_option1, @field_option2]
+      @field_defaults = [DynamicFieldsets::FieldDefault.new(:value => 'first')]
+    end
+
+    it "returns array of options that match defaults" do
+      @mselect.stub!(:field_options).and_return @field_options
+      @mselect.stub!(:field_defaults).and_return @field_defaults
+      @mselect.collect_default_values.should == [1]
+    end
   end
 end

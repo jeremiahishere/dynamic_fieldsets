@@ -57,9 +57,12 @@ module DynamicFieldsetsHelper
     classes  = "#{field.type.gsub("DynamicFieldsets::", "").underscore.downcase} "
     classes += ( field.required ? 'required' : 'optional' )
     
+    attrs = field.html_attribute_hash
+    
     field_markup = []
     if field.use_form_header_partial?
       field_markup.push render(:partial => field.form_header_partial, :locals => {
+          :attributes => attrs,
           :classes => classes,
           :field => field,
           :fieldset_child => fieldset_child,
@@ -67,7 +70,6 @@ module DynamicFieldsetsHelper
         })
     end
       
-    attrs = field.html_attribute_hash
     
     attributes = {
       :fsa => fsa,

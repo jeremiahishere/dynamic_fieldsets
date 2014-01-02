@@ -104,7 +104,6 @@ module DynamicFieldsets
     # @return [Hash] A hash of html attribute key: value pairs
     def html_attribute_hash
       attrs = {}
-      debugger
       field_html_attributes.each{ |a| attrs.merge! a.attribute_name.to_sym => a.value } if field_html_attributes.present?
       return attrs
     end
@@ -152,7 +151,7 @@ module DynamicFieldsets
       output = {
         :value => args[:value],
         :values => args[:values],
-        :label => self.label,
+        :label => label,
         :object => "#{DynamicFieldsets::config.form_fieldset_associator_prefix}#{args[:fsa].id}",
         :method => "#{DynamicFieldsets::config.form_field_prefix}#{args[:fieldset_child].id}",
       }
