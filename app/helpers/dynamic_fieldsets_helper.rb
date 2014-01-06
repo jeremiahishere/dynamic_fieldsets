@@ -132,7 +132,9 @@ module DynamicFieldsetsHelper
   # @param [FieldsetAssociator] The fieldset associator for the dynamic fieldset to render
   # @return [String] The HTML for the entire dynamic fieldset
   def dynamic_fieldset_renderer(fsa, form_type)
-    rendered_dynamic_fieldset = "<div id='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}'>\n"
+    debugger
+    rendered_dynamic_fieldset = ""
+    rendered_dynamic_fieldset += "<div id='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}'>\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}[fieldset_id]' value='#{fsa.fieldset_id}' />\n"
     rendered_dynamic_fieldset += "<input type='hidden' name='#{DynamicFieldsets.config.form_fieldset_associator_prefix}#{fsa.id}[fieldset_model_name]' value='#{fsa.fieldset_model_name}' />\n"
     fieldset_renderer( fsa, fsa.fieldset, fsa.field_values, form_type ).each do |line|
@@ -149,7 +151,8 @@ module DynamicFieldsetsHelper
   # @return [String] The javascript variable that shows what fields have dependencies
   def javascript_renderer(fsa, form_type)
     unless fsa.id == nil
-      rendered_javascript = "<script type='text/javascript'> 
+      rendered_javascript = ""
+      rendered_javascript += "<script type='text/javascript'> 
         var current_fsa = #{fsa.id};
         if ( typeof dynamic_fieldsets_dependencies == 'undefined' ){
           var dynamic_fieldsets_dependencies = {};
@@ -157,7 +160,7 @@ module DynamicFieldsetsHelper
         } else {
           dynamic_fieldsets_dependencies[current_fsa] = #{fsa.dependency_child_hash.to_json}; 
         }</script>"
-      
+
       if form_type == "form"
         rendered_javascript += render "dynamic_fieldsets/shared/form_javascript_watcher"
       elsif form_type == "show"
