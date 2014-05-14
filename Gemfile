@@ -6,7 +6,7 @@ group :development, :test do
   gem "capybara", ">= 0.4.0"
   gem "sqlite3"
   gem 'ruby-debug19'
-  gem "bundler", "~> 1.0.0"
+  gem "bundler", "~> 1.6.2"
   gem "jeweler", "~> 1.6.3"
   gem "json"
 
@@ -15,8 +15,6 @@ group :development, :test do
   gem "rspec-rails", "~>2.6.1"
   gem "shoulda", "~> 3.0.0"
   gem "ruby_parser", "~> 2.3.1"  # outputs parsetrees
-  gem "ZenTest"
-  gem "autotest-rails"
 
   # cucumber
   gem "cucumber", ">= 0"

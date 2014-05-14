@@ -1,7 +1,6 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    ZenTest (4.6.2)
     abstract (1.0.0)
     actionmailer (3.0.11)
       actionpack (= 3.0.11)
@@ -31,8 +30,6 @@ GEM
     activesupport (3.0.11)
     archive-tar-minitar (0.5.2)
     arel (2.0.10)
-    autotest-rails (4.1.2)
-      ZenTest (~> 4.5)
     builder (2.1.2)
     capybara (1.1.2)
       mime-types (>= 1.16)
@@ -155,9 +152,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  ZenTest
-  autotest-rails
-  bundler (~> 1.0.0)
+  bundler (~> 1.6.2)
   capybara (>= 0.4.0)
   ci_reporter
   cucumber

@@ -1,5 +1,9 @@
 == unreleased changes
 
+== 0.1.20
+* Removed <p id="notice">, this element should be conditionally added on layout when key is present in flash hash
+* Removed ZenTest and autotest from gemfile
+
 == 0.1.19
 * Added auto clearing for selects boxes when they're hidden by their dependency actions
 * js show watcher now hides unused questions
