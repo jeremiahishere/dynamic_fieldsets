@@ -2,10 +2,12 @@ source "http://rubygems.org"
 
 gem "rails", "~> 3.1.10"
 
+gem 'pry-debugger'
+
 group :development, :test do
   gem "capybara", "~> 1.1.2"
   gem "sqlite3"
-  gem 'ruby-debug19'
+  # gem 'ruby-debug19'
   gem "bundler", "~> 1.6.2"
   gem "jeweler", "~> 2.0.1"
   gem "json"

@@ -253,9 +253,15 @@ describe DynamicFieldsets::Field do
     it { should respond_to :show_partial_locals }
     describe ".show_partial_locals" do
       before(:each) do
-        @arguments = { 
-          :value => "hello",
-          :value => ["hello", "world"]
+        @fsa = DynamicFieldsets::FieldsetAssociator.new
+        @fsa.stub(:id).and_return(1)
+
+        @fieldset_child = DynamicFieldsets::FieldsetAssociator.new
+        @fieldset_child.stub(:id).and_return(2)
+
+        @arguments = {
+          :fsa => @fsa,
+          :fieldset_child => @fieldset_child,
         }
       end
       

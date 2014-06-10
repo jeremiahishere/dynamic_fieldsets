@@ -76,13 +76,10 @@ describe DynamicFieldsets::FieldsetChild do
  
     # no_duplicate_fields_in_fieldset_children
     it "should not allow duplicate pairings of fieldsets and fields" do
-      fieldset = DynamicFieldsets::Fieldset.new
-      field = DynamicFieldsets::Field.new
-      field.stub!(:id).and_return(100)
-      fieldset_child1 = DynamicFieldsets::FieldsetChild.new(:fieldset => fieldset, :child => field, :order_num => 1)
-      fieldset_child1.stub!(:id).and_return(100)
-      fieldset_child2 = DynamicFieldsets::FieldsetChild.new(:fieldset => fieldset, :child => field, :order_num => 2)
-      DynamicFieldsets::FieldsetChild.stub!(:where).and_return([fieldset_child1])
+      fieldset = DynamicFieldsets::Fieldset.create
+      field = DynamicFieldsets::Field.create
+      fieldset_child1 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => fieldset.id, :child_id => field.id, :order_num => 1, :child_type => "DynamicFieldsets::Field")
+      fieldset_child2 = DynamicFieldsets::FieldsetChild.create(:fieldset_id => fieldset.id, :child_id => field.id, :order_num => 2, :child_type => "DynamicFieldsets::Field")
       fieldset_child2.should have(1).error_on(:child_id)
     end
 
@@ -91,7 +88,7 @@ describe DynamicFieldsets::FieldsetChild do
     it "cannot be it's own parent" do
       fieldset = DynamicFieldsets::Fieldset.new
       fieldset.stub!(:id).and_return(100)
-      fieldset_child = DynamicFieldsets::FieldsetChild.new(:fieldset_id => fieldset.id, :child => fieldset, :order_num => 1)
+      fieldset_child = DynamicFieldsets::FieldsetChild.new(:fieldset_id => fieldset.id, :child_id => fieldset.id, :order_num => 1, :child_type => "DynamicFieldsets::Fieldset")
       fieldset_child.should have(2).error_on(:child_id)
     end
   
