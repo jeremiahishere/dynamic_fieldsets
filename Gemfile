@@ -5,6 +5,8 @@ gem "rails", "~> 3.1.10"
 gem 'pry-debugger'
 
 group :development, :test do
+  # gem "selenikit", git: "https://github.com/cloudspace/selenikit.git"
+  gem 'selenium-webdriver', "~> 2.38.0"
   gem "capybara", "~> 1.1.2"
   gem "sqlite3"
   # gem 'ruby-debug19'
@@ -28,4 +30,6 @@ group :development, :test do
 
   # jenkins/hudson ci
   gem "ci_reporter"
+  
+  gem 'linguistics'
 end

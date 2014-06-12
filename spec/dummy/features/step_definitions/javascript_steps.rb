@@ -16,10 +16,10 @@ def create_child_fieldset(parent, order_num = 1)
 end
 
 def create_textfield(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::TextField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "textfield",
+    # :type => "textfield",
     :enabled => true,
     :required => true)
   DynamicFieldsets::FieldsetChild.create(:fieldset => parent, :child => child_field, :order_num => order_num)
@@ -27,10 +27,10 @@ def create_textfield(parent, order_num = 1)
 end
 
 def create_radio(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::RadioField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "radio",
+    # :type => "radio",
     :enabled => true,
     :required => true,
     :field_options => [DynamicFieldsets::FieldOption.create(
@@ -44,22 +44,22 @@ def create_radio(parent, order_num = 1)
 end
 
 def create_textarea(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::TextareaField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "textarea",
-    :enable => true,
+    # :type => "textarea",
+    :enabled => true,
     :required => true)
   DynamicFieldsets::FieldsetChild.create(:fieldset => parent, :child => child_field, :order_num => order_num)
   return child_field
 end
 
 def create_checkbox(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::CheckboxField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "checkbox",
-    :enable => true,
+    # :type => "checkbox",
+    :enabled => true,
     :required => true,
     :field_options => [DynamicFieldsets::FieldOption.create(
       :name => "Checkbox A"
@@ -72,11 +72,11 @@ def create_checkbox(parent, order_num = 1)
 end
 
 def create_select(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::SelectField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "select",
-    :enable => true,
+    # :type => "select",
+    :enabled => true,
     :required => true,
     :field_options => [DynamicFieldsets::FieldOption.create(
       :name => "Select Option A"
@@ -89,11 +89,11 @@ def create_select(parent, order_num = 1)
 end
 
 def create_multi_select(parent, order_num = 1)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::MultipleSelectField.create(
     :name => "Child Field",
     :label => "Child Field",
-    :type => "multiple_select",
-    :enable => true,
+    # :type => "multiple_select",
+    :enabled => true,
     :required => true,
     :field_options => [DynamicFieldsets::FieldOption.create(
       :name => "Select Option A"
@@ -108,11 +108,11 @@ def create_multi_select(parent, order_num = 1)
 end
 
 def create_instruction(parent, order_num = 2)
-  child_field = DynamicFieldsets::Field.create(
+  child_field = DynamicFieldsets::InstructionField.create(
     :name => "Dependent Field",
     :label => "Dependent Field",
-    :type => "instruction",
-    :enable => true,
+    # :type => "instruction",
+    :enabled => true,
     :required => true
   )
   DynamicFieldsets::FieldsetChild.create(:fieldset => parent, :child => child_field, :order_num => order_num)
@@ -140,7 +140,7 @@ end
 
 Given /^there is a dependency on a textfield with "([^"]*)"$/ do |value|
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @textfield = create_textfield(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
   create_dependency(@textfield, @instruction, value, "equals")
@@ -148,7 +148,7 @@ end
 
 Given /^there is a dependency on a radio$/ do
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @radio = create_radio(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
   create_dependency(@radio, @instruction, "radio button b", "equals")
@@ -156,15 +156,15 @@ end
 
 Given /^there is a dependency on a textarea with "([^"]*)"$/ do |value|
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @textarea = create_textarea(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
   create_dependency(@textarea, @instruction, value, "equals")
 end
 
-Given /^there is a dependency on a checkbox$/ do |value|
+Given /^there is a dependency on a checkbox$/ do
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @checkbox = create_checkbox(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
   create_dependency(@checkbox, @instruction, "checkbox b", "includes")
@@ -172,7 +172,7 @@ end
 
 Given /^there is a dependency on a select$/ do
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @select = create_select(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
   create_dependency(@select, @instruction, "select option b", "equals")
@@ -180,10 +180,10 @@ end
 
 Given /^there is a dependency on a multi-select$/ do
   @parent_fieldset = create_root_fieldset
-  @child_fieldset = create_child_fieldset
+  @child_fieldset = create_child_fieldset(@parent_fieldset, 1)
   @multi_select = create_multi_select(@child_fieldset)
   @instruction = create_instruction(@child_fieldset)
-  create_dependency(@select, @instruction, "select option b", "includes")
+  create_dependency(@multi_select, @instruction, "select option b", "includes")
 end
 
 Then /^I should not see the instructions$/ do

@@ -27,7 +27,7 @@
   <% fieldset_child = DynamicFieldsets::FieldsetChild.where( fieldset_id: fieldset.id, child_id: child.id, child_type: "DynamicFieldsets::Field" ).first %>
     <li id="child-<%= fieldset_child.id %>" class="field<%= ' required' if child.required? %>">
     <div>
-      <span class="fieldtype"><%= child.type %>:</span>
+      <span class="fieldtype"><%= child.display_type %>:</span>
       <span class="name"><%= child.label %></span>
       <span class="admin">
         <span class="show"><%= link_to 'Show', dynamic_fieldsets_field_path(child) %></span>

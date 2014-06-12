@@ -32,13 +32,13 @@ end
 World(WithinHelpers)
 
 # Single-line step scoper
-When /^(.*) within (.*[^:])$/ do |step, parent|
-  with_scope(parent) { When step }
+When /^(.*) within (.*[^:])$/ do |s, parent|
+  with_scope(parent) { step s }
 end
 
 # Multi-line step scoper
-When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
-  with_scope(parent) { When "#{step}:", table_or_string }
+When /^(.*) within (.*[^:]):$/ do |s, parent, table_or_string|
+  with_scope(parent) { step "#{s}:", table_or_string }
 end
 
 Given /^(?:|I )am on (.+)$/ do |page_name|
@@ -58,7 +58,6 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
 end
 
 When /^(?:|I )follow "([^"]*)" with debugger$/ do |link|
-  debugger
   click_link(link)
 end
 
@@ -83,7 +82,7 @@ end
 #
 When /^(?:|I )fill in the following:$/ do |fields|
   fields.rows_hash.each do |name, value|
-    When %{I fill in "#{name}" with "#{value}"}
+    step %{I fill in "#{name}" with "#{value}"}
   end
 end
 
@@ -216,4 +215,8 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+And /^I sleep$/ do
+  sleep(10000)
 end

@@ -1,7 +1,7 @@
 Feature: Managed fieldsets
 
   Scenario: Listing fieldsets
-    Given a fieldset exists
+    Given fieldsets exist
     When I go to the fieldset index page
     Then I should see that fieldset listed
 
@@ -25,7 +25,7 @@ Feature: Managed fieldsets
     Then I should be on the fieldset show page for that fieldset
     And I should see "Successfully created a new fieldset"
     And I should see the data for that fieldset
-    
+
   Scenario: Editing a fieldset
     Given a parent fieldset exists
     And I am on the fieldset edit page for that fieldset
@@ -40,9 +40,8 @@ Feature: Managed fieldsets
     And I should see "This fieldset has been repurposed"
 
   Scenario: Destroying a fieldset
-    Given I am pending
     Given a parent fieldset exists
     And I record the data for that fieldset
     And I am on the fieldset index page
-    When I follow "Destroy"
+    When I press "Destroy"
     Then I should not see that fieldset listed

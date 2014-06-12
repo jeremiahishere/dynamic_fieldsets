@@ -9,7 +9,7 @@ Feature: Managed fields
     Given I am on the field new page
     When I fill in "test_field" for "Label"
     And I fill in "Test field" for "Name"
-    And I select "textfield" from "Field type"
+    And I select "Text field" from "dynamic_fieldsets_field_type"
     And I press "Create Field"
     Then I should be on the field show page for that field
     And I should see "Successfully created a new field"
@@ -20,8 +20,8 @@ Feature: Managed fields
     And I am on the field edit page for that field
     When I fill in "Different field name" for "Name"
     And I fill in "different_field_name" for "Label"
-    And I select "textarea" from "Field type"
-    And I press "Update Field"
+    And I select "Text field" from "dynamic_fieldsets_field_type"
+    And I press "Update Text field"
     Then I should be on the field show page for that field
     And I should see "Successfully updated a field"
     And I should see "Different field name"

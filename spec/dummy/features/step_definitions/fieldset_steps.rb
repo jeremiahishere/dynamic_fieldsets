@@ -1,8 +1,12 @@
-Given(/^a fieldset exists$/) do
-  @fieldset = DynamicFieldsets::Fieldset.create(
-    :name => "Fingerprint Form",
-    :nkey => "fingerprint_form",
-    :description => "A test fingerprint form")
+Given(/^fieldsets exist$/) do
+  num_sets = DynamicFieldsets::Fieldset.all.length
+  Linguistics.use(:en)
+  10.times do
+    DynamicFieldsets::Fieldset.create(
+      :name => "Test information form#{DynamicFieldsets::Fieldset.all.length + 1}",
+      :nkey => (DynamicFieldsets::Fieldset.all.length + 1).en.ordinate,
+      :description => "A test information form#{DynamicFieldsets::Fieldset.all.length + 1}")
+  end
 end
 
 Then(/^I should see that fieldset listed$/) do

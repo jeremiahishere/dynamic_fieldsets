@@ -1,8 +1,7 @@
 Given /^a field exists$/ do
-  @field = DynamicFieldsets::Field.create(
+  @field = DynamicFieldsets::TextField.create(
     :name => "Test field",
     :label => "Test field",
-    :type => "textfield",
     :enabled => true,
     :required => true)
 end
@@ -10,7 +9,7 @@ end
 Given /^the field is in use$/ do
   @field = DynamicFieldsets::Field.last
   if DynamicFieldsets::Fieldset.all.empty?
-    Given %{a fieldset exists}
+    step %{fieldsets exist}
   end
   @fsc = DynamicFieldsets::FieldsetChild.create(:child => @field, :fieldset_id => DynamicFieldsets::Fieldset.last.id)
 end
@@ -26,14 +25,14 @@ end
 Then /^I should see that field listed$/ do
   @field = DynamicFieldsets::Field.last
   page.should have_content(@field.name)
-  page.should have_content(@field.type)
+  page.should have_content(@field.display_type)
 end
 
 Then /^I should see the data for that field$/ do
   @field = DynamicFieldsets::Field.last
   page.should have_content(@field.name)
   page.should have_content(@field.label)
-  page.should have_content(@field.type)
+  page.should have_content(@field.display_type)
   page.should have_content(@field.enabled)
   page.should have_content(@field.required)
 
@@ -63,5 +62,5 @@ end
 
 Then /^I should not see that field listed$/ do
   page.should_not have_content(@field.name)
-  page.should_not have_content(@field.type)
+  page.should_not have_content(@field.display_type)
 end

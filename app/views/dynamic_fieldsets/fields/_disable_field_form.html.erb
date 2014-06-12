@@ -1,4 +1,4 @@
-<%= form_for field, :method => :post, :url => dynamic_fieldsets_enable_field_path(field) do |f| %>
-  <%= f.hidden_field :enabled, :value => !field.enabled %>
-  <%= f.submit field.enabled ? "Disable" : "Enable"  %>
+<%= form_tag dynamic_fieldsets_enable_field_path(field), :method => :post do %>
+  <%= hidden_field_tag "dynamic_fieldsets_field[enabled]", !field.enabled %>
+  <%= submit_tag "#{field.enabled ? 'Disable' : 'Enable'}" %>
 <% end %>
